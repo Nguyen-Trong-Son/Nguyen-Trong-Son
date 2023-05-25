@@ -1,0 +1,199 @@
+ARM GAS  /tmp/ccvTIXWz.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"Debug_Program.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.Debug_Program_Config,"ax",%progbits
+  18              		.align	1
+  19              		.global	Debug_Program_Config
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	Debug_Program_Config:
+  25              	.LVL0:
+  26              	.LFB65:
+  27              		.file 1 "Debug_Program/Debug_Program.c"
+   1:Debug_Program/Debug_Program.c **** /**
+   2:Debug_Program/Debug_Program.c ****  * @file Debug_Program.c
+   3:Debug_Program/Debug_Program.c ****  * @author  Nguyen Trong Son (LoH Technology Company Limited)
+   4:Debug_Program/Debug_Program.c ****  * @brief 
+   5:Debug_Program/Debug_Program.c ****  * @version 0.1
+   6:Debug_Program/Debug_Program.c ****  * @date 2022-08-28
+   7:Debug_Program/Debug_Program.c ****  * 
+   8:Debug_Program/Debug_Program.c ****  * @copyright Copyright (c) 2022
+   9:Debug_Program/Debug_Program.c ****  * 
+  10:Debug_Program/Debug_Program.c ****  */
+  11:Debug_Program/Debug_Program.c **** #include "Debug_Program.h"
+  12:Debug_Program/Debug_Program.c **** 
+  13:Debug_Program/Debug_Program.c **** /**
+  14:Debug_Program/Debug_Program.c ****  * @brief Debug_Program_Config
+  15:Debug_Program/Debug_Program.c ****  * 
+  16:Debug_Program/Debug_Program.c ****  * @param program_x 
+  17:Debug_Program/Debug_Program.c ****  * @param uart_debug 
+  18:Debug_Program/Debug_Program.c ****  * @param port_led_debug 
+  19:Debug_Program/Debug_Program.c ****  * @param pin__led_debug 
+  20:Debug_Program/Debug_Program.c ****  * @param time_out 
+  21:Debug_Program/Debug_Program.c ****  */
+  22:Debug_Program/Debug_Program.c **** void Debug_Program_Config(Debug_Program_Name *program_x, UART_HandleTypeDef *uart_debug,  GPIO_Type
+  23:Debug_Program/Debug_Program.c **** {
+  28              		.loc 1 23 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 4, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  24:Debug_Program/Debug_Program.c ****     program_x->usart = uart_debug;
+  33              		.loc 1 24 5 view .LVU1
+  34              		.loc 1 24 22 is_stmt 0 view .LVU2
+ARM GAS  /tmp/ccvTIXWz.s 			page 2
+
+
+  35 0000 0160     		str	r1, [r0]
+  25:Debug_Program/Debug_Program.c ****     program_x->Port = port_led_debug;
+  36              		.loc 1 25 5 is_stmt 1 view .LVU3
+  37              		.loc 1 25 21 is_stmt 0 view .LVU4
+  38 0002 4260     		str	r2, [r0, #4]
+  26:Debug_Program/Debug_Program.c ****     program_x->Pin = pin__led_debug;
+  39              		.loc 1 26 5 is_stmt 1 view .LVU5
+  40              		.loc 1 26 20 is_stmt 0 view .LVU6
+  41 0004 0381     		strh	r3, [r0, #8]	@ movhi
+  27:Debug_Program/Debug_Program.c ****     program_x->time_out_uart = time_out;
+  42              		.loc 1 27 5 is_stmt 1 view .LVU7
+  43              		.loc 1 27 30 is_stmt 0 view .LVU8
+  44 0006 009B     		ldr	r3, [sp]
+  45              	.LVL1:
+  46              		.loc 1 27 30 view .LVU9
+  47 0008 C360     		str	r3, [r0, #12]
+  28:Debug_Program/Debug_Program.c **** }
+  48              		.loc 1 28 1 view .LVU10
+  49 000a 7047     		bx	lr
+  50              		.cfi_endproc
+  51              	.LFE65:
+  53              		.section	.text.Transmit_Data_To_Computer,"ax",%progbits
+  54              		.align	1
+  55              		.global	Transmit_Data_To_Computer
+  56              		.syntax unified
+  57              		.thumb
+  58              		.thumb_func
+  60              	Transmit_Data_To_Computer:
+  61              	.LVL2:
+  62              	.LFB66:
+  29:Debug_Program/Debug_Program.c **** 
+  30:Debug_Program/Debug_Program.c **** /**
+  31:Debug_Program/Debug_Program.c ****  * @brief Transmit_Data_To_Computer
+  32:Debug_Program/Debug_Program.c ****  * 
+  33:Debug_Program/Debug_Program.c ****  * @param program_x 
+  34:Debug_Program/Debug_Program.c ****  * @param data 
+  35:Debug_Program/Debug_Program.c ****  * @param size_data 
+  36:Debug_Program/Debug_Program.c ****  */
+  37:Debug_Program/Debug_Program.c **** void Transmit_Data_To_Computer(Debug_Program_Name *program_x, uint8_t *data, uint16_t size_data)
+  38:Debug_Program/Debug_Program.c **** {
+  63              		.loc 1 38 1 is_stmt 1 view -0
+  64              		.cfi_startproc
+  65              		@ args = 0, pretend = 0, frame = 0
+  66              		@ frame_needed = 0, uses_anonymous_args = 0
+  67              		.loc 1 38 1 is_stmt 0 view .LVU12
+  68 0000 08B5     		push	{r3, lr}
+  69              	.LCFI0:
+  70              		.cfi_def_cfa_offset 8
+  71              		.cfi_offset 3, -8
+  72              		.cfi_offset 14, -4
+  39:Debug_Program/Debug_Program.c ****     HAL_UART_Transmit(program_x->usart, data, size_data, program_x->time_out_uart);
+  73              		.loc 1 39 5 is_stmt 1 view .LVU13
+  74 0002 C368     		ldr	r3, [r0, #12]
+  75 0004 0068     		ldr	r0, [r0]
+  76              	.LVL3:
+  77              		.loc 1 39 5 is_stmt 0 view .LVU14
+  78 0006 FFF7FEFF 		bl	HAL_UART_Transmit
+ARM GAS  /tmp/ccvTIXWz.s 			page 3
+
+
+  79              	.LVL4:
+  40:Debug_Program/Debug_Program.c **** 
+  41:Debug_Program/Debug_Program.c **** }
+  80              		.loc 1 41 1 view .LVU15
+  81 000a 08BD     		pop	{r3, pc}
+  82              		.cfi_endproc
+  83              	.LFE66:
+  85              		.section	.text.Blink_Led01,"ax",%progbits
+  86              		.align	1
+  87              		.global	Blink_Led01
+  88              		.syntax unified
+  89              		.thumb
+  90              		.thumb_func
+  92              	Blink_Led01:
+  93              	.LVL5:
+  94              	.LFB67:
+  42:Debug_Program/Debug_Program.c **** 
+  43:Debug_Program/Debug_Program.c **** /**
+  44:Debug_Program/Debug_Program.c ****  * @brief Blink_Led01
+  45:Debug_Program/Debug_Program.c ****  * 
+  46:Debug_Program/Debug_Program.c ****  * @param program_x 
+  47:Debug_Program/Debug_Program.c ****  */
+  48:Debug_Program/Debug_Program.c **** void Blink_Led01(Debug_Program_Name *program_x)
+  49:Debug_Program/Debug_Program.c **** {
+  95              		.loc 1 49 1 is_stmt 1 view -0
+  96              		.cfi_startproc
+  97              		@ args = 0, pretend = 0, frame = 0
+  98              		@ frame_needed = 0, uses_anonymous_args = 0
+  99              		.loc 1 49 1 is_stmt 0 view .LVU17
+ 100 0000 08B5     		push	{r3, lr}
+ 101              	.LCFI1:
+ 102              		.cfi_def_cfa_offset 8
+ 103              		.cfi_offset 3, -8
+ 104              		.cfi_offset 14, -4
+  50:Debug_Program/Debug_Program.c ****     HAL_GPIO_TogglePin(program_x->Port, program_x->Pin);
+ 105              		.loc 1 50 5 is_stmt 1 view .LVU18
+ 106 0002 0189     		ldrh	r1, [r0, #8]
+ 107 0004 4068     		ldr	r0, [r0, #4]
+ 108              	.LVL6:
+ 109              		.loc 1 50 5 is_stmt 0 view .LVU19
+ 110 0006 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 111              	.LVL7:
+  51:Debug_Program/Debug_Program.c **** 
+  52:Debug_Program/Debug_Program.c **** }
+ 112              		.loc 1 52 1 view .LVU20
+ 113 000a 08BD     		pop	{r3, pc}
+ 114              		.cfi_endproc
+ 115              	.LFE67:
+ 117              		.text
+ 118              	.Letext0:
+ 119              		.file 2 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 120              		.file 3 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 121              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 122              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 123              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 124              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h"
+ 125              		.file 8 "Debug_Program/Debug_Program.h"
+ARM GAS  /tmp/ccvTIXWz.s 			page 4
+
+
+ 126              		.file 9 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ARM GAS  /tmp/ccvTIXWz.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Debug_Program.c
+     /tmp/ccvTIXWz.s:18     .text.Debug_Program_Config:0000000000000000 $t
+     /tmp/ccvTIXWz.s:24     .text.Debug_Program_Config:0000000000000000 Debug_Program_Config
+     /tmp/ccvTIXWz.s:54     .text.Transmit_Data_To_Computer:0000000000000000 $t
+     /tmp/ccvTIXWz.s:60     .text.Transmit_Data_To_Computer:0000000000000000 Transmit_Data_To_Computer
+     /tmp/ccvTIXWz.s:86     .text.Blink_Led01:0000000000000000 $t
+     /tmp/ccvTIXWz.s:92     .text.Blink_Led01:0000000000000000 Blink_Led01
+
+UNDEFINED SYMBOLS
+HAL_UART_Transmit
+HAL_GPIO_TogglePin

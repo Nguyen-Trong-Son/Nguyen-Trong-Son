@@ -1,0 +1,9 @@
+../HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c:32:6:Hpma115S0_Dust_Sensor_Init	16	static
+../HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c:46:9:Hpma115S0_Start_Particle_Measure	16	static
+../HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c:64:9:Hpma115S0_Stop_Particle_Measurement	16	static
+../HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c:81:9:Hpma115S0_Enable_Auto_Send	16	static
+../HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c:99:9:Hpma115S0_Stop_Auto_Send	16	static
+../HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c:115:6:Hpma115S0_Set_Adjustment_Cofficient	16	static
+../HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c:142:10:Hpma115S0_Read_Particle_Measuring	24	static
+../HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c:160:10:Hpma115S0_Adjustment_Cofficient	24	static
+../HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c:186:7:Hpma115S0_Caclulator_Average	88	dynamic

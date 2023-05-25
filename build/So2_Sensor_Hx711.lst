@@ -1,0 +1,1418 @@
+ARM GAS  /tmp/cc4npXR1.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"So2_Sensor_Hx711.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.hx711_delay_us,"ax",%progbits
+  18              		.align	1
+  19              		.global	hx711_delay_us
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	hx711_delay_us:
+  25              	.LFB65:
+  26              		.file 1 "So2_Hx711/So2_Sensor_Hx711.c"
+   1:So2_Hx711/So2_Sensor_Hx711.c **** #include "So2_Sensor_Hx711.h"
+   2:So2_Hx711/So2_Sensor_Hx711.c **** #include "math.h"
+   3:So2_Hx711/So2_Sensor_Hx711.c **** #include "stdint.h"
+   4:So2_Hx711/So2_Sensor_Hx711.c **** 
+   5:So2_Hx711/So2_Sensor_Hx711.c **** #define	  _HX711_USE_FREERTOS	0
+   6:So2_Hx711/So2_Sensor_Hx711.c **** #define   _HX711_DELAY_US_LOOP  4
+   7:So2_Hx711/So2_Sensor_Hx711.c **** 
+   8:So2_Hx711/So2_Sensor_Hx711.c **** #if (_HX711_USE_FREERTOS == 1)
+   9:So2_Hx711/So2_Sensor_Hx711.c **** #include "cmsis_os.h"
+  10:So2_Hx711/So2_Sensor_Hx711.c **** #define hx711_delay(x)    osDelay(x)
+  11:So2_Hx711/So2_Sensor_Hx711.c **** #else
+  12:So2_Hx711/So2_Sensor_Hx711.c **** #define hx711_delay(x)    HAL_Delay(x)
+  13:So2_Hx711/So2_Sensor_Hx711.c **** #endif
+  14:So2_Hx711/So2_Sensor_Hx711.c **** 
+  15:So2_Hx711/So2_Sensor_Hx711.c **** //#############################################################################################
+  16:So2_Hx711/So2_Sensor_Hx711.c **** void hx711_delay_us(void)
+  17:So2_Hx711/So2_Sensor_Hx711.c **** {
+  27              		.loc 1 17 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              		@ link register save eliminated.
+  18:So2_Hx711/So2_Sensor_Hx711.c ****   uint32_t delay = _HX711_DELAY_US_LOOP;
+  32              		.loc 1 18 3 view .LVU1
+  33              	.LVL0:
+  19:So2_Hx711/So2_Sensor_Hx711.c ****   while (delay > 0)
+  34              		.loc 1 19 3 view .LVU2
+  18:So2_Hx711/So2_Sensor_Hx711.c ****   uint32_t delay = _HX711_DELAY_US_LOOP;
+  35              		.loc 1 18 12 is_stmt 0 view .LVU3
+  36 0000 0423     		movs	r3, #4
+  37              		.loc 1 19 9 view .LVU4
+  38 0002 04E0     		b	.L2
+ARM GAS  /tmp/cc4npXR1.s 			page 2
+
+
+  39              	.LVL1:
+  40              	.L3:
+  20:So2_Hx711/So2_Sensor_Hx711.c ****   {
+  21:So2_Hx711/So2_Sensor_Hx711.c ****     delay--;
+  41              		.loc 1 21 5 is_stmt 1 view .LVU5
+  42              		.loc 1 21 10 is_stmt 0 view .LVU6
+  43 0004 013B     		subs	r3, r3, #1
+  44              	.LVL2:
+  22:So2_Hx711/So2_Sensor_Hx711.c ****     __asm__("nop"); __asm__("nop"); __asm__("nop"); __asm__("nop");
+  45              		.loc 1 22 5 is_stmt 1 view .LVU7
+  46              		.syntax unified
+  47              	@ 22 "So2_Hx711/So2_Sensor_Hx711.c" 1
+  48 0006 00BF     		nop
+  49              	@ 0 "" 2
+  50              		.loc 1 22 21 view .LVU8
+  51              	@ 22 "So2_Hx711/So2_Sensor_Hx711.c" 1
+  52 0008 00BF     		nop
+  53              	@ 0 "" 2
+  54              		.loc 1 22 37 view .LVU9
+  55              	@ 22 "So2_Hx711/So2_Sensor_Hx711.c" 1
+  56 000a 00BF     		nop
+  57              	@ 0 "" 2
+  58              		.loc 1 22 53 view .LVU10
+  59              	@ 22 "So2_Hx711/So2_Sensor_Hx711.c" 1
+  60 000c 00BF     		nop
+  61              	@ 0 "" 2
+  62              	.LVL3:
+  63              		.thumb
+  64              		.syntax unified
+  65              	.L2:
+  19:So2_Hx711/So2_Sensor_Hx711.c ****   while (delay > 0)
+  66              		.loc 1 19 16 view .LVU11
+  67 000e 002B     		cmp	r3, #0
+  68 0010 F8D1     		bne	.L3
+  23:So2_Hx711/So2_Sensor_Hx711.c ****   }
+  24:So2_Hx711/So2_Sensor_Hx711.c **** }
+  69              		.loc 1 24 1 is_stmt 0 view .LVU12
+  70 0012 7047     		bx	lr
+  71              		.cfi_endproc
+  72              	.LFE65:
+  74              		.section	.text.hx711_lock,"ax",%progbits
+  75              		.align	1
+  76              		.global	hx711_lock
+  77              		.syntax unified
+  78              		.thumb
+  79              		.thumb_func
+  81              	hx711_lock:
+  82              	.LVL4:
+  83              	.LFB66:
+  25:So2_Hx711/So2_Sensor_Hx711.c **** //#############################################################################################
+  26:So2_Hx711/So2_Sensor_Hx711.c **** void hx711_lock(hx711_t *hx711)
+  27:So2_Hx711/So2_Sensor_Hx711.c **** {
+  84              		.loc 1 27 1 is_stmt 1 view -0
+  85              		.cfi_startproc
+  86              		@ args = 0, pretend = 0, frame = 0
+  87              		@ frame_needed = 0, uses_anonymous_args = 0
+  88              		.loc 1 27 1 is_stmt 0 view .LVU14
+ARM GAS  /tmp/cc4npXR1.s 			page 3
+
+
+  89 0000 10B5     		push	{r4, lr}
+  90              	.LCFI0:
+  91              		.cfi_def_cfa_offset 8
+  92              		.cfi_offset 4, -8
+  93              		.cfi_offset 14, -4
+  94 0002 0446     		mov	r4, r0
+  28:So2_Hx711/So2_Sensor_Hx711.c ****   while (hx711->lock)
+  95              		.loc 1 28 3 is_stmt 1 view .LVU15
+  96              		.loc 1 28 9 is_stmt 0 view .LVU16
+  97 0004 02E0     		b	.L5
+  98              	.LVL5:
+  99              	.L6:
+  29:So2_Hx711/So2_Sensor_Hx711.c ****     hx711_delay(1);
+ 100              		.loc 1 29 5 is_stmt 1 view .LVU17
+ 101 0006 0120     		movs	r0, #1
+ 102 0008 FFF7FEFF 		bl	HAL_Delay
+ 103              	.LVL6:
+ 104              	.L5:
+  28:So2_Hx711/So2_Sensor_Hx711.c ****   while (hx711->lock)
+ 105              		.loc 1 28 10 view .LVU18
+  28:So2_Hx711/So2_Sensor_Hx711.c ****   while (hx711->lock)
+ 106              		.loc 1 28 15 is_stmt 0 view .LVU19
+ 107 000c 237D     		ldrb	r3, [r4, #20]	@ zero_extendqisi2
+  28:So2_Hx711/So2_Sensor_Hx711.c ****   while (hx711->lock)
+ 108              		.loc 1 28 10 view .LVU20
+ 109 000e 002B     		cmp	r3, #0
+ 110 0010 F9D1     		bne	.L6
+  30:So2_Hx711/So2_Sensor_Hx711.c ****   hx711->lock = 1;      
+ 111              		.loc 1 30 3 is_stmt 1 view .LVU21
+ 112              		.loc 1 30 15 is_stmt 0 view .LVU22
+ 113 0012 0123     		movs	r3, #1
+ 114 0014 2375     		strb	r3, [r4, #20]
+  31:So2_Hx711/So2_Sensor_Hx711.c **** }
+ 115              		.loc 1 31 1 view .LVU23
+ 116 0016 10BD     		pop	{r4, pc}
+ 117              		.loc 1 31 1 view .LVU24
+ 118              		.cfi_endproc
+ 119              	.LFE66:
+ 121              		.section	.text.hx711_unlock,"ax",%progbits
+ 122              		.align	1
+ 123              		.global	hx711_unlock
+ 124              		.syntax unified
+ 125              		.thumb
+ 126              		.thumb_func
+ 128              	hx711_unlock:
+ 129              	.LVL7:
+ 130              	.LFB67:
+  32:So2_Hx711/So2_Sensor_Hx711.c **** //#############################################################################################
+  33:So2_Hx711/So2_Sensor_Hx711.c **** void hx711_unlock(hx711_t *hx711)
+  34:So2_Hx711/So2_Sensor_Hx711.c **** {
+ 131              		.loc 1 34 1 is_stmt 1 view -0
+ 132              		.cfi_startproc
+ 133              		@ args = 0, pretend = 0, frame = 0
+ 134              		@ frame_needed = 0, uses_anonymous_args = 0
+ 135              		@ link register save eliminated.
+  35:So2_Hx711/So2_Sensor_Hx711.c ****   hx711->lock = 0;
+ 136              		.loc 1 35 3 view .LVU26
+ARM GAS  /tmp/cc4npXR1.s 			page 4
+
+
+ 137              		.loc 1 35 15 is_stmt 0 view .LVU27
+ 138 0000 0023     		movs	r3, #0
+ 139 0002 0375     		strb	r3, [r0, #20]
+  36:So2_Hx711/So2_Sensor_Hx711.c **** }
+ 140              		.loc 1 36 1 view .LVU28
+ 141 0004 7047     		bx	lr
+ 142              		.cfi_endproc
+ 143              	.LFE67:
+ 145              		.section	.text.hx711_set_gain,"ax",%progbits
+ 146              		.align	1
+ 147              		.global	hx711_set_gain
+ 148              		.syntax unified
+ 149              		.thumb
+ 150              		.thumb_func
+ 152              	hx711_set_gain:
+ 153              	.LVL8:
+ 154              	.LFB69:
+  37:So2_Hx711/So2_Sensor_Hx711.c **** //#############################################################################################
+  38:So2_Hx711/So2_Sensor_Hx711.c **** void hx711_init(hx711_t *hx711, GPIO_TypeDef *clk_gpio, uint16_t clk_pin, GPIO_TypeDef *dat_gpio, u
+  39:So2_Hx711/So2_Sensor_Hx711.c **** {
+  40:So2_Hx711/So2_Sensor_Hx711.c ****   //hx711_lock(hx711);
+  41:So2_Hx711/So2_Sensor_Hx711.c ****   hx711->clk_gpio = clk_gpio;
+  42:So2_Hx711/So2_Sensor_Hx711.c ****   hx711->clk_pin = clk_pin;
+  43:So2_Hx711/So2_Sensor_Hx711.c ****   hx711->dat_gpio = dat_gpio;
+  44:So2_Hx711/So2_Sensor_Hx711.c ****   hx711->dat_pin = dat_pin;
+  45:So2_Hx711/So2_Sensor_Hx711.c **** 
+  46:So2_Hx711/So2_Sensor_Hx711.c ****   GPIO_InitTypeDef  gpio = {0};
+  47:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Mode = GPIO_MODE_OUTPUT_PP;
+  48:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Pull = GPIO_NOPULL;
+  49:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+  50:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Pin = clk_pin;
+  51:So2_Hx711/So2_Sensor_Hx711.c ****   HAL_GPIO_Init(clk_gpio, &gpio);
+  52:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Mode = GPIO_MODE_INPUT;
+  53:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Pull = GPIO_PULLUP;
+  54:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+  55:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Pin = dat_pin;
+  56:So2_Hx711/So2_Sensor_Hx711.c ****   HAL_GPIO_Init(dat_gpio, &gpio);
+  57:So2_Hx711/So2_Sensor_Hx711.c ****   HAL_GPIO_WritePin(hx711->clk_gpio, hx711->clk_pin, GPIO_PIN_SET);
+  58:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_delay(10);
+  59:So2_Hx711/So2_Sensor_Hx711.c ****   HAL_GPIO_WritePin(hx711->clk_gpio, hx711->clk_pin, GPIO_PIN_RESET);
+  60:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_delay(10);
+  61:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_value(hx711);
+  62:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_value(hx711);
+  63:So2_Hx711/So2_Sensor_Hx711.c ****   //hx711_unlock(hx711);
+  64:So2_Hx711/So2_Sensor_Hx711.c **** }
+  65:So2_Hx711/So2_Sensor_Hx711.c **** 
+  66:So2_Hx711/So2_Sensor_Hx711.c **** 
+  67:So2_Hx711/So2_Sensor_Hx711.c **** void hx711_set_gain(hx711_t *hx711, uint8_t gain)
+  68:So2_Hx711/So2_Sensor_Hx711.c **** {
+ 155              		.loc 1 68 1 is_stmt 1 view -0
+ 156              		.cfi_startproc
+ 157              		@ args = 0, pretend = 0, frame = 0
+ 158              		@ frame_needed = 0, uses_anonymous_args = 0
+ 159              		@ link register save eliminated.
+  69:So2_Hx711/So2_Sensor_Hx711.c **** 	switch(gain)
+ 160              		.loc 1 69 2 view .LVU30
+ 161 0000 4029     		cmp	r1, #64
+ARM GAS  /tmp/cc4npXR1.s 			page 5
+
+
+ 162 0002 07D0     		beq	.L10
+ 163 0004 8029     		cmp	r1, #128
+ 164 0006 02D0     		beq	.L11
+ 165 0008 2029     		cmp	r1, #32
+ 166 000a 06D0     		beq	.L14
+ 167              	.L9:
+  70:So2_Hx711/So2_Sensor_Hx711.c **** 	{
+  71:So2_Hx711/So2_Sensor_Hx711.c **** 		case 128:
+  72:So2_Hx711/So2_Sensor_Hx711.c **** 				hx711->gain = 1;
+  73:So2_Hx711/So2_Sensor_Hx711.c **** 				break;
+  74:So2_Hx711/So2_Sensor_Hx711.c **** 		case 64:
+  75:So2_Hx711/So2_Sensor_Hx711.c **** 			    hx711->gain = 3;
+  76:So2_Hx711/So2_Sensor_Hx711.c **** 			    break;
+  77:So2_Hx711/So2_Sensor_Hx711.c **** 		case 32:
+  78:So2_Hx711/So2_Sensor_Hx711.c **** 			    hx711->gain = 2;
+  79:So2_Hx711/So2_Sensor_Hx711.c **** 			    break;
+  80:So2_Hx711/So2_Sensor_Hx711.c **** 		default:
+  81:So2_Hx711/So2_Sensor_Hx711.c **** 			break;
+  82:So2_Hx711/So2_Sensor_Hx711.c **** 	}
+  83:So2_Hx711/So2_Sensor_Hx711.c **** }
+ 168              		.loc 1 83 1 is_stmt 0 view .LVU31
+ 169 000c 7047     		bx	lr
+ 170              	.L11:
+  72:So2_Hx711/So2_Sensor_Hx711.c **** 				break;
+ 171              		.loc 1 72 5 is_stmt 1 view .LVU32
+  72:So2_Hx711/So2_Sensor_Hx711.c **** 				break;
+ 172              		.loc 1 72 17 is_stmt 0 view .LVU33
+ 173 000e 0123     		movs	r3, #1
+ 174 0010 4375     		strb	r3, [r0, #21]
+  73:So2_Hx711/So2_Sensor_Hx711.c **** 		case 64:
+ 175              		.loc 1 73 5 is_stmt 1 view .LVU34
+ 176 0012 7047     		bx	lr
+ 177              	.L10:
+  75:So2_Hx711/So2_Sensor_Hx711.c **** 			    break;
+ 178              		.loc 1 75 8 view .LVU35
+  75:So2_Hx711/So2_Sensor_Hx711.c **** 			    break;
+ 179              		.loc 1 75 20 is_stmt 0 view .LVU36
+ 180 0014 0323     		movs	r3, #3
+ 181 0016 4375     		strb	r3, [r0, #21]
+  76:So2_Hx711/So2_Sensor_Hx711.c **** 		case 32:
+ 182              		.loc 1 76 8 is_stmt 1 view .LVU37
+ 183 0018 7047     		bx	lr
+ 184              	.L14:
+  78:So2_Hx711/So2_Sensor_Hx711.c **** 			    break;
+ 185              		.loc 1 78 8 view .LVU38
+  78:So2_Hx711/So2_Sensor_Hx711.c **** 			    break;
+ 186              		.loc 1 78 20 is_stmt 0 view .LVU39
+ 187 001a 0223     		movs	r3, #2
+ 188 001c 4375     		strb	r3, [r0, #21]
+  79:So2_Hx711/So2_Sensor_Hx711.c **** 		default:
+ 189              		.loc 1 79 8 is_stmt 1 view .LVU40
+ 190              		.loc 1 83 1 is_stmt 0 view .LVU41
+ 191 001e F5E7     		b	.L9
+ 192              		.cfi_endproc
+ 193              	.LFE69:
+ 195              		.section	.text.hx711_value,"ax",%progbits
+ 196              		.align	1
+ARM GAS  /tmp/cc4npXR1.s 			page 6
+
+
+ 197              		.global	hx711_value
+ 198              		.syntax unified
+ 199              		.thumb
+ 200              		.thumb_func
+ 202              	hx711_value:
+ 203              	.LVL9:
+ 204              	.LFB70:
+  84:So2_Hx711/So2_Sensor_Hx711.c **** 
+  85:So2_Hx711/So2_Sensor_Hx711.c **** //#############################################################################################
+  86:So2_Hx711/So2_Sensor_Hx711.c **** int32_t hx711_value(hx711_t *hx711)
+  87:So2_Hx711/So2_Sensor_Hx711.c **** {
+ 205              		.loc 1 87 1 is_stmt 1 view -0
+ 206              		.cfi_startproc
+ 207              		@ args = 0, pretend = 0, frame = 0
+ 208              		@ frame_needed = 0, uses_anonymous_args = 0
+ 209              		.loc 1 87 1 is_stmt 0 view .LVU43
+ 210 0000 70B5     		push	{r4, r5, r6, lr}
+ 211              	.LCFI1:
+ 212              		.cfi_def_cfa_offset 16
+ 213              		.cfi_offset 4, -16
+ 214              		.cfi_offset 5, -12
+ 215              		.cfi_offset 6, -8
+ 216              		.cfi_offset 14, -4
+ 217 0002 0446     		mov	r4, r0
+  88:So2_Hx711/So2_Sensor_Hx711.c ****   uint32_t data = 0;
+ 218              		.loc 1 88 3 is_stmt 1 view .LVU44
+ 219              	.LVL10:
+  89:So2_Hx711/So2_Sensor_Hx711.c ****   uint32_t  startTime = HAL_GetTick();
+ 220              		.loc 1 89 3 view .LVU45
+ 221              		.loc 1 89 25 is_stmt 0 view .LVU46
+ 222 0004 FFF7FEFF 		bl	HAL_GetTick
+ 223              	.LVL11:
+ 224              		.loc 1 89 25 view .LVU47
+ 225 0008 0546     		mov	r5, r0
+ 226              	.LVL12:
+  90:So2_Hx711/So2_Sensor_Hx711.c ****   while(HAL_GPIO_ReadPin(hx711->dat_gpio, hx711->dat_pin) == GPIO_PIN_SET)
+ 227              		.loc 1 90 3 is_stmt 1 view .LVU48
+ 228              	.L16:
+ 229              		.loc 1 90 59 view .LVU49
+ 230              		.loc 1 90 9 is_stmt 0 view .LVU50
+ 231 000a 6189     		ldrh	r1, [r4, #10]
+ 232 000c 6068     		ldr	r0, [r4, #4]
+ 233 000e FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 234              	.LVL13:
+ 235              		.loc 1 90 59 view .LVU51
+ 236 0012 0128     		cmp	r0, #1
+ 237 0014 09D1     		bne	.L26
+  91:So2_Hx711/So2_Sensor_Hx711.c ****   {
+  92:So2_Hx711/So2_Sensor_Hx711.c ****     hx711_delay(1);
+ 238              		.loc 1 92 5 is_stmt 1 view .LVU52
+ 239 0016 0120     		movs	r0, #1
+ 240 0018 FFF7FEFF 		bl	HAL_Delay
+ 241              	.LVL14:
+  93:So2_Hx711/So2_Sensor_Hx711.c ****     if(HAL_GetTick() - startTime > 150)
+ 242              		.loc 1 93 5 view .LVU53
+ 243              		.loc 1 93 8 is_stmt 0 view .LVU54
+ 244 001c FFF7FEFF 		bl	HAL_GetTick
+ARM GAS  /tmp/cc4npXR1.s 			page 7
+
+
+ 245              	.LVL15:
+ 246              		.loc 1 93 22 view .LVU55
+ 247 0020 401B     		subs	r0, r0, r5
+ 248              		.loc 1 93 7 view .LVU56
+ 249 0022 9628     		cmp	r0, #150
+ 250 0024 F1D9     		bls	.L16
+  94:So2_Hx711/So2_Sensor_Hx711.c ****       return 0;
+ 251              		.loc 1 94 14 view .LVU57
+ 252 0026 0020     		movs	r0, #0
+ 253 0028 35E0     		b	.L15
+ 254              	.L26:
+ 255              	.LBB2:
+  95:So2_Hx711/So2_Sensor_Hx711.c ****   }
+  96:So2_Hx711/So2_Sensor_Hx711.c ****   for(int8_t i=0; i<24 ; i++)
+ 256              		.loc 1 96 14 view .LVU58
+ 257 002a 0025     		movs	r5, #0
+ 258              	.LVL16:
+ 259              		.loc 1 96 14 view .LVU59
+ 260              	.LBE2:
+  88:So2_Hx711/So2_Sensor_Hx711.c ****   uint32_t  startTime = HAL_GetTick();
+ 261              		.loc 1 88 12 view .LVU60
+ 262 002c 2E46     		mov	r6, r5
+ 263 002e 01E0     		b	.L19
+ 264              	.LVL17:
+ 265              	.L20:
+ 266              	.LBB3:
+ 267              		.loc 1 96 27 is_stmt 1 discriminator 2 view .LVU61
+ 268 0030 0135     		adds	r5, r5, #1
+ 269              	.LVL18:
+ 270              		.loc 1 96 27 is_stmt 0 discriminator 2 view .LVU62
+ 271 0032 6DB2     		sxtb	r5, r5
+ 272              	.LVL19:
+ 273              	.L19:
+ 274              		.loc 1 96 20 is_stmt 1 discriminator 1 view .LVU63
+ 275 0034 172D     		cmp	r5, #23
+ 276 0036 16DC     		bgt	.L27
+  97:So2_Hx711/So2_Sensor_Hx711.c ****   {
+  98:So2_Hx711/So2_Sensor_Hx711.c ****     HAL_GPIO_WritePin(hx711->clk_gpio, hx711->clk_pin, GPIO_PIN_SET);   
+ 277              		.loc 1 98 5 view .LVU64
+ 278 0038 0122     		movs	r2, #1
+ 279 003a 2189     		ldrh	r1, [r4, #8]
+ 280 003c 2068     		ldr	r0, [r4]
+ 281 003e FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 282              	.LVL20:
+  99:So2_Hx711/So2_Sensor_Hx711.c ****     hx711_delay_us();
+ 283              		.loc 1 99 5 view .LVU65
+ 284 0042 FFF7FEFF 		bl	hx711_delay_us
+ 285              	.LVL21:
+ 100:So2_Hx711/So2_Sensor_Hx711.c ****     HAL_GPIO_WritePin(hx711->clk_gpio, hx711->clk_pin, GPIO_PIN_RESET);
+ 286              		.loc 1 100 5 view .LVU66
+ 287 0046 0022     		movs	r2, #0
+ 288 0048 2189     		ldrh	r1, [r4, #8]
+ 289 004a 2068     		ldr	r0, [r4]
+ 290 004c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 291              	.LVL22:
+ 101:So2_Hx711/So2_Sensor_Hx711.c ****     hx711_delay_us();
+ 292              		.loc 1 101 5 view .LVU67
+ARM GAS  /tmp/cc4npXR1.s 			page 8
+
+
+ 293 0050 FFF7FEFF 		bl	hx711_delay_us
+ 294              	.LVL23:
+ 102:So2_Hx711/So2_Sensor_Hx711.c ****     data = data << 1;    
+ 295              		.loc 1 102 5 view .LVU68
+ 296              		.loc 1 102 10 is_stmt 0 view .LVU69
+ 297 0054 7600     		lsls	r6, r6, #1
+ 298              	.LVL24:
+ 103:So2_Hx711/So2_Sensor_Hx711.c ****     if(HAL_GPIO_ReadPin(hx711->dat_gpio, hx711->dat_pin) == GPIO_PIN_SET)
+ 299              		.loc 1 103 5 is_stmt 1 view .LVU70
+ 300              		.loc 1 103 8 is_stmt 0 view .LVU71
+ 301 0056 6189     		ldrh	r1, [r4, #10]
+ 302 0058 6068     		ldr	r0, [r4, #4]
+ 303 005a FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 304              	.LVL25:
+ 305              		.loc 1 103 7 view .LVU72
+ 306 005e 0128     		cmp	r0, #1
+ 307 0060 E6D1     		bne	.L20
+ 104:So2_Hx711/So2_Sensor_Hx711.c ****       data ++;
+ 308              		.loc 1 104 7 is_stmt 1 view .LVU73
+ 309              		.loc 1 104 12 is_stmt 0 view .LVU74
+ 310 0062 0136     		adds	r6, r6, #1
+ 311              	.LVL26:
+ 312              		.loc 1 104 12 view .LVU75
+ 313 0064 E4E7     		b	.L20
+ 314              	.L27:
+ 315              		.loc 1 104 12 view .LVU76
+ 316              	.LBE3:
+ 105:So2_Hx711/So2_Sensor_Hx711.c ****   }
+ 106:So2_Hx711/So2_Sensor_Hx711.c ****   data = data ^ 0x800000; 
+ 317              		.loc 1 106 3 is_stmt 1 view .LVU77
+ 318              		.loc 1 106 8 is_stmt 0 view .LVU78
+ 319 0066 86F40006 		eor	r6, r6, #8388608
+ 320              	.LVL27:
+ 107:So2_Hx711/So2_Sensor_Hx711.c ****   for(uint8_t i = 0; i < hx711->gain; i++)
+ 321              		.loc 1 107 3 is_stmt 1 view .LVU79
+ 322              	.LBB4:
+ 323              		.loc 1 107 7 view .LVU80
+ 324              		.loc 1 107 15 is_stmt 0 view .LVU81
+ 325 006a 0025     		movs	r5, #0
+ 326              	.LVL28:
+ 327              		.loc 1 107 3 view .LVU82
+ 328 006c 0FE0     		b	.L22
+ 329              	.LVL29:
+ 330              	.L23:
+ 108:So2_Hx711/So2_Sensor_Hx711.c ****   {
+ 109:So2_Hx711/So2_Sensor_Hx711.c **** 	  HAL_GPIO_WritePin(hx711->clk_gpio, hx711->clk_pin, GPIO_PIN_SET);
+ 331              		.loc 1 109 4 is_stmt 1 discriminator 3 view .LVU83
+ 332 006e 0122     		movs	r2, #1
+ 333 0070 2189     		ldrh	r1, [r4, #8]
+ 334 0072 2068     		ldr	r0, [r4]
+ 335 0074 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 336              	.LVL30:
+ 110:So2_Hx711/So2_Sensor_Hx711.c **** 	  hx711_delay_us();
+ 337              		.loc 1 110 4 discriminator 3 view .LVU84
+ 338 0078 FFF7FEFF 		bl	hx711_delay_us
+ 339              	.LVL31:
+ 111:So2_Hx711/So2_Sensor_Hx711.c **** 	  HAL_GPIO_WritePin(hx711->clk_gpio, hx711->clk_pin, GPIO_PIN_RESET);
+ARM GAS  /tmp/cc4npXR1.s 			page 9
+
+
+ 340              		.loc 1 111 4 discriminator 3 view .LVU85
+ 341 007c 0022     		movs	r2, #0
+ 342 007e 2189     		ldrh	r1, [r4, #8]
+ 343 0080 2068     		ldr	r0, [r4]
+ 344 0082 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 345              	.LVL32:
+ 112:So2_Hx711/So2_Sensor_Hx711.c **** 	  hx711_delay_us();
+ 346              		.loc 1 112 4 discriminator 3 view .LVU86
+ 347 0086 FFF7FEFF 		bl	hx711_delay_us
+ 348              	.LVL33:
+ 107:So2_Hx711/So2_Sensor_Hx711.c ****   {
+ 349              		.loc 1 107 40 discriminator 3 view .LVU87
+ 350 008a 0135     		adds	r5, r5, #1
+ 351              	.LVL34:
+ 107:So2_Hx711/So2_Sensor_Hx711.c ****   {
+ 352              		.loc 1 107 40 is_stmt 0 discriminator 3 view .LVU88
+ 353 008c EDB2     		uxtb	r5, r5
+ 354              	.LVL35:
+ 355              	.L22:
+ 107:So2_Hx711/So2_Sensor_Hx711.c ****   {
+ 356              		.loc 1 107 24 is_stmt 1 discriminator 1 view .LVU89
+ 107:So2_Hx711/So2_Sensor_Hx711.c ****   {
+ 357              		.loc 1 107 31 is_stmt 0 discriminator 1 view .LVU90
+ 358 008e 637D     		ldrb	r3, [r4, #21]	@ zero_extendqisi2
+ 107:So2_Hx711/So2_Sensor_Hx711.c ****   {
+ 359              		.loc 1 107 24 discriminator 1 view .LVU91
+ 360 0090 AB42     		cmp	r3, r5
+ 361 0092 ECD8     		bhi	.L23
+ 362              	.LBE4:
+ 113:So2_Hx711/So2_Sensor_Hx711.c ****   }
+ 114:So2_Hx711/So2_Sensor_Hx711.c ****   return data;    
+ 363              		.loc 1 114 3 is_stmt 1 view .LVU92
+ 364              		.loc 1 114 10 is_stmt 0 view .LVU93
+ 365 0094 3046     		mov	r0, r6
+ 366              	.LVL36:
+ 367              	.L15:
+ 115:So2_Hx711/So2_Sensor_Hx711.c **** }
+ 368              		.loc 1 115 1 view .LVU94
+ 369 0096 70BD     		pop	{r4, r5, r6, pc}
+ 370              		.loc 1 115 1 view .LVU95
+ 371              		.cfi_endproc
+ 372              	.LFE70:
+ 374              		.section	.text.hx711_init,"ax",%progbits
+ 375              		.align	1
+ 376              		.global	hx711_init
+ 377              		.syntax unified
+ 378              		.thumb
+ 379              		.thumb_func
+ 381              	hx711_init:
+ 382              	.LVL37:
+ 383              	.LFB68:
+  39:So2_Hx711/So2_Sensor_Hx711.c ****   //hx711_lock(hx711);
+ 384              		.loc 1 39 1 is_stmt 1 view -0
+ 385              		.cfi_startproc
+ 386              		@ args = 4, pretend = 0, frame = 16
+ 387              		@ frame_needed = 0, uses_anonymous_args = 0
+  39:So2_Hx711/So2_Sensor_Hx711.c ****   //hx711_lock(hx711);
+ARM GAS  /tmp/cc4npXR1.s 			page 10
+
+
+ 388              		.loc 1 39 1 is_stmt 0 view .LVU97
+ 389 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 390              	.LCFI2:
+ 391              		.cfi_def_cfa_offset 28
+ 392              		.cfi_offset 4, -28
+ 393              		.cfi_offset 5, -24
+ 394              		.cfi_offset 6, -20
+ 395              		.cfi_offset 7, -16
+ 396              		.cfi_offset 8, -12
+ 397              		.cfi_offset 9, -8
+ 398              		.cfi_offset 14, -4
+ 399 0004 85B0     		sub	sp, sp, #20
+ 400              	.LCFI3:
+ 401              		.cfi_def_cfa_offset 48
+ 402 0006 0446     		mov	r4, r0
+ 403 0008 0846     		mov	r0, r1
+ 404              	.LVL38:
+  39:So2_Hx711/So2_Sensor_Hx711.c ****   //hx711_lock(hx711);
+ 405              		.loc 1 39 1 view .LVU98
+ 406 000a 1E46     		mov	r6, r3
+ 407 000c BDF83080 		ldrh	r8, [sp, #48]
+  41:So2_Hx711/So2_Sensor_Hx711.c ****   hx711->clk_pin = clk_pin;
+ 408              		.loc 1 41 3 is_stmt 1 view .LVU99
+  41:So2_Hx711/So2_Sensor_Hx711.c ****   hx711->clk_pin = clk_pin;
+ 409              		.loc 1 41 19 is_stmt 0 view .LVU100
+ 410 0010 2160     		str	r1, [r4]
+  42:So2_Hx711/So2_Sensor_Hx711.c ****   hx711->dat_gpio = dat_gpio;
+ 411              		.loc 1 42 3 is_stmt 1 view .LVU101
+  42:So2_Hx711/So2_Sensor_Hx711.c ****   hx711->dat_gpio = dat_gpio;
+ 412              		.loc 1 42 18 is_stmt 0 view .LVU102
+ 413 0012 2281     		strh	r2, [r4, #8]	@ movhi
+  43:So2_Hx711/So2_Sensor_Hx711.c ****   hx711->dat_pin = dat_pin;
+ 414              		.loc 1 43 3 is_stmt 1 view .LVU103
+  43:So2_Hx711/So2_Sensor_Hx711.c ****   hx711->dat_pin = dat_pin;
+ 415              		.loc 1 43 19 is_stmt 0 view .LVU104
+ 416 0014 6360     		str	r3, [r4, #4]
+  44:So2_Hx711/So2_Sensor_Hx711.c **** 
+ 417              		.loc 1 44 3 is_stmt 1 view .LVU105
+  44:So2_Hx711/So2_Sensor_Hx711.c **** 
+ 418              		.loc 1 44 18 is_stmt 0 view .LVU106
+ 419 0016 A4F80A80 		strh	r8, [r4, #10]	@ movhi
+  46:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Mode = GPIO_MODE_OUTPUT_PP;
+ 420              		.loc 1 46 3 is_stmt 1 view .LVU107
+  46:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Mode = GPIO_MODE_OUTPUT_PP;
+ 421              		.loc 1 46 21 is_stmt 0 view .LVU108
+ 422 001a 0025     		movs	r5, #0
+ 423 001c 0095     		str	r5, [sp]
+ 424 001e 0195     		str	r5, [sp, #4]
+ 425 0020 0295     		str	r5, [sp, #8]
+ 426 0022 0395     		str	r5, [sp, #12]
+  47:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Pull = GPIO_NOPULL;
+ 427              		.loc 1 47 3 is_stmt 1 view .LVU109
+  47:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Pull = GPIO_NOPULL;
+ 428              		.loc 1 47 13 is_stmt 0 view .LVU110
+ 429 0024 0127     		movs	r7, #1
+ 430 0026 0197     		str	r7, [sp, #4]
+  48:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+ARM GAS  /tmp/cc4npXR1.s 			page 11
+
+
+ 431              		.loc 1 48 3 is_stmt 1 view .LVU111
+  49:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Pin = clk_pin;
+ 432              		.loc 1 49 3 view .LVU112
+  49:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Pin = clk_pin;
+ 433              		.loc 1 49 14 is_stmt 0 view .LVU113
+ 434 0028 4FF00309 		mov	r9, #3
+ 435 002c CDF80C90 		str	r9, [sp, #12]
+  50:So2_Hx711/So2_Sensor_Hx711.c ****   HAL_GPIO_Init(clk_gpio, &gpio);
+ 436              		.loc 1 50 3 is_stmt 1 view .LVU114
+  50:So2_Hx711/So2_Sensor_Hx711.c ****   HAL_GPIO_Init(clk_gpio, &gpio);
+ 437              		.loc 1 50 12 is_stmt 0 view .LVU115
+ 438 0030 0092     		str	r2, [sp]
+  51:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Mode = GPIO_MODE_INPUT;
+ 439              		.loc 1 51 3 is_stmt 1 view .LVU116
+ 440 0032 6946     		mov	r1, sp
+ 441              	.LVL39:
+  51:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Mode = GPIO_MODE_INPUT;
+ 442              		.loc 1 51 3 is_stmt 0 view .LVU117
+ 443 0034 FFF7FEFF 		bl	HAL_GPIO_Init
+ 444              	.LVL40:
+  52:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Pull = GPIO_PULLUP;
+ 445              		.loc 1 52 3 is_stmt 1 view .LVU118
+  52:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Pull = GPIO_PULLUP;
+ 446              		.loc 1 52 13 is_stmt 0 view .LVU119
+ 447 0038 0195     		str	r5, [sp, #4]
+  53:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+ 448              		.loc 1 53 3 is_stmt 1 view .LVU120
+  53:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+ 449              		.loc 1 53 13 is_stmt 0 view .LVU121
+ 450 003a 0297     		str	r7, [sp, #8]
+  54:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Pin = dat_pin;
+ 451              		.loc 1 54 3 is_stmt 1 view .LVU122
+  54:So2_Hx711/So2_Sensor_Hx711.c ****   gpio.Pin = dat_pin;
+ 452              		.loc 1 54 14 is_stmt 0 view .LVU123
+ 453 003c CDF80C90 		str	r9, [sp, #12]
+  55:So2_Hx711/So2_Sensor_Hx711.c ****   HAL_GPIO_Init(dat_gpio, &gpio);
+ 454              		.loc 1 55 3 is_stmt 1 view .LVU124
+  55:So2_Hx711/So2_Sensor_Hx711.c ****   HAL_GPIO_Init(dat_gpio, &gpio);
+ 455              		.loc 1 55 12 is_stmt 0 view .LVU125
+ 456 0040 CDF80080 		str	r8, [sp]
+  56:So2_Hx711/So2_Sensor_Hx711.c ****   HAL_GPIO_WritePin(hx711->clk_gpio, hx711->clk_pin, GPIO_PIN_SET);
+ 457              		.loc 1 56 3 is_stmt 1 view .LVU126
+ 458 0044 6946     		mov	r1, sp
+ 459 0046 3046     		mov	r0, r6
+ 460 0048 FFF7FEFF 		bl	HAL_GPIO_Init
+ 461              	.LVL41:
+  57:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_delay(10);
+ 462              		.loc 1 57 3 view .LVU127
+ 463 004c 3A46     		mov	r2, r7
+ 464 004e 2189     		ldrh	r1, [r4, #8]
+ 465 0050 2068     		ldr	r0, [r4]
+ 466 0052 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 467              	.LVL42:
+  58:So2_Hx711/So2_Sensor_Hx711.c ****   HAL_GPIO_WritePin(hx711->clk_gpio, hx711->clk_pin, GPIO_PIN_RESET);
+ 468              		.loc 1 58 3 view .LVU128
+ 469 0056 0A20     		movs	r0, #10
+ 470 0058 FFF7FEFF 		bl	HAL_Delay
+ARM GAS  /tmp/cc4npXR1.s 			page 12
+
+
+ 471              	.LVL43:
+  59:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_delay(10);
+ 472              		.loc 1 59 3 view .LVU129
+ 473 005c 2A46     		mov	r2, r5
+ 474 005e 2189     		ldrh	r1, [r4, #8]
+ 475 0060 2068     		ldr	r0, [r4]
+ 476 0062 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 477              	.LVL44:
+  60:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_value(hx711);
+ 478              		.loc 1 60 3 view .LVU130
+ 479 0066 0A20     		movs	r0, #10
+ 480 0068 FFF7FEFF 		bl	HAL_Delay
+ 481              	.LVL45:
+  61:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_value(hx711);
+ 482              		.loc 1 61 3 view .LVU131
+ 483 006c 2046     		mov	r0, r4
+ 484 006e FFF7FEFF 		bl	hx711_value
+ 485              	.LVL46:
+  62:So2_Hx711/So2_Sensor_Hx711.c ****   //hx711_unlock(hx711);
+ 486              		.loc 1 62 3 view .LVU132
+ 487 0072 2046     		mov	r0, r4
+ 488 0074 FFF7FEFF 		bl	hx711_value
+ 489              	.LVL47:
+  64:So2_Hx711/So2_Sensor_Hx711.c **** 
+ 490              		.loc 1 64 1 is_stmt 0 view .LVU133
+ 491 0078 05B0     		add	sp, sp, #20
+ 492              	.LCFI4:
+ 493              		.cfi_def_cfa_offset 28
+ 494              		@ sp needed
+ 495 007a BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+  64:So2_Hx711/So2_Sensor_Hx711.c **** 
+ 496              		.loc 1 64 1 view .LVU134
+ 497              		.cfi_endproc
+ 498              	.LFE68:
+ 500              		.global	__aeabi_ldivmod
+ 501              		.section	.text.hx711_value_ave,"ax",%progbits
+ 502              		.align	1
+ 503              		.global	hx711_value_ave
+ 504              		.syntax unified
+ 505              		.thumb
+ 506              		.thumb_func
+ 508              	hx711_value_ave:
+ 509              	.LVL48:
+ 510              	.LFB71:
+ 116:So2_Hx711/So2_Sensor_Hx711.c **** //#############################################################################################
+ 117:So2_Hx711/So2_Sensor_Hx711.c **** int32_t hx711_value_ave(hx711_t *hx711, uint16_t sample)
+ 118:So2_Hx711/So2_Sensor_Hx711.c **** {
+ 511              		.loc 1 118 1 is_stmt 1 view -0
+ 512              		.cfi_startproc
+ 513              		@ args = 0, pretend = 0, frame = 0
+ 514              		@ frame_needed = 0, uses_anonymous_args = 0
+ 515              		.loc 1 118 1 is_stmt 0 view .LVU136
+ 516 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 517              	.LCFI5:
+ 518              		.cfi_def_cfa_offset 24
+ 519              		.cfi_offset 4, -24
+ 520              		.cfi_offset 5, -20
+ARM GAS  /tmp/cc4npXR1.s 			page 13
+
+
+ 521              		.cfi_offset 6, -16
+ 522              		.cfi_offset 7, -12
+ 523              		.cfi_offset 8, -8
+ 524              		.cfi_offset 14, -4
+ 525 0004 8046     		mov	r8, r0
+ 526 0006 0F46     		mov	r7, r1
+ 119:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_lock(hx711);
+ 527              		.loc 1 119 3 is_stmt 1 view .LVU137
+ 528 0008 FFF7FEFF 		bl	hx711_lock
+ 529              	.LVL49:
+ 120:So2_Hx711/So2_Sensor_Hx711.c ****   int64_t  ave = 0;
+ 530              		.loc 1 120 3 view .LVU138
+ 121:So2_Hx711/So2_Sensor_Hx711.c ****   for(uint16_t i=0 ; i<sample ; i++)
+ 531              		.loc 1 121 3 view .LVU139
+ 532              	.LBB5:
+ 533              		.loc 1 121 7 view .LVU140
+ 534              		.loc 1 121 16 is_stmt 0 view .LVU141
+ 535 000c 0024     		movs	r4, #0
+ 536              	.LBE5:
+ 120:So2_Hx711/So2_Sensor_Hx711.c ****   int64_t  ave = 0;
+ 537              		.loc 1 120 12 view .LVU142
+ 538 000e 2546     		mov	r5, r4
+ 539 0010 2646     		mov	r6, r4
+ 540              	.LBB6:
+ 541              		.loc 1 121 3 view .LVU143
+ 542 0012 0AE0     		b	.L31
+ 543              	.LVL50:
+ 544              	.L32:
+ 122:So2_Hx711/So2_Sensor_Hx711.c ****   {
+ 123:So2_Hx711/So2_Sensor_Hx711.c ****     ave += hx711_value(hx711);
+ 545              		.loc 1 123 5 is_stmt 1 discriminator 3 view .LVU144
+ 546              		.loc 1 123 12 is_stmt 0 discriminator 3 view .LVU145
+ 547 0014 4046     		mov	r0, r8
+ 548 0016 FFF7FEFF 		bl	hx711_value
+ 549              	.LVL51:
+ 550              		.loc 1 123 9 discriminator 3 view .LVU146
+ 551 001a 4519     		adds	r5, r0, r5
+ 552              	.LVL52:
+ 553              		.loc 1 123 9 discriminator 3 view .LVU147
+ 554 001c 46EBE076 		adc	r6, r6, r0, asr #31
+ 555              	.LVL53:
+ 124:So2_Hx711/So2_Sensor_Hx711.c ****     hx711_delay(5);
+ 556              		.loc 1 124 5 is_stmt 1 discriminator 3 view .LVU148
+ 557 0020 0520     		movs	r0, #5
+ 558 0022 FFF7FEFF 		bl	HAL_Delay
+ 559              	.LVL54:
+ 121:So2_Hx711/So2_Sensor_Hx711.c ****   for(uint16_t i=0 ; i<sample ; i++)
+ 560              		.loc 1 121 34 discriminator 3 view .LVU149
+ 561 0026 0134     		adds	r4, r4, #1
+ 562              	.LVL55:
+ 121:So2_Hx711/So2_Sensor_Hx711.c ****   for(uint16_t i=0 ; i<sample ; i++)
+ 563              		.loc 1 121 34 is_stmt 0 discriminator 3 view .LVU150
+ 564 0028 A4B2     		uxth	r4, r4
+ 565              	.LVL56:
+ 566              	.L31:
+ 121:So2_Hx711/So2_Sensor_Hx711.c ****   for(uint16_t i=0 ; i<sample ; i++)
+ 567              		.loc 1 121 23 is_stmt 1 discriminator 1 view .LVU151
+ARM GAS  /tmp/cc4npXR1.s 			page 14
+
+
+ 568 002a BC42     		cmp	r4, r7
+ 569 002c F2D3     		bcc	.L32
+ 570              	.LBE6:
+ 125:So2_Hx711/So2_Sensor_Hx711.c ****   }
+ 126:So2_Hx711/So2_Sensor_Hx711.c ****   int32_t answer = (int32_t)(ave / sample);
+ 571              		.loc 1 126 3 view .LVU152
+ 572              		.loc 1 126 34 is_stmt 0 view .LVU153
+ 573 002e 3A46     		mov	r2, r7
+ 574 0030 0023     		movs	r3, #0
+ 575 0032 2846     		mov	r0, r5
+ 576 0034 3146     		mov	r1, r6
+ 577 0036 FFF7FEFF 		bl	__aeabi_ldivmod
+ 578              	.LVL57:
+ 579 003a 0446     		mov	r4, r0
+ 580              	.LVL58:
+ 127:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_unlock(hx711);
+ 581              		.loc 1 127 3 is_stmt 1 view .LVU154
+ 582 003c 4046     		mov	r0, r8
+ 583              	.LVL59:
+ 584              		.loc 1 127 3 is_stmt 0 view .LVU155
+ 585 003e FFF7FEFF 		bl	hx711_unlock
+ 586              	.LVL60:
+ 128:So2_Hx711/So2_Sensor_Hx711.c ****   return answer;
+ 587              		.loc 1 128 3 is_stmt 1 view .LVU156
+ 129:So2_Hx711/So2_Sensor_Hx711.c **** }
+ 588              		.loc 1 129 1 is_stmt 0 view .LVU157
+ 589 0042 2046     		mov	r0, r4
+ 590 0044 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 591              		.loc 1 129 1 view .LVU158
+ 592              		.cfi_endproc
+ 593              	.LFE71:
+ 595              		.section	.text.hx711_tare,"ax",%progbits
+ 596              		.align	1
+ 597              		.global	hx711_tare
+ 598              		.syntax unified
+ 599              		.thumb
+ 600              		.thumb_func
+ 602              	hx711_tare:
+ 603              	.LVL61:
+ 604              	.LFB72:
+ 130:So2_Hx711/So2_Sensor_Hx711.c **** //#############################################################################################
+ 131:So2_Hx711/So2_Sensor_Hx711.c **** void hx711_tare(hx711_t *hx711, uint16_t sample)
+ 132:So2_Hx711/So2_Sensor_Hx711.c **** {
+ 605              		.loc 1 132 1 is_stmt 1 view -0
+ 606              		.cfi_startproc
+ 607              		@ args = 0, pretend = 0, frame = 0
+ 608              		@ frame_needed = 0, uses_anonymous_args = 0
+ 609              		.loc 1 132 1 is_stmt 0 view .LVU160
+ 610 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 611              	.LCFI6:
+ 612              		.cfi_def_cfa_offset 24
+ 613              		.cfi_offset 4, -24
+ 614              		.cfi_offset 5, -20
+ 615              		.cfi_offset 6, -16
+ 616              		.cfi_offset 7, -12
+ 617              		.cfi_offset 8, -8
+ 618              		.cfi_offset 14, -4
+ARM GAS  /tmp/cc4npXR1.s 			page 15
+
+
+ 619 0004 0746     		mov	r7, r0
+ 620 0006 8846     		mov	r8, r1
+ 133:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_lock(hx711);
+ 621              		.loc 1 133 3 is_stmt 1 view .LVU161
+ 622 0008 FFF7FEFF 		bl	hx711_lock
+ 623              	.LVL62:
+ 134:So2_Hx711/So2_Sensor_Hx711.c ****   int64_t  ave = 0;
+ 624              		.loc 1 134 3 view .LVU162
+ 135:So2_Hx711/So2_Sensor_Hx711.c ****   for(uint16_t i=0 ; i<sample ; i++)
+ 625              		.loc 1 135 3 view .LVU163
+ 626              	.LBB7:
+ 627              		.loc 1 135 7 view .LVU164
+ 628              		.loc 1 135 16 is_stmt 0 view .LVU165
+ 629 000c 0024     		movs	r4, #0
+ 630              	.LBE7:
+ 134:So2_Hx711/So2_Sensor_Hx711.c ****   int64_t  ave = 0;
+ 631              		.loc 1 134 12 view .LVU166
+ 632 000e 2546     		mov	r5, r4
+ 633 0010 2646     		mov	r6, r4
+ 634              	.LBB8:
+ 635              		.loc 1 135 3 view .LVU167
+ 636 0012 0AE0     		b	.L35
+ 637              	.LVL63:
+ 638              	.L36:
+ 136:So2_Hx711/So2_Sensor_Hx711.c ****   {
+ 137:So2_Hx711/So2_Sensor_Hx711.c ****     ave += hx711_value(hx711);
+ 639              		.loc 1 137 5 is_stmt 1 discriminator 3 view .LVU168
+ 640              		.loc 1 137 12 is_stmt 0 discriminator 3 view .LVU169
+ 641 0014 3846     		mov	r0, r7
+ 642 0016 FFF7FEFF 		bl	hx711_value
+ 643              	.LVL64:
+ 644              		.loc 1 137 9 discriminator 3 view .LVU170
+ 645 001a 4519     		adds	r5, r0, r5
+ 646              	.LVL65:
+ 647              		.loc 1 137 9 discriminator 3 view .LVU171
+ 648 001c 46EBE076 		adc	r6, r6, r0, asr #31
+ 649              	.LVL66:
+ 138:So2_Hx711/So2_Sensor_Hx711.c ****     hx711_delay(5);
+ 650              		.loc 1 138 5 is_stmt 1 discriminator 3 view .LVU172
+ 651 0020 0520     		movs	r0, #5
+ 652 0022 FFF7FEFF 		bl	HAL_Delay
+ 653              	.LVL67:
+ 135:So2_Hx711/So2_Sensor_Hx711.c ****   for(uint16_t i=0 ; i<sample ; i++)
+ 654              		.loc 1 135 34 discriminator 3 view .LVU173
+ 655 0026 0134     		adds	r4, r4, #1
+ 656              	.LVL68:
+ 135:So2_Hx711/So2_Sensor_Hx711.c ****   for(uint16_t i=0 ; i<sample ; i++)
+ 657              		.loc 1 135 34 is_stmt 0 discriminator 3 view .LVU174
+ 658 0028 A4B2     		uxth	r4, r4
+ 659              	.LVL69:
+ 660              	.L35:
+ 135:So2_Hx711/So2_Sensor_Hx711.c ****   for(uint16_t i=0 ; i<sample ; i++)
+ 661              		.loc 1 135 23 is_stmt 1 discriminator 1 view .LVU175
+ 662 002a 4445     		cmp	r4, r8
+ 663 002c F2D3     		bcc	.L36
+ 664              	.LBE8:
+ 139:So2_Hx711/So2_Sensor_Hx711.c ****   }
+ARM GAS  /tmp/cc4npXR1.s 			page 16
+
+
+ 140:So2_Hx711/So2_Sensor_Hx711.c ****   hx711->offset = (int32_t)(ave / sample);
+ 665              		.loc 1 140 3 view .LVU176
+ 666              		.loc 1 140 33 is_stmt 0 view .LVU177
+ 667 002e 4246     		mov	r2, r8
+ 668 0030 0023     		movs	r3, #0
+ 669 0032 2846     		mov	r0, r5
+ 670 0034 3146     		mov	r1, r6
+ 671 0036 FFF7FEFF 		bl	__aeabi_ldivmod
+ 672              	.LVL70:
+ 673              		.loc 1 140 17 view .LVU178
+ 674 003a F860     		str	r0, [r7, #12]
+ 141:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_unlock(hx711);
+ 675              		.loc 1 141 3 is_stmt 1 view .LVU179
+ 676 003c 3846     		mov	r0, r7
+ 677 003e FFF7FEFF 		bl	hx711_unlock
+ 678              	.LVL71:
+ 142:So2_Hx711/So2_Sensor_Hx711.c **** }
+ 679              		.loc 1 142 1 is_stmt 0 view .LVU180
+ 680 0042 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 681              		.loc 1 142 1 view .LVU181
+ 682              		.cfi_endproc
+ 683              	.LFE72:
+ 685              		.global	__aeabi_i2f
+ 686              		.global	__aeabi_fdiv
+ 687              		.section	.text.hx711_calibration,"ax",%progbits
+ 688              		.align	1
+ 689              		.global	hx711_calibration
+ 690              		.syntax unified
+ 691              		.thumb
+ 692              		.thumb_func
+ 694              	hx711_calibration:
+ 695              	.LVL72:
+ 696              	.LFB73:
+ 143:So2_Hx711/So2_Sensor_Hx711.c **** //#############################################################################################
+ 144:So2_Hx711/So2_Sensor_Hx711.c **** void hx711_calibration(hx711_t *hx711, int32_t noload_raw, int32_t load_raw, float scale)
+ 145:So2_Hx711/So2_Sensor_Hx711.c **** {
+ 697              		.loc 1 145 1 is_stmt 1 view -0
+ 698              		.cfi_startproc
+ 699              		@ args = 0, pretend = 0, frame = 0
+ 700              		@ frame_needed = 0, uses_anonymous_args = 0
+ 701              		.loc 1 145 1 is_stmt 0 view .LVU183
+ 702 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 703              	.LCFI7:
+ 704              		.cfi_def_cfa_offset 24
+ 705              		.cfi_offset 3, -24
+ 706              		.cfi_offset 4, -20
+ 707              		.cfi_offset 5, -16
+ 708              		.cfi_offset 6, -12
+ 709              		.cfi_offset 7, -8
+ 710              		.cfi_offset 14, -4
+ 711 0002 0446     		mov	r4, r0
+ 712 0004 0D46     		mov	r5, r1
+ 713 0006 1746     		mov	r7, r2
+ 714 0008 1E46     		mov	r6, r3
+ 146:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_lock(hx711);
+ 715              		.loc 1 146 3 is_stmt 1 view .LVU184
+ 716 000a FFF7FEFF 		bl	hx711_lock
+ARM GAS  /tmp/cc4npXR1.s 			page 17
+
+
+ 717              	.LVL73:
+ 147:So2_Hx711/So2_Sensor_Hx711.c ****   hx711->offset = noload_raw;
+ 718              		.loc 1 147 3 view .LVU185
+ 719              		.loc 1 147 17 is_stmt 0 view .LVU186
+ 720 000e E560     		str	r5, [r4, #12]
+ 148:So2_Hx711/So2_Sensor_Hx711.c ****   hx711->coef = (load_raw - noload_raw) / scale;  
+ 721              		.loc 1 148 3 is_stmt 1 view .LVU187
+ 722              		.loc 1 148 41 is_stmt 0 view .LVU188
+ 723 0010 781B     		subs	r0, r7, r5
+ 724 0012 FFF7FEFF 		bl	__aeabi_i2f
+ 725              	.LVL74:
+ 726 0016 3146     		mov	r1, r6
+ 727 0018 FFF7FEFF 		bl	__aeabi_fdiv
+ 728              	.LVL75:
+ 729              		.loc 1 148 15 view .LVU189
+ 730 001c 2061     		str	r0, [r4, #16]	@ float
+ 149:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_unlock(hx711);
+ 731              		.loc 1 149 3 is_stmt 1 view .LVU190
+ 732 001e 2046     		mov	r0, r4
+ 733 0020 FFF7FEFF 		bl	hx711_unlock
+ 734              	.LVL76:
+ 150:So2_Hx711/So2_Sensor_Hx711.c **** }
+ 735              		.loc 1 150 1 is_stmt 0 view .LVU191
+ 736 0024 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 737              		.loc 1 150 1 view .LVU192
+ 738              		.cfi_endproc
+ 739              	.LFE73:
+ 741              		.global	__aeabi_fsub
+ 742              		.global	__aeabi_fmul
+ 743              		.global	__aeabi_f2d
+ 744              		.global	__aeabi_dmul
+ 745              		.global	__aeabi_ddiv
+ 746              		.global	__aeabi_d2f
+ 747              		.global	__aeabi_fcmplt
+ 748              		.global	__aeabi_fcmpgt
+ 749              		.section	.text.hx711_so2_result,"ax",%progbits
+ 750              		.align	1
+ 751              		.global	hx711_so2_result
+ 752              		.syntax unified
+ 753              		.thumb
+ 754              		.thumb_func
+ 756              	hx711_so2_result:
+ 757              	.LVL77:
+ 758              	.LFB74:
+ 151:So2_Hx711/So2_Sensor_Hx711.c **** //#############################################################################################
+ 152:So2_Hx711/So2_Sensor_Hx711.c **** float hx711_so2_result(hx711_t *hx711, uint16_t sample)
+ 153:So2_Hx711/So2_Sensor_Hx711.c **** {
+ 759              		.loc 1 153 1 is_stmt 1 view -0
+ 760              		.cfi_startproc
+ 761              		@ args = 0, pretend = 0, frame = 0
+ 762              		@ frame_needed = 0, uses_anonymous_args = 0
+ 763              		.loc 1 153 1 is_stmt 0 view .LVU194
+ 764 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 765              	.LCFI8:
+ 766              		.cfi_def_cfa_offset 24
+ 767              		.cfi_offset 4, -24
+ 768              		.cfi_offset 5, -20
+ARM GAS  /tmp/cc4npXR1.s 			page 18
+
+
+ 769              		.cfi_offset 6, -16
+ 770              		.cfi_offset 7, -12
+ 771              		.cfi_offset 8, -8
+ 772              		.cfi_offset 14, -4
+ 773 0004 0746     		mov	r7, r0
+ 774 0006 8846     		mov	r8, r1
+ 154:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_lock(hx711);
+ 775              		.loc 1 154 3 is_stmt 1 view .LVU195
+ 776 0008 FFF7FEFF 		bl	hx711_lock
+ 777              	.LVL78:
+ 155:So2_Hx711/So2_Sensor_Hx711.c ****   int64_t  ave = 0;
+ 778              		.loc 1 155 3 view .LVU196
+ 156:So2_Hx711/So2_Sensor_Hx711.c ****   for(uint16_t i=0 ; i<sample ; i++)
+ 779              		.loc 1 156 3 view .LVU197
+ 780              	.LBB9:
+ 781              		.loc 1 156 7 view .LVU198
+ 782              		.loc 1 156 16 is_stmt 0 view .LVU199
+ 783 000c 0024     		movs	r4, #0
+ 784              	.LBE9:
+ 155:So2_Hx711/So2_Sensor_Hx711.c ****   int64_t  ave = 0;
+ 785              		.loc 1 155 12 view .LVU200
+ 786 000e 2546     		mov	r5, r4
+ 787 0010 2646     		mov	r6, r4
+ 788              	.LBB10:
+ 789              		.loc 1 156 3 view .LVU201
+ 790 0012 0AE0     		b	.L41
+ 791              	.LVL79:
+ 792              	.L42:
+ 157:So2_Hx711/So2_Sensor_Hx711.c ****   {
+ 158:So2_Hx711/So2_Sensor_Hx711.c ****     ave += hx711_value(hx711);
+ 793              		.loc 1 158 5 is_stmt 1 discriminator 3 view .LVU202
+ 794              		.loc 1 158 12 is_stmt 0 discriminator 3 view .LVU203
+ 795 0014 3846     		mov	r0, r7
+ 796 0016 FFF7FEFF 		bl	hx711_value
+ 797              	.LVL80:
+ 798              		.loc 1 158 9 discriminator 3 view .LVU204
+ 799 001a 4519     		adds	r5, r0, r5
+ 800              	.LVL81:
+ 801              		.loc 1 158 9 discriminator 3 view .LVU205
+ 802 001c 46EBE076 		adc	r6, r6, r0, asr #31
+ 803              	.LVL82:
+ 159:So2_Hx711/So2_Sensor_Hx711.c ****     hx711_delay(5);
+ 804              		.loc 1 159 5 is_stmt 1 discriminator 3 view .LVU206
+ 805 0020 0520     		movs	r0, #5
+ 806 0022 FFF7FEFF 		bl	HAL_Delay
+ 807              	.LVL83:
+ 156:So2_Hx711/So2_Sensor_Hx711.c ****   for(uint16_t i=0 ; i<sample ; i++)
+ 808              		.loc 1 156 34 discriminator 3 view .LVU207
+ 809 0026 0134     		adds	r4, r4, #1
+ 810              	.LVL84:
+ 156:So2_Hx711/So2_Sensor_Hx711.c ****   for(uint16_t i=0 ; i<sample ; i++)
+ 811              		.loc 1 156 34 is_stmt 0 discriminator 3 view .LVU208
+ 812 0028 A4B2     		uxth	r4, r4
+ 813              	.LVL85:
+ 814              	.L41:
+ 156:So2_Hx711/So2_Sensor_Hx711.c ****   for(uint16_t i=0 ; i<sample ; i++)
+ 815              		.loc 1 156 23 is_stmt 1 discriminator 1 view .LVU209
+ARM GAS  /tmp/cc4npXR1.s 			page 19
+
+
+ 816 002a 4445     		cmp	r4, r8
+ 817 002c F2D3     		bcc	.L42
+ 818              	.LBE10:
+ 160:So2_Hx711/So2_Sensor_Hx711.c ****   }
+ 161:So2_Hx711/So2_Sensor_Hx711.c ****   int32_t data = (int32_t)(ave / sample);
+ 819              		.loc 1 161 3 view .LVU210
+ 820              		.loc 1 161 32 is_stmt 0 view .LVU211
+ 821 002e 4246     		mov	r2, r8
+ 822 0030 0023     		movs	r3, #0
+ 823 0032 2846     		mov	r0, r5
+ 824 0034 3146     		mov	r1, r6
+ 825 0036 FFF7FEFF 		bl	__aeabi_ldivmod
+ 826              	.LVL86:
+ 162:So2_Hx711/So2_Sensor_Hx711.c ****   float answer =  (float)((((((((float)data - hx711->offset) * 1.25f) / pow(2, 23)) / 128.0f) / 132
+ 827              		.loc 1 162 3 is_stmt 1 view .LVU212
+ 828              		.loc 1 162 33 is_stmt 0 view .LVU213
+ 829 003a FFF7FEFF 		bl	__aeabi_i2f
+ 830              	.LVL87:
+ 831              		.loc 1 162 33 view .LVU214
+ 832 003e 0446     		mov	r4, r0
+ 833              	.LVL88:
+ 834              		.loc 1 162 45 view .LVU215
+ 835 0040 F868     		ldr	r0, [r7, #12]
+ 836 0042 FFF7FEFF 		bl	__aeabi_i2f
+ 837              	.LVL89:
+ 838 0046 0146     		mov	r1, r0
+ 839 0048 2046     		mov	r0, r4
+ 840 004a FFF7FEFF 		bl	__aeabi_fsub
+ 841              	.LVL90:
+ 842              		.loc 1 162 62 view .LVU216
+ 843 004e 1C49     		ldr	r1, .L49+8
+ 844 0050 FFF7FEFF 		bl	__aeabi_fmul
+ 845              	.LVL91:
+ 846 0054 FFF7FEFF 		bl	__aeabi_f2d
+ 847              	.LVL92:
+ 848              		.loc 1 162 71 view .LVU217
+ 849 0058 0022     		movs	r2, #0
+ 850 005a 4FF07A53 		mov	r3, #1048576000
+ 851 005e FFF7FEFF 		bl	__aeabi_dmul
+ 852              	.LVL93:
+ 853              		.loc 1 162 85 view .LVU218
+ 854 0062 0022     		movs	r2, #0
+ 855 0064 4FF07E53 		mov	r3, #1065353216
+ 856 0068 FFF7FEFF 		bl	__aeabi_dmul
+ 857              	.LVL94:
+ 858              		.loc 1 162 95 view .LVU219
+ 859 006c 0022     		movs	r2, #0
+ 860 006e 154B     		ldr	r3, .L49+12
+ 861 0070 FFF7FEFF 		bl	__aeabi_ddiv
+ 862              	.LVL95:
+ 863              		.loc 1 162 102 view .LVU220
+ 864 0074 0022     		movs	r2, #0
+ 865 0076 144B     		ldr	r3, .L49+16
+ 866 0078 FFF7FEFF 		bl	__aeabi_ddiv
+ 867              	.LVL96:
+ 868              		.loc 1 162 108 view .LVU221
+ 869 007c 0EA3     		adr	r3, .L49
+ARM GAS  /tmp/cc4npXR1.s 			page 20
+
+
+ 870 007e D3E90023 		ldrd	r2, [r3]
+ 871 0082 FFF7FEFF 		bl	__aeabi_dmul
+ 872              	.LVL97:
+ 873              		.loc 1 162 19 view .LVU222
+ 874 0086 FFF7FEFF 		bl	__aeabi_d2f
+ 875              	.LVL98:
+ 876              		.loc 1 162 9 view .LVU223
+ 877 008a 3969     		ldr	r1, [r7, #16]	@ float
+ 878 008c FFF7FEFF 		bl	__aeabi_fdiv
+ 879              	.LVL99:
+ 880 0090 0446     		mov	r4, r0
+ 881              	.LVL100:
+ 163:So2_Hx711/So2_Sensor_Hx711.c ****   if(answer < 0)
+ 882              		.loc 1 163 3 is_stmt 1 view .LVU224
+ 883              		.loc 1 163 5 is_stmt 0 view .LVU225
+ 884 0092 0021     		movs	r1, #0
+ 885 0094 FFF7FEFF 		bl	__aeabi_fcmplt
+ 886              	.LVL101:
+ 887              		.loc 1 163 5 view .LVU226
+ 888 0098 58B9     		cbnz	r0, .L48
+ 889              	.LVL102:
+ 890              	.L43:
+ 164:So2_Hx711/So2_Sensor_Hx711.c **** 	  answer  = 0;
+ 165:So2_Hx711/So2_Sensor_Hx711.c ****   if(answer > 1000)
+ 891              		.loc 1 165 3 is_stmt 1 view .LVU227
+ 892              		.loc 1 165 5 is_stmt 0 view .LVU228
+ 893 009a 0C49     		ldr	r1, .L49+20
+ 894 009c 2046     		mov	r0, r4
+ 895 009e FFF7FEFF 		bl	__aeabi_fcmpgt
+ 896              	.LVL103:
+ 897 00a2 00B1     		cbz	r0, .L44
+ 166:So2_Hx711/So2_Sensor_Hx711.c **** 	  answer = 1000;
+ 898              		.loc 1 166 11 view .LVU229
+ 899 00a4 094C     		ldr	r4, .L49+20
+ 900              	.LVL104:
+ 901              	.L44:
+ 167:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_unlock(hx711);
+ 902              		.loc 1 167 3 is_stmt 1 view .LVU230
+ 903 00a6 3846     		mov	r0, r7
+ 904 00a8 FFF7FEFF 		bl	hx711_unlock
+ 905              	.LVL105:
+ 168:So2_Hx711/So2_Sensor_Hx711.c ****   return answer;
+ 906              		.loc 1 168 3 view .LVU231
+ 169:So2_Hx711/So2_Sensor_Hx711.c **** }
+ 907              		.loc 1 169 1 is_stmt 0 view .LVU232
+ 908 00ac 2046     		mov	r0, r4
+ 909 00ae BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 910              	.LVL106:
+ 911              	.L48:
+ 164:So2_Hx711/So2_Sensor_Hx711.c ****   if(answer > 1000)
+ 912              		.loc 1 164 12 view .LVU233
+ 913 00b2 0024     		movs	r4, #0
+ 914              	.LVL107:
+ 164:So2_Hx711/So2_Sensor_Hx711.c ****   if(answer > 1000)
+ 915              		.loc 1 164 12 view .LVU234
+ 916 00b4 F1E7     		b	.L43
+ 917              	.L50:
+ARM GAS  /tmp/cc4npXR1.s 			page 21
+
+
+ 918 00b6 00BF     		.align	3
+ 919              	.L49:
+ 920 00b8 95D626E8 		.word	-400107883
+ 921 00bc 0B2E113E 		.word	1041313291
+ 922 00c0 0000A03F 		.word	1067450368
+ 923 00c4 00806040 		.word	1080066048
+ 924 00c8 00003C40 		.word	1077673984
+ 925 00cc 00007A44 		.word	1148846080
+ 926              		.cfi_endproc
+ 927              	.LFE74:
+ 929              		.section	.text.hx711_coef_set,"ax",%progbits
+ 930              		.align	1
+ 931              		.global	hx711_coef_set
+ 932              		.syntax unified
+ 933              		.thumb
+ 934              		.thumb_func
+ 936              	hx711_coef_set:
+ 937              	.LVL108:
+ 938              	.LFB75:
+ 170:So2_Hx711/So2_Sensor_Hx711.c **** //#############################################################################################
+ 171:So2_Hx711/So2_Sensor_Hx711.c **** void hx711_coef_set(hx711_t *hx711, float coef)
+ 172:So2_Hx711/So2_Sensor_Hx711.c **** {
+ 939              		.loc 1 172 1 is_stmt 1 view -0
+ 940              		.cfi_startproc
+ 941              		@ args = 0, pretend = 0, frame = 0
+ 942              		@ frame_needed = 0, uses_anonymous_args = 0
+ 943              		@ link register save eliminated.
+ 173:So2_Hx711/So2_Sensor_Hx711.c ****   hx711->coef = coef;  
+ 944              		.loc 1 173 3 view .LVU236
+ 945              		.loc 1 173 15 is_stmt 0 view .LVU237
+ 946 0000 0161     		str	r1, [r0, #16]	@ float
+ 174:So2_Hx711/So2_Sensor_Hx711.c **** }
+ 947              		.loc 1 174 1 view .LVU238
+ 948 0002 7047     		bx	lr
+ 949              		.cfi_endproc
+ 950              	.LFE75:
+ 952              		.section	.text.hx711_coef_get,"ax",%progbits
+ 953              		.align	1
+ 954              		.global	hx711_coef_get
+ 955              		.syntax unified
+ 956              		.thumb
+ 957              		.thumb_func
+ 959              	hx711_coef_get:
+ 960              	.LVL109:
+ 961              	.LFB76:
+ 175:So2_Hx711/So2_Sensor_Hx711.c **** //#############################################################################################
+ 176:So2_Hx711/So2_Sensor_Hx711.c **** float hx711_coef_get(hx711_t *hx711)
+ 177:So2_Hx711/So2_Sensor_Hx711.c **** {
+ 962              		.loc 1 177 1 is_stmt 1 view -0
+ 963              		.cfi_startproc
+ 964              		@ args = 0, pretend = 0, frame = 0
+ 965              		@ frame_needed = 0, uses_anonymous_args = 0
+ 966              		@ link register save eliminated.
+ 178:So2_Hx711/So2_Sensor_Hx711.c ****   return hx711->coef;  
+ 967              		.loc 1 178 3 view .LVU240
+ 179:So2_Hx711/So2_Sensor_Hx711.c **** }
+ 968              		.loc 1 179 1 is_stmt 0 view .LVU241
+ARM GAS  /tmp/cc4npXR1.s 			page 22
+
+
+ 969 0000 0069     		ldr	r0, [r0, #16]	@ float
+ 970              	.LVL110:
+ 971              		.loc 1 179 1 view .LVU242
+ 972 0002 7047     		bx	lr
+ 973              		.cfi_endproc
+ 974              	.LFE76:
+ 976              		.section	.text.hx711_power_down,"ax",%progbits
+ 977              		.align	1
+ 978              		.global	hx711_power_down
+ 979              		.syntax unified
+ 980              		.thumb
+ 981              		.thumb_func
+ 983              	hx711_power_down:
+ 984              	.LVL111:
+ 985              	.LFB77:
+ 180:So2_Hx711/So2_Sensor_Hx711.c **** //#############################################################################################
+ 181:So2_Hx711/So2_Sensor_Hx711.c **** void hx711_power_down(hx711_t *hx711)
+ 182:So2_Hx711/So2_Sensor_Hx711.c **** {
+ 986              		.loc 1 182 1 is_stmt 1 view -0
+ 987              		.cfi_startproc
+ 988              		@ args = 0, pretend = 0, frame = 0
+ 989              		@ frame_needed = 0, uses_anonymous_args = 0
+ 990              		.loc 1 182 1 is_stmt 0 view .LVU244
+ 991 0000 10B5     		push	{r4, lr}
+ 992              	.LCFI9:
+ 993              		.cfi_def_cfa_offset 8
+ 994              		.cfi_offset 4, -8
+ 995              		.cfi_offset 14, -4
+ 996 0002 0446     		mov	r4, r0
+ 183:So2_Hx711/So2_Sensor_Hx711.c ****   HAL_GPIO_WritePin(hx711->clk_gpio, hx711->clk_pin, GPIO_PIN_RESET);
+ 997              		.loc 1 183 3 is_stmt 1 view .LVU245
+ 998 0004 0022     		movs	r2, #0
+ 999 0006 0189     		ldrh	r1, [r0, #8]
+ 1000 0008 0068     		ldr	r0, [r0]
+ 1001              	.LVL112:
+ 1002              		.loc 1 183 3 is_stmt 0 view .LVU246
+ 1003 000a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1004              	.LVL113:
+ 184:So2_Hx711/So2_Sensor_Hx711.c ****   HAL_GPIO_WritePin(hx711->clk_gpio, hx711->clk_pin, GPIO_PIN_SET);
+ 1005              		.loc 1 184 3 is_stmt 1 view .LVU247
+ 1006 000e 0122     		movs	r2, #1
+ 1007 0010 2189     		ldrh	r1, [r4, #8]
+ 1008 0012 2068     		ldr	r0, [r4]
+ 1009 0014 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1010              	.LVL114:
+ 185:So2_Hx711/So2_Sensor_Hx711.c ****   hx711_delay(1);
+ 1011              		.loc 1 185 3 view .LVU248
+ 1012 0018 0120     		movs	r0, #1
+ 1013 001a FFF7FEFF 		bl	HAL_Delay
+ 1014              	.LVL115:
+ 186:So2_Hx711/So2_Sensor_Hx711.c **** }
+ 1015              		.loc 1 186 1 is_stmt 0 view .LVU249
+ 1016 001e 10BD     		pop	{r4, pc}
+ 1017              		.loc 1 186 1 view .LVU250
+ 1018              		.cfi_endproc
+ 1019              	.LFE77:
+ 1021              		.section	.text.hx711_power_up,"ax",%progbits
+ARM GAS  /tmp/cc4npXR1.s 			page 23
+
+
+ 1022              		.align	1
+ 1023              		.global	hx711_power_up
+ 1024              		.syntax unified
+ 1025              		.thumb
+ 1026              		.thumb_func
+ 1028              	hx711_power_up:
+ 1029              	.LVL116:
+ 1030              	.LFB78:
+ 187:So2_Hx711/So2_Sensor_Hx711.c **** //#############################################################################################
+ 188:So2_Hx711/So2_Sensor_Hx711.c **** void hx711_power_up(hx711_t *hx711)
+ 189:So2_Hx711/So2_Sensor_Hx711.c **** {
+ 1031              		.loc 1 189 1 is_stmt 1 view -0
+ 1032              		.cfi_startproc
+ 1033              		@ args = 0, pretend = 0, frame = 0
+ 1034              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1035              		.loc 1 189 1 is_stmt 0 view .LVU252
+ 1036 0000 08B5     		push	{r3, lr}
+ 1037              	.LCFI10:
+ 1038              		.cfi_def_cfa_offset 8
+ 1039              		.cfi_offset 3, -8
+ 1040              		.cfi_offset 14, -4
+ 190:So2_Hx711/So2_Sensor_Hx711.c ****   HAL_GPIO_WritePin(hx711->clk_gpio, hx711->clk_pin, GPIO_PIN_RESET);
+ 1041              		.loc 1 190 3 is_stmt 1 view .LVU253
+ 1042 0002 0022     		movs	r2, #0
+ 1043 0004 0189     		ldrh	r1, [r0, #8]
+ 1044 0006 0068     		ldr	r0, [r0]
+ 1045              	.LVL117:
+ 1046              		.loc 1 190 3 is_stmt 0 view .LVU254
+ 1047 0008 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1048              	.LVL118:
+ 191:So2_Hx711/So2_Sensor_Hx711.c **** }
+ 1049              		.loc 1 191 1 view .LVU255
+ 1050 000c 08BD     		pop	{r3, pc}
+ 1051              		.cfi_endproc
+ 1052              	.LFE78:
+ 1054              		.text
+ 1055              	.Letext0:
+ 1056              		.file 2 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 1057              		.file 3 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 1058              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 1059              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 1060              		.file 6 "So2_Hx711/So2_Sensor_Hx711.h"
+ 1061              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ARM GAS  /tmp/cc4npXR1.s 			page 24
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 So2_Sensor_Hx711.c
+     /tmp/cc4npXR1.s:18     .text.hx711_delay_us:0000000000000000 $t
+     /tmp/cc4npXR1.s:24     .text.hx711_delay_us:0000000000000000 hx711_delay_us
+     /tmp/cc4npXR1.s:75     .text.hx711_lock:0000000000000000 $t
+     /tmp/cc4npXR1.s:81     .text.hx711_lock:0000000000000000 hx711_lock
+     /tmp/cc4npXR1.s:122    .text.hx711_unlock:0000000000000000 $t
+     /tmp/cc4npXR1.s:128    .text.hx711_unlock:0000000000000000 hx711_unlock
+     /tmp/cc4npXR1.s:146    .text.hx711_set_gain:0000000000000000 $t
+     /tmp/cc4npXR1.s:152    .text.hx711_set_gain:0000000000000000 hx711_set_gain
+     /tmp/cc4npXR1.s:196    .text.hx711_value:0000000000000000 $t
+     /tmp/cc4npXR1.s:202    .text.hx711_value:0000000000000000 hx711_value
+     /tmp/cc4npXR1.s:375    .text.hx711_init:0000000000000000 $t
+     /tmp/cc4npXR1.s:381    .text.hx711_init:0000000000000000 hx711_init
+     /tmp/cc4npXR1.s:502    .text.hx711_value_ave:0000000000000000 $t
+     /tmp/cc4npXR1.s:508    .text.hx711_value_ave:0000000000000000 hx711_value_ave
+     /tmp/cc4npXR1.s:596    .text.hx711_tare:0000000000000000 $t
+     /tmp/cc4npXR1.s:602    .text.hx711_tare:0000000000000000 hx711_tare
+     /tmp/cc4npXR1.s:688    .text.hx711_calibration:0000000000000000 $t
+     /tmp/cc4npXR1.s:694    .text.hx711_calibration:0000000000000000 hx711_calibration
+     /tmp/cc4npXR1.s:750    .text.hx711_so2_result:0000000000000000 $t
+     /tmp/cc4npXR1.s:756    .text.hx711_so2_result:0000000000000000 hx711_so2_result
+     /tmp/cc4npXR1.s:920    .text.hx711_so2_result:00000000000000b8 $d
+     /tmp/cc4npXR1.s:930    .text.hx711_coef_set:0000000000000000 $t
+     /tmp/cc4npXR1.s:936    .text.hx711_coef_set:0000000000000000 hx711_coef_set
+     /tmp/cc4npXR1.s:953    .text.hx711_coef_get:0000000000000000 $t
+     /tmp/cc4npXR1.s:959    .text.hx711_coef_get:0000000000000000 hx711_coef_get
+     /tmp/cc4npXR1.s:977    .text.hx711_power_down:0000000000000000 $t
+     /tmp/cc4npXR1.s:983    .text.hx711_power_down:0000000000000000 hx711_power_down
+     /tmp/cc4npXR1.s:1022   .text.hx711_power_up:0000000000000000 $t
+     /tmp/cc4npXR1.s:1028   .text.hx711_power_up:0000000000000000 hx711_power_up
+
+UNDEFINED SYMBOLS
+HAL_Delay
+HAL_GetTick
+HAL_GPIO_ReadPin
+HAL_GPIO_WritePin
+HAL_GPIO_Init
+__aeabi_ldivmod
+__aeabi_i2f
+__aeabi_fdiv
+__aeabi_fsub
+__aeabi_fmul
+__aeabi_f2d
+__aeabi_dmul
+__aeabi_ddiv
+__aeabi_d2f
+__aeabi_fcmplt
+__aeabi_fcmpgt

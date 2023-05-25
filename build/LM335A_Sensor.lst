@@ -1,0 +1,524 @@
+ARM GAS  /tmp/cctiByLZ.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"LM335A_Sensor.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.LM335A_ADC_Config,"ax",%progbits
+  18              		.align	1
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  23              	LM335A_ADC_Config:
+  24              	.LVL0:
+  25              	.LFB65:
+  26              		.file 1 "LM335A_Sensor/LM335A_Sensor.c"
+   1:LM335A_Sensor/LM335A_Sensor.c **** #include "LM335A_Sensor.h"
+   2:LM335A_Sensor/LM335A_Sensor.c **** #include "stdlib.h"
+   3:LM335A_Sensor/LM335A_Sensor.c **** 
+   4:LM335A_Sensor/LM335A_Sensor.c **** // protype
+   5:LM335A_Sensor/LM335A_Sensor.c **** static void LM335A_ADC_Config(LM335A_HandleTypeDef *Lm335a_x);
+   6:LM335A_Sensor/LM335A_Sensor.c **** 
+   7:LM335A_Sensor/LM335A_Sensor.c **** /**
+   8:LM335A_Sensor/LM335A_Sensor.c ****  * @brief LM335A_ADC_Config
+   9:LM335A_Sensor/LM335A_Sensor.c ****  * 
+  10:LM335A_Sensor/LM335A_Sensor.c ****  * @param Lm335a_x 
+  11:LM335A_Sensor/LM335A_Sensor.c ****  */
+  12:LM335A_Sensor/LM335A_Sensor.c **** static void LM335A_ADC_Config(LM335A_HandleTypeDef *Lm335a_x)
+  13:LM335A_Sensor/LM335A_Sensor.c **** {
+  27              		.loc 1 13 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 16
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              		.loc 1 13 1 is_stmt 0 view .LVU1
+  32 0000 00B5     		push	{lr}
+  33              	.LCFI0:
+  34              		.cfi_def_cfa_offset 4
+  35              		.cfi_offset 14, -4
+  36 0002 85B0     		sub	sp, sp, #20
+  37              	.LCFI1:
+  38              		.cfi_def_cfa_offset 24
+  14:LM335A_Sensor/LM335A_Sensor.c ****     ADC_ChannelConfTypeDef sConfig = {0};
+  39              		.loc 1 14 5 is_stmt 1 view .LVU2
+  40              		.loc 1 14 28 is_stmt 0 view .LVU3
+  41 0004 0023     		movs	r3, #0
+  42 0006 0193     		str	r3, [sp, #4]
+  43 0008 0293     		str	r3, [sp, #8]
+  44 000a 0393     		str	r3, [sp, #12]
+ARM GAS  /tmp/cctiByLZ.s 			page 2
+
+
+  15:LM335A_Sensor/LM335A_Sensor.c ****     sConfig.Channel = ADC_CHANNEL_11;
+  45              		.loc 1 15 5 is_stmt 1 view .LVU4
+  46              		.loc 1 15 21 is_stmt 0 view .LVU5
+  47 000c 0B23     		movs	r3, #11
+  48 000e 0193     		str	r3, [sp, #4]
+  16:LM335A_Sensor/LM335A_Sensor.c ****     sConfig.Rank = ADC_REGULAR_RANK_1;
+  49              		.loc 1 16 5 is_stmt 1 view .LVU6
+  50              		.loc 1 16 18 is_stmt 0 view .LVU7
+  51 0010 0123     		movs	r3, #1
+  52 0012 0293     		str	r3, [sp, #8]
+  17:LM335A_Sensor/LM335A_Sensor.c ****     sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
+  53              		.loc 1 17 5 is_stmt 1 view .LVU8
+  54              		.loc 1 17 26 is_stmt 0 view .LVU9
+  55 0014 0723     		movs	r3, #7
+  56 0016 0393     		str	r3, [sp, #12]
+  18:LM335A_Sensor/LM335A_Sensor.c ****     if (HAL_ADC_ConfigChannel(Lm335a_x->ADC_LM335A, &sConfig) != HAL_OK)
+  57              		.loc 1 18 5 is_stmt 1 view .LVU10
+  58              		.loc 1 18 9 is_stmt 0 view .LVU11
+  59 0018 01A9     		add	r1, sp, #4
+  60 001a 0068     		ldr	r0, [r0]
+  61              	.LVL1:
+  62              		.loc 1 18 9 view .LVU12
+  63 001c FFF7FEFF 		bl	HAL_ADC_ConfigChannel
+  64              	.LVL2:
+  65              		.loc 1 18 8 view .LVU13
+  66 0020 10B9     		cbnz	r0, .L4
+  67              	.L1:
+  19:LM335A_Sensor/LM335A_Sensor.c ****     {
+  20:LM335A_Sensor/LM335A_Sensor.c ****         Error_Handler();
+  21:LM335A_Sensor/LM335A_Sensor.c ****     }
+  22:LM335A_Sensor/LM335A_Sensor.c **** }
+  68              		.loc 1 22 1 view .LVU14
+  69 0022 05B0     		add	sp, sp, #20
+  70              	.LCFI2:
+  71              		.cfi_remember_state
+  72              		.cfi_def_cfa_offset 4
+  73              		@ sp needed
+  74 0024 5DF804FB 		ldr	pc, [sp], #4
+  75              	.L4:
+  76              	.LCFI3:
+  77              		.cfi_restore_state
+  78              	.LBB2:
+  20:LM335A_Sensor/LM335A_Sensor.c ****     }
+  79              		.loc 1 20 9 is_stmt 1 view .LVU15
+  80 0028 FFF7FEFF 		bl	Error_Handler
+  81              	.LVL3:
+  82              	.LBE2:
+  83              		.loc 1 22 1 is_stmt 0 view .LVU16
+  84 002c F9E7     		b	.L1
+  85              		.cfi_endproc
+  86              	.LFE65:
+  88              		.section	.text.LM335A_Init,"ax",%progbits
+  89              		.align	1
+  90              		.global	LM335A_Init
+  91              		.syntax unified
+  92              		.thumb
+  93              		.thumb_func
+ARM GAS  /tmp/cctiByLZ.s 			page 3
+
+
+  95              	LM335A_Init:
+  96              	.LVL4:
+  97              	.LFB66:
+  23:LM335A_Sensor/LM335A_Sensor.c **** 
+  24:LM335A_Sensor/LM335A_Sensor.c **** /**
+  25:LM335A_Sensor/LM335A_Sensor.c ****  * @brief LM335A_Init
+  26:LM335A_Sensor/LM335A_Sensor.c ****  * 
+  27:LM335A_Sensor/LM335A_Sensor.c ****  * @param Lm335a_x 
+  28:LM335A_Sensor/LM335A_Sensor.c ****  * @param adc 
+  29:LM335A_Sensor/LM335A_Sensor.c ****  * @param Lm335a_Chanel_ADC 
+  30:LM335A_Sensor/LM335A_Sensor.c ****  * @param Lm335a_Rank_ADC 
+  31:LM335A_Sensor/LM335A_Sensor.c ****  * @param Lm335a_Sample_Time 
+  32:LM335A_Sensor/LM335A_Sensor.c ****  */
+  33:LM335A_Sensor/LM335A_Sensor.c **** void LM335A_Init(LM335A_HandleTypeDef *Lm335a_x,ADC_HandleTypeDef *adc)
+  34:LM335A_Sensor/LM335A_Sensor.c **** {
+  98              		.loc 1 34 1 is_stmt 1 view -0
+  99              		.cfi_startproc
+ 100              		@ args = 0, pretend = 0, frame = 0
+ 101              		@ frame_needed = 0, uses_anonymous_args = 0
+ 102              		@ link register save eliminated.
+  35:LM335A_Sensor/LM335A_Sensor.c ****     Lm335a_x->ADC_LM335A = adc;
+ 103              		.loc 1 35 5 view .LVU18
+ 104              		.loc 1 35 26 is_stmt 0 view .LVU19
+ 105 0000 0160     		str	r1, [r0]
+  36:LM335A_Sensor/LM335A_Sensor.c **** }
+ 106              		.loc 1 36 1 view .LVU20
+ 107 0002 7047     		bx	lr
+ 108              		.cfi_endproc
+ 109              	.LFE66:
+ 111              		.global	__aeabi_ui2f
+ 112              		.global	__aeabi_fdiv
+ 113              		.global	__aeabi_fmul
+ 114              		.section	.text.LM335A_Measuring,"ax",%progbits
+ 115              		.align	1
+ 116              		.global	LM335A_Measuring
+ 117              		.syntax unified
+ 118              		.thumb
+ 119              		.thumb_func
+ 121              	LM335A_Measuring:
+ 122              	.LVL5:
+ 123              	.LFB67:
+  37:LM335A_Sensor/LM335A_Sensor.c **** 
+  38:LM335A_Sensor/LM335A_Sensor.c **** 
+  39:LM335A_Sensor/LM335A_Sensor.c **** /**
+  40:LM335A_Sensor/LM335A_Sensor.c ****  * @brief LM335A_Measuring
+  41:LM335A_Sensor/LM335A_Sensor.c ****  * 
+  42:LM335A_Sensor/LM335A_Sensor.c ****  * @param Lm335a_x 
+  43:LM335A_Sensor/LM335A_Sensor.c ****  * @param sample 
+  44:LM335A_Sensor/LM335A_Sensor.c ****  * @return float 
+  45:LM335A_Sensor/LM335A_Sensor.c ****  */
+  46:LM335A_Sensor/LM335A_Sensor.c **** float LM335A_Measuring(LM335A_HandleTypeDef *Lm335a_x, uint8_t sample)
+  47:LM335A_Sensor/LM335A_Sensor.c **** {
+ 124              		.loc 1 47 1 is_stmt 1 view -0
+ 125              		.cfi_startproc
+ 126              		@ args = 0, pretend = 0, frame = 0
+ 127              		@ frame_needed = 1, uses_anonymous_args = 0
+ 128              		.loc 1 47 1 is_stmt 0 view .LVU22
+ARM GAS  /tmp/cctiByLZ.s 			page 4
+
+
+ 129 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 130              	.LCFI4:
+ 131              		.cfi_def_cfa_offset 24
+ 132              		.cfi_offset 4, -24
+ 133              		.cfi_offset 5, -20
+ 134              		.cfi_offset 6, -16
+ 135              		.cfi_offset 7, -12
+ 136              		.cfi_offset 8, -8
+ 137              		.cfi_offset 14, -4
+ 138 0004 00AF     		add	r7, sp, #0
+ 139              	.LCFI5:
+ 140              		.cfi_def_cfa_register 7
+ 141 0006 8046     		mov	r8, r0
+ 142 0008 0C46     		mov	r4, r1
+  48:LM335A_Sensor/LM335A_Sensor.c ****     uint32_t sum = 0, data = 0;
+ 143              		.loc 1 48 5 is_stmt 1 view .LVU23
+ 144              	.LVL6:
+  49:LM335A_Sensor/LM335A_Sensor.c ****     uint16_t arr_adc_value[sample];
+ 145              		.loc 1 49 5 view .LVU24
+ 146              		.loc 1 49 14 is_stmt 0 view .LVU25
+ 147 000a 4B00     		lsls	r3, r1, #1
+ 148 000c 0733     		adds	r3, r3, #7
+ 149 000e 03F47E73 		and	r3, r3, #1016
+ 150 0012 ADEB030D 		sub	sp, sp, r3
+ 151 0016 6D46     		mov	r5, sp
+ 152              	.LVL7:
+  50:LM335A_Sensor/LM335A_Sensor.c ****     uint8_t index = 0;
+ 153              		.loc 1 50 5 is_stmt 1 view .LVU26
+  51:LM335A_Sensor/LM335A_Sensor.c ****     float calcVoltage = 0;
+ 154              		.loc 1 51 5 view .LVU27
+  52:LM335A_Sensor/LM335A_Sensor.c ****     float Temperature = 0;
+ 155              		.loc 1 52 5 view .LVU28
+  53:LM335A_Sensor/LM335A_Sensor.c **** 
+  54:LM335A_Sensor/LM335A_Sensor.c ****     for(uint8_t i = 0; i < sample; i++)
+ 156              		.loc 1 54 5 view .LVU29
+ 157              	.LBB3:
+ 158              		.loc 1 54 9 view .LVU30
+ 159              		.loc 1 54 17 is_stmt 0 view .LVU31
+ 160 0018 0026     		movs	r6, #0
+ 161              		.loc 1 54 5 view .LVU32
+ 162 001a 1BE0     		b	.L7
+ 163              	.LVL8:
+ 164              	.L8:
+  55:LM335A_Sensor/LM335A_Sensor.c ****     {
+  56:LM335A_Sensor/LM335A_Sensor.c ****         LM335A_ADC_Config(Lm335a_x);
+ 165              		.loc 1 56 9 is_stmt 1 discriminator 3 view .LVU33
+ 166 001c 4046     		mov	r0, r8
+ 167 001e FFF7FEFF 		bl	LM335A_ADC_Config
+ 168              	.LVL9:
+  57:LM335A_Sensor/LM335A_Sensor.c ****         HAL_ADC_Start(Lm335a_x->ADC_LM335A);
+ 169              		.loc 1 57 9 discriminator 3 view .LVU34
+ 170 0022 D8F80000 		ldr	r0, [r8]
+ 171 0026 FFF7FEFF 		bl	HAL_ADC_Start
+ 172              	.LVL10:
+  58:LM335A_Sensor/LM335A_Sensor.c ****         HAL_ADC_PollForConversion(Lm335a_x->ADC_LM335A,1000);
+ 173              		.loc 1 58 9 discriminator 3 view .LVU35
+ 174 002a 4FF47A71 		mov	r1, #1000
+ARM GAS  /tmp/cctiByLZ.s 			page 5
+
+
+ 175 002e D8F80000 		ldr	r0, [r8]
+ 176 0032 FFF7FEFF 		bl	HAL_ADC_PollForConversion
+ 177              	.LVL11:
+  59:LM335A_Sensor/LM335A_Sensor.c ****         arr_adc_value[i] = HAL_ADC_GetValue(Lm335a_x->ADC_LM335A);
+ 178              		.loc 1 59 9 discriminator 3 view .LVU36
+ 179              		.loc 1 59 28 is_stmt 0 discriminator 3 view .LVU37
+ 180 0036 D8F80000 		ldr	r0, [r8]
+ 181 003a FFF7FEFF 		bl	HAL_ADC_GetValue
+ 182              	.LVL12:
+ 183              		.loc 1 59 26 discriminator 3 view .LVU38
+ 184 003e 25F81600 		strh	r0, [r5, r6, lsl #1]	@ movhi
+  60:LM335A_Sensor/LM335A_Sensor.c ****         HAL_ADC_Stop(Lm335a_x->ADC_LM335A);
+ 185              		.loc 1 60 9 is_stmt 1 discriminator 3 view .LVU39
+ 186 0042 D8F80000 		ldr	r0, [r8]
+ 187 0046 FFF7FEFF 		bl	HAL_ADC_Stop
+ 188              	.LVL13:
+  61:LM335A_Sensor/LM335A_Sensor.c ****         HAL_Delay(100);
+ 189              		.loc 1 61 9 discriminator 3 view .LVU40
+ 190 004a 6420     		movs	r0, #100
+ 191 004c FFF7FEFF 		bl	HAL_Delay
+ 192              	.LVL14:
+  54:LM335A_Sensor/LM335A_Sensor.c ****     {
+ 193              		.loc 1 54 37 discriminator 3 view .LVU41
+ 194 0050 0136     		adds	r6, r6, #1
+ 195              	.LVL15:
+  54:LM335A_Sensor/LM335A_Sensor.c ****     {
+ 196              		.loc 1 54 37 is_stmt 0 discriminator 3 view .LVU42
+ 197 0052 F6B2     		uxtb	r6, r6
+ 198              	.LVL16:
+ 199              	.L7:
+  54:LM335A_Sensor/LM335A_Sensor.c ****     {
+ 200              		.loc 1 54 26 is_stmt 1 discriminator 1 view .LVU43
+ 201 0054 A642     		cmp	r6, r4
+ 202 0056 E1D3     		bcc	.L8
+ 203              	.LBE3:
+ 204              	.LBB4:
+  62:LM335A_Sensor/LM335A_Sensor.c ****     }
+  63:LM335A_Sensor/LM335A_Sensor.c **** 
+  64:LM335A_Sensor/LM335A_Sensor.c ****     for(uint8_t i = 0; i < sample; i++)
+ 205              		.loc 1 64 17 is_stmt 0 view .LVU44
+ 206 0058 0023     		movs	r3, #0
+ 207              	.LBE4:
+  48:LM335A_Sensor/LM335A_Sensor.c ****     uint16_t arr_adc_value[sample];
+ 208              		.loc 1 48 14 view .LVU45
+ 209 005a 1A46     		mov	r2, r3
+ 210 005c 04E0     		b	.L9
+ 211              	.LVL17:
+ 212              	.L10:
+ 213              	.LBB5:
+  65:LM335A_Sensor/LM335A_Sensor.c ****     {
+  66:LM335A_Sensor/LM335A_Sensor.c ****         sum += arr_adc_value[i];
+ 214              		.loc 1 66 9 is_stmt 1 discriminator 3 view .LVU46
+ 215              		.loc 1 66 29 is_stmt 0 discriminator 3 view .LVU47
+ 216 005e 35F81310 		ldrh	r1, [r5, r3, lsl #1]
+ 217              		.loc 1 66 13 discriminator 3 view .LVU48
+ 218 0062 0A44     		add	r2, r2, r1
+ 219              	.LVL18:
+ARM GAS  /tmp/cctiByLZ.s 			page 6
+
+
+  64:LM335A_Sensor/LM335A_Sensor.c ****     {
+ 220              		.loc 1 64 37 is_stmt 1 discriminator 3 view .LVU49
+ 221 0064 0133     		adds	r3, r3, #1
+ 222              	.LVL19:
+  64:LM335A_Sensor/LM335A_Sensor.c ****     {
+ 223              		.loc 1 64 37 is_stmt 0 discriminator 3 view .LVU50
+ 224 0066 DBB2     		uxtb	r3, r3
+ 225              	.LVL20:
+ 226              	.L9:
+  64:LM335A_Sensor/LM335A_Sensor.c ****     {
+ 227              		.loc 1 64 26 is_stmt 1 discriminator 1 view .LVU51
+ 228 0068 A342     		cmp	r3, r4
+ 229 006a F8D3     		bcc	.L10
+ 230              	.LBE5:
+  67:LM335A_Sensor/LM335A_Sensor.c ****     }
+  68:LM335A_Sensor/LM335A_Sensor.c **** 
+  69:LM335A_Sensor/LM335A_Sensor.c ****     data  = sum / sample;
+ 231              		.loc 1 69 5 view .LVU52
+ 232              		.loc 1 69 11 is_stmt 0 view .LVU53
+ 233 006c B2FBF4F1 		udiv	r1, r2, r4
+ 234              	.LVL21:
+  70:LM335A_Sensor/LM335A_Sensor.c ****     index = sample;
+ 235              		.loc 1 70 5 is_stmt 1 view .LVU54
+  71:LM335A_Sensor/LM335A_Sensor.c **** 
+  72:LM335A_Sensor/LM335A_Sensor.c ****     for(uint8_t i = 0; i < sample; i++)
+ 236              		.loc 1 72 5 view .LVU55
+ 237              	.LBB6:
+ 238              		.loc 1 72 9 view .LVU56
+ 239              		.loc 1 72 9 is_stmt 0 view .LVU57
+ 240              	.LBE6:
+  70:LM335A_Sensor/LM335A_Sensor.c ****     index = sample;
+ 241              		.loc 1 70 11 view .LVU58
+ 242 0070 2046     		mov	r0, r4
+ 243              	.LBB7:
+ 244              		.loc 1 72 17 view .LVU59
+ 245 0072 0023     		movs	r3, #0
+ 246              	.LVL22:
+ 247              		.loc 1 72 5 view .LVU60
+ 248 0074 01E0     		b	.L11
+ 249              	.LVL23:
+ 250              	.L12:
+ 251              		.loc 1 72 37 is_stmt 1 discriminator 2 view .LVU61
+ 252 0076 0133     		adds	r3, r3, #1
+ 253              	.LVL24:
+ 254              		.loc 1 72 37 is_stmt 0 discriminator 2 view .LVU62
+ 255 0078 DBB2     		uxtb	r3, r3
+ 256              	.LVL25:
+ 257              	.L11:
+ 258              		.loc 1 72 26 is_stmt 1 discriminator 1 view .LVU63
+ 259 007a A342     		cmp	r3, r4
+ 260 007c 0DD2     		bcs	.L17
+  73:LM335A_Sensor/LM335A_Sensor.c ****     {
+  74:LM335A_Sensor/LM335A_Sensor.c ****         if(abs(data - arr_adc_value[i]) > data)
+ 261              		.loc 1 74 9 view .LVU64
+ 262              		.loc 1 74 36 is_stmt 0 view .LVU65
+ 263 007e 35F81320 		ldrh	r2, [r5, r3, lsl #1]
+ 264              		.loc 1 74 21 view .LVU66
+ARM GAS  /tmp/cctiByLZ.s 			page 7
+
+
+ 265 0082 8A1A     		subs	r2, r1, r2
+ 266              		.loc 1 74 12 view .LVU67
+ 267 0084 002A     		cmp	r2, #0
+ 268 0086 B8BF     		it	lt
+ 269 0088 5242     		rsblt	r2, r2, #0
+ 270              		.loc 1 74 11 view .LVU68
+ 271 008a 8A42     		cmp	r2, r1
+ 272 008c F3D9     		bls	.L12
+  75:LM335A_Sensor/LM335A_Sensor.c ****         {
+  76:LM335A_Sensor/LM335A_Sensor.c ****             arr_adc_value[i] = 0;
+ 273              		.loc 1 76 13 is_stmt 1 view .LVU69
+ 274              		.loc 1 76 30 is_stmt 0 view .LVU70
+ 275 008e 0022     		movs	r2, #0
+ 276 0090 25F81320 		strh	r2, [r5, r3, lsl #1]	@ movhi
+  77:LM335A_Sensor/LM335A_Sensor.c ****             index --;
+ 277              		.loc 1 77 13 is_stmt 1 view .LVU71
+ 278              		.loc 1 77 19 is_stmt 0 view .LVU72
+ 279 0094 0138     		subs	r0, r0, #1
+ 280              	.LVL26:
+ 281              		.loc 1 77 19 view .LVU73
+ 282 0096 C0B2     		uxtb	r0, r0
+ 283              	.LVL27:
+ 284              		.loc 1 77 19 view .LVU74
+ 285 0098 EDE7     		b	.L12
+ 286              	.L17:
+ 287              		.loc 1 77 19 view .LVU75
+ 288              	.LBE7:
+ 289              	.LBB8:
+  78:LM335A_Sensor/LM335A_Sensor.c ****         }
+  79:LM335A_Sensor/LM335A_Sensor.c ****     }
+  80:LM335A_Sensor/LM335A_Sensor.c **** 
+  81:LM335A_Sensor/LM335A_Sensor.c ****     sum = 0;
+  82:LM335A_Sensor/LM335A_Sensor.c ****     data = 0;
+  83:LM335A_Sensor/LM335A_Sensor.c **** 
+  84:LM335A_Sensor/LM335A_Sensor.c ****     for (uint8_t i = 0; i < sample; i++)
+ 290              		.loc 1 84 18 view .LVU76
+ 291 009a 0023     		movs	r3, #0
+ 292              	.LVL28:
+ 293              		.loc 1 84 18 view .LVU77
+ 294              	.LBE8:
+  81:LM335A_Sensor/LM335A_Sensor.c ****     data = 0;
+ 295              		.loc 1 81 9 view .LVU78
+ 296 009c 1A46     		mov	r2, r3
+ 297 009e 04E0     		b	.L14
+ 298              	.LVL29:
+ 299              	.L15:
+ 300              	.LBB9:
+  85:LM335A_Sensor/LM335A_Sensor.c ****     {
+  86:LM335A_Sensor/LM335A_Sensor.c ****         sum += arr_adc_value[i];
+ 301              		.loc 1 86 9 is_stmt 1 discriminator 3 view .LVU79
+ 302              		.loc 1 86 29 is_stmt 0 discriminator 3 view .LVU80
+ 303 00a0 35F81310 		ldrh	r1, [r5, r3, lsl #1]
+ 304              		.loc 1 86 13 discriminator 3 view .LVU81
+ 305 00a4 0A44     		add	r2, r2, r1
+ 306              	.LVL30:
+  84:LM335A_Sensor/LM335A_Sensor.c ****     {
+ 307              		.loc 1 84 38 is_stmt 1 discriminator 3 view .LVU82
+ARM GAS  /tmp/cctiByLZ.s 			page 8
+
+
+ 308 00a6 0133     		adds	r3, r3, #1
+ 309              	.LVL31:
+  84:LM335A_Sensor/LM335A_Sensor.c ****     {
+ 310              		.loc 1 84 38 is_stmt 0 discriminator 3 view .LVU83
+ 311 00a8 DBB2     		uxtb	r3, r3
+ 312              	.LVL32:
+ 313              	.L14:
+  84:LM335A_Sensor/LM335A_Sensor.c ****     {
+ 314              		.loc 1 84 27 is_stmt 1 discriminator 1 view .LVU84
+ 315 00aa A342     		cmp	r3, r4
+ 316 00ac F8D3     		bcc	.L15
+ 317              	.LBE9:
+  87:LM335A_Sensor/LM335A_Sensor.c ****     }
+  88:LM335A_Sensor/LM335A_Sensor.c **** 
+  89:LM335A_Sensor/LM335A_Sensor.c ****     data = sum / index;
+ 318              		.loc 1 89 5 view .LVU85
+ 319              	.LVL33:
+  90:LM335A_Sensor/LM335A_Sensor.c ****     //data += 77;
+  91:LM335A_Sensor/LM335A_Sensor.c **** 
+  92:LM335A_Sensor/LM335A_Sensor.c **** 
+  93:LM335A_Sensor/LM335A_Sensor.c ****     calcVoltage = (float)(((float)data / 4095.0f) *3.3f);
+ 320              		.loc 1 93 5 view .LVU86
+ 321              		.loc 1 93 28 is_stmt 0 view .LVU87
+ 322 00ae B2FBF0F0 		udiv	r0, r2, r0
+ 323              	.LVL34:
+ 324              		.loc 1 93 28 view .LVU88
+ 325 00b2 FFF7FEFF 		bl	__aeabi_ui2f
+ 326              	.LVL35:
+ 327              		.loc 1 93 40 view .LVU89
+ 328 00b6 0649     		ldr	r1, .L18
+ 329 00b8 FFF7FEFF 		bl	__aeabi_fdiv
+ 330              	.LVL36:
+ 331              		.loc 1 93 17 view .LVU90
+ 332 00bc 0549     		ldr	r1, .L18+4
+ 333 00be FFF7FEFF 		bl	__aeabi_fmul
+ 334              	.LVL37:
+  94:LM335A_Sensor/LM335A_Sensor.c **** 
+  95:LM335A_Sensor/LM335A_Sensor.c ****     Temperature = calcVoltage * 10;
+ 335              		.loc 1 95 5 is_stmt 1 view .LVU91
+ 336              		.loc 1 95 17 is_stmt 0 view .LVU92
+ 337 00c2 0549     		ldr	r1, .L18+8
+ 338 00c4 FFF7FEFF 		bl	__aeabi_fmul
+ 339              	.LVL38:
+  96:LM335A_Sensor/LM335A_Sensor.c **** 
+  97:LM335A_Sensor/LM335A_Sensor.c ****     return Temperature;
+ 340              		.loc 1 97 5 is_stmt 1 view .LVU93
+  98:LM335A_Sensor/LM335A_Sensor.c **** }
+ 341              		.loc 1 98 1 is_stmt 0 view .LVU94
+ 342 00c8 BD46     		mov	sp, r7
+ 343              	.LCFI6:
+ 344              		.cfi_def_cfa_register 13
+ 345              		@ sp needed
+ 346 00ca BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 347              	.LVL39:
+ 348              	.L19:
+ 349              		.loc 1 98 1 view .LVU95
+ 350 00ce 00BF     		.align	2
+ARM GAS  /tmp/cctiByLZ.s 			page 9
+
+
+ 351              	.L18:
+ 352 00d0 00F07F45 		.word	1166012416
+ 353 00d4 33335340 		.word	1079194419
+ 354 00d8 00002041 		.word	1092616192
+ 355              		.cfi_endproc
+ 356              	.LFE67:
+ 358              		.text
+ 359              	.Letext0:
+ 360              		.file 2 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 361              		.file 3 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 362              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 363              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h"
+ 364              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 365              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 366              		.file 8 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_adc.h"
+ 367              		.file 9 "LM335A_Sensor/LM335A_Sensor.h"
+ 368              		.file 10 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ARM GAS  /tmp/cctiByLZ.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 LM335A_Sensor.c
+     /tmp/cctiByLZ.s:18     .text.LM335A_ADC_Config:0000000000000000 $t
+     /tmp/cctiByLZ.s:23     .text.LM335A_ADC_Config:0000000000000000 LM335A_ADC_Config
+     /tmp/cctiByLZ.s:89     .text.LM335A_Init:0000000000000000 $t
+     /tmp/cctiByLZ.s:95     .text.LM335A_Init:0000000000000000 LM335A_Init
+     /tmp/cctiByLZ.s:115    .text.LM335A_Measuring:0000000000000000 $t
+     /tmp/cctiByLZ.s:121    .text.LM335A_Measuring:0000000000000000 LM335A_Measuring
+     /tmp/cctiByLZ.s:352    .text.LM335A_Measuring:00000000000000d0 $d
+
+UNDEFINED SYMBOLS
+HAL_ADC_ConfigChannel
+Error_Handler
+__aeabi_ui2f
+__aeabi_fdiv
+__aeabi_fmul
+HAL_ADC_Start
+HAL_ADC_PollForConversion
+HAL_ADC_GetValue
+HAL_ADC_Stop
+HAL_Delay

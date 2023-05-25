@@ -1,0 +1,1557 @@
+ARM GAS  /tmp/ccot5CYK.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"BMP180_Air_Pressure_Sensor.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.BMP180_Get_UTemp,"ax",%progbits
+  18              		.align	1
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  23              	BMP180_Get_UTemp:
+  24              	.LVL0:
+  25              	.LFB67:
+  26              		.file 1 "BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c"
+   1:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** /**
+   2:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @file BMP180_Air_Pressure_Sensor.c
+   3:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @author Nguyen Trong Son (LoH Technology Company Limited)
+   4:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @brief 
+   5:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @version 0.1
+   6:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @date 2022-08-27
+   7:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * 
+   8:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @copyright Copyright (c) 2022
+   9:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * 
+  10:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  */
+  11:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+  12:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** #include "BMP180_Air_Pressure_Sensor.h"
+  13:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** #include "stdint.h"
+  14:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** #include "math.h"
+  15:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+  16:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+  17:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // Defines according to the datsheet
+  18:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int16_t AC1 = 0;
+  19:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int16_t AC2 = 0;
+  20:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int16_t AC3 = 0;
+  21:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // uint16_t AC4 = 0;
+  22:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // uint16_t AC5 = 0;
+  23:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // uint16_t AC6 = 0;
+  24:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int16_t B1 = 0;
+  25:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int16_t B2 = 0;
+  26:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int16_t MB = 0;
+  27:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int16_t MC = 0;
+  28:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int16_t MD = 0;
+  29:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+  30:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // /********************/
+  31:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int32_t UT = 0;
+  32:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int16_t oss = 0;
+ARM GAS  /tmp/ccot5CYK.s 			page 2
+
+
+  33:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int32_t UP = 0;
+  34:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int32_t X1 = 0;
+  35:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int32_t X2 = 0;
+  36:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int32_t X3 = 0;
+  37:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int32_t B3 = 0;
+  38:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int32_t B5 = 0;
+  39:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // uint32_t B4 = 0;
+  40:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int32_t B6 = 0;
+  41:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // uint32_t B7 = 0;
+  42:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+  43:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // /*******************/
+  44:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int32_t Press = 0;
+  45:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** // int32_t Temp = 0;
+  46:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+  47:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** /**
+  48:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @brief BMP_180_Air_Pressure_Sensor_Init
+  49:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * 
+  50:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @param sensor_x 
+  51:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  */
+  52:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** void BMP_180_Air_Pressure_Sensor_Init(BMP180_Air_Pressure_Sensor_Name *sensor_x, I2C_HandleTypeDef 
+  53:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** {
+  54:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->hi2c_bmp180_air_pressure_sensor = hi2c_x;
+  55:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC1 = 0;
+  56:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC2 = 0;
+  57:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC3 = 0;
+  58:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC4 = 0;
+  59:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC5 = 0;
+  60:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B1 = 0;
+  61:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B2 = 0;
+  62:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B3 = 0;
+  63:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B4 = 0;
+  64:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B5 = 0;
+  65:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B6 = 0;
+  66:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B7 = 0;
+  67:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MB = 0;
+  68:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MC = 0;
+  69:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MD = 0;
+  70:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->oss = oversmapling_setting;
+  71:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->Press = 0;
+  72:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->Temp = 0;
+  73:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->UT = 0;
+  74:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->UP = 0;
+  75:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X1 = 0;
+  76:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X2 = 0;
+  77:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X3 = 0;
+  78:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** }
+  79:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+  80:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** /**
+  81:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @brief Start_Read_Calliberation_Data
+  82:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * 
+  83:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @param hi2c 
+  84:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @return uint8_t 
+  85:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  */
+  86:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** uint8_t BMP180_Start_Read_Calliberation_Data(BMP180_Air_Pressure_Sensor_Name *sensor_x)
+  87:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** {
+  88:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	uint8_t Callib_Data[22] = {0};
+  89:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	uint16_t Callib_Start = 0xAA;
+ARM GAS  /tmp/ccot5CYK.s 			page 3
+
+
+  90:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	HAL_I2C_Mem_Read(sensor_x->hi2c_bmp180_air_pressure_sensor, BMP180_ADDRESS, Callib_Start, 1, Calli
+  91:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+  92:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC1 = ((Callib_Data[0] << 8) | Callib_Data[1]);
+  93:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC2 = ((Callib_Data[2] << 8) | Callib_Data[3]);
+  94:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC3 = ((Callib_Data[4] << 8) | Callib_Data[5]);
+  95:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC4 = ((Callib_Data[6] << 8) | Callib_Data[7]);
+  96:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC5 = ((Callib_Data[8] << 8) | Callib_Data[9]);
+  97:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC6 = ((Callib_Data[10] << 8) | Callib_Data[11]);
+  98:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B1 = ((Callib_Data[12] << 8) | Callib_Data[13]);
+  99:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B2 = ((Callib_Data[14] << 8) | Callib_Data[15]);
+ 100:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MB = ((Callib_Data[16] << 8) | Callib_Data[17]);
+ 101:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MC = ((Callib_Data[18] << 8) | Callib_Data[19]);
+ 102:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MD = ((Callib_Data[20] << 8) | Callib_Data[21]);
+ 103:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****     return 0;
+ 104:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** }
+ 105:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+ 106:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** /**
+ 107:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @brief Get_UTemp
+ 108:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * 
+ 109:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @param hi2c 
+ 110:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @return uint16_t 
+ 111:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  */
+ 112:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** static uint16_t BMP180_Get_UTemp (BMP180_Air_Pressure_Sensor_Name *sensor_x)
+ 113:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** {
+  27              		.loc 1 113 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 8
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              		.loc 1 113 1 is_stmt 0 view .LVU1
+  32 0000 70B5     		push	{r4, r5, r6, lr}
+  33              	.LCFI0:
+  34              		.cfi_def_cfa_offset 16
+  35              		.cfi_offset 4, -16
+  36              		.cfi_offset 5, -12
+  37              		.cfi_offset 6, -8
+  38              		.cfi_offset 14, -4
+  39 0002 86B0     		sub	sp, sp, #24
+  40              	.LCFI1:
+  41              		.cfi_def_cfa_offset 40
+  42 0004 0446     		mov	r4, r0
+ 114:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	uint8_t datatowrite = 0x2E;
+  43              		.loc 1 114 2 is_stmt 1 view .LVU2
+  44              		.loc 1 114 10 is_stmt 0 view .LVU3
+  45 0006 2E23     		movs	r3, #46
+  46 0008 8DF81730 		strb	r3, [sp, #23]
+ 115:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	uint8_t Temp_RAW[2] = {0};
+  47              		.loc 1 115 2 is_stmt 1 view .LVU4
+  48              		.loc 1 115 10 is_stmt 0 view .LVU5
+  49 000c 0023     		movs	r3, #0
+  50 000e ADF81430 		strh	r3, [sp, #20]	@ movhi
+ 116:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	HAL_I2C_Mem_Write(sensor_x->hi2c_bmp180_air_pressure_sensor, BMP180_ADDRESS, 0xF4, 1, &datatowrite
+  51              		.loc 1 116 2 is_stmt 1 view .LVU6
+  52 0012 4FF47A76 		mov	r6, #1000
+  53 0016 0296     		str	r6, [sp, #8]
+  54 0018 0125     		movs	r5, #1
+  55 001a 0195     		str	r5, [sp, #4]
+  56 001c 0DF11703 		add	r3, sp, #23
+ARM GAS  /tmp/ccot5CYK.s 			page 4
+
+
+  57 0020 0093     		str	r3, [sp]
+  58 0022 2B46     		mov	r3, r5
+  59 0024 F422     		movs	r2, #244
+  60 0026 EE21     		movs	r1, #238
+  61 0028 0068     		ldr	r0, [r0]
+  62              	.LVL1:
+  63              		.loc 1 116 2 is_stmt 0 view .LVU7
+  64 002a FFF7FEFF 		bl	HAL_I2C_Mem_Write
+  65              	.LVL2:
+ 117:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	HAL_Delay (5);  // wait 4.5 ms
+  66              		.loc 1 117 2 is_stmt 1 view .LVU8
+  67 002e 0520     		movs	r0, #5
+  68 0030 FFF7FEFF 		bl	HAL_Delay
+  69              	.LVL3:
+ 118:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	HAL_I2C_Mem_Read(sensor_x->hi2c_bmp180_air_pressure_sensor, BMP180_ADDRESS, 0xF6, 1, Temp_RAW, 2, 
+  70              		.loc 1 118 2 view .LVU9
+  71 0034 0296     		str	r6, [sp, #8]
+  72 0036 0223     		movs	r3, #2
+  73 0038 0193     		str	r3, [sp, #4]
+  74 003a 05AB     		add	r3, sp, #20
+  75 003c 0093     		str	r3, [sp]
+  76 003e 2B46     		mov	r3, r5
+  77 0040 F622     		movs	r2, #246
+  78 0042 EE21     		movs	r1, #238
+  79 0044 2068     		ldr	r0, [r4]
+  80 0046 FFF7FEFF 		bl	HAL_I2C_Mem_Read
+  81              	.LVL4:
+ 119:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	return ((Temp_RAW[0]<<8) + Temp_RAW[1]);
+  82              		.loc 1 119 2 view .LVU10
+  83              		.loc 1 119 19 is_stmt 0 view .LVU11
+  84 004a 9DF81430 		ldrb	r3, [sp, #20]	@ zero_extendqisi2
+  85              		.loc 1 119 37 view .LVU12
+  86 004e 9DF81500 		ldrb	r0, [sp, #21]	@ zero_extendqisi2
+  87              		.loc 1 119 27 view .LVU13
+  88 0052 00EB0320 		add	r0, r0, r3, lsl #8
+ 120:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** }
+  89              		.loc 1 120 1 view .LVU14
+  90 0056 80B2     		uxth	r0, r0
+  91 0058 06B0     		add	sp, sp, #24
+  92              	.LCFI2:
+  93              		.cfi_def_cfa_offset 16
+  94              		@ sp needed
+  95 005a 70BD     		pop	{r4, r5, r6, pc}
+  96              		.loc 1 120 1 view .LVU15
+  97              		.cfi_endproc
+  98              	.LFE67:
+ 100              		.section	.text.BMP180_Get_UPress,"ax",%progbits
+ 101              		.align	1
+ 102              		.syntax unified
+ 103              		.thumb
+ 104              		.thumb_func
+ 106              	BMP180_Get_UPress:
+ 107              	.LVL5:
+ 108              	.LFB69:
+ 121:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+ 122:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** /**
+ 123:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @brief BMP180_GetTemp
+ARM GAS  /tmp/ccot5CYK.s 			page 5
+
+
+ 124:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * 
+ 125:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @param hi2c 
+ 126:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @return float 
+ 127:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  */
+ 128:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** float BMP180_GetTemp(BMP180_Air_Pressure_Sensor_Name *sensor_x)
+ 129:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** {
+ 130:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->UT = BMP180_Get_UTemp(sensor_x);
+ 131:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X1 = ((sensor_x->UT - sensor_x->AC6) * (sensor_x->AC5/(pow(2,15))));
+ 132:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X2 = ((sensor_x->MC*(pow(2,11))) / (sensor_x->X1 + sensor_x->MD));
+ 133:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B5 = sensor_x->X1 + sensor_x->X2;
+ 134:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->Temp = (sensor_x->B5 + 8)/(pow(2,4));
+ 135:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	return sensor_x->Temp / 10.0;
+ 136:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** }
+ 137:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+ 138:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** /**
+ 139:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @brief Get_UPress
+ 140:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * 
+ 141:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @param oss 
+ 142:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @param hi2c 
+ 143:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @return uint32_t 
+ 144:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  */
+ 145:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** static uint32_t BMP180_Get_UPress(BMP180_Air_Pressure_Sensor_Name *sensor_x)   // oversampling sett
+ 146:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** {
+ 109              		.loc 1 146 1 is_stmt 1 view -0
+ 110              		.cfi_startproc
+ 111              		@ args = 0, pretend = 0, frame = 8
+ 112              		@ frame_needed = 0, uses_anonymous_args = 0
+ 113              		.loc 1 146 1 is_stmt 0 view .LVU17
+ 114 0000 10B5     		push	{r4, lr}
+ 115              	.LCFI3:
+ 116              		.cfi_def_cfa_offset 8
+ 117              		.cfi_offset 4, -8
+ 118              		.cfi_offset 14, -4
+ 119 0002 86B0     		sub	sp, sp, #24
+ 120              	.LCFI4:
+ 121              		.cfi_def_cfa_offset 32
+ 122 0004 0446     		mov	r4, r0
+ 147:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	uint8_t datatowrite = 0x34+(sensor_x->oss<<6);
+ 123              		.loc 1 147 2 is_stmt 1 view .LVU18
+ 124              		.loc 1 147 38 is_stmt 0 view .LVU19
+ 125 0006 B0F91430 		ldrsh	r3, [r0, #20]
+ 126              		.loc 1 147 43 view .LVU20
+ 127 000a 9B01     		lsls	r3, r3, #6
+ 128 000c DBB2     		uxtb	r3, r3
+ 129              		.loc 1 147 28 view .LVU21
+ 130 000e 3433     		adds	r3, r3, #52
+ 131              		.loc 1 147 10 view .LVU22
+ 132 0010 8DF81730 		strb	r3, [sp, #23]
+ 148:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	uint8_t Press_RAW[3] = {0};
+ 133              		.loc 1 148 2 is_stmt 1 view .LVU23
+ 134              		.loc 1 148 10 is_stmt 0 view .LVU24
+ 135 0014 244B     		ldr	r3, .L12
+ 136 0016 1B88     		ldrh	r3, [r3]
+ 137 0018 ADF81430 		strh	r3, [sp, #20]	@ movhi
+ 138 001c 0023     		movs	r3, #0
+ 139 001e 8DF81630 		strb	r3, [sp, #22]
+ 149:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	HAL_I2C_Mem_Write(sensor_x->hi2c_bmp180_air_pressure_sensor, BMP180_ADDRESS, 0xF4, 1, &datatowrite
+ARM GAS  /tmp/ccot5CYK.s 			page 6
+
+
+ 140              		.loc 1 149 2 is_stmt 1 view .LVU25
+ 141 0022 4FF47A73 		mov	r3, #1000
+ 142 0026 0293     		str	r3, [sp, #8]
+ 143 0028 0123     		movs	r3, #1
+ 144 002a 0193     		str	r3, [sp, #4]
+ 145 002c 0DF11702 		add	r2, sp, #23
+ 146 0030 0092     		str	r2, [sp]
+ 147 0032 F422     		movs	r2, #244
+ 148 0034 EE21     		movs	r1, #238
+ 149 0036 0068     		ldr	r0, [r0]
+ 150              	.LVL6:
+ 151              		.loc 1 149 2 is_stmt 0 view .LVU26
+ 152 0038 FFF7FEFF 		bl	HAL_I2C_Mem_Write
+ 153              	.LVL7:
+ 150:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	switch (sensor_x->oss)
+ 154              		.loc 1 150 2 is_stmt 1 view .LVU27
+ 155              		.loc 1 150 18 is_stmt 0 view .LVU28
+ 156 003c B4F91430 		ldrsh	r3, [r4, #20]
+ 157              		.loc 1 150 2 view .LVU29
+ 158 0040 032B     		cmp	r3, #3
+ 159 0042 06D8     		bhi	.L4
+ 160 0044 DFE803F0 		tbb	[pc, r3]
+ 161              	.L6:
+ 162 0048 02       		.byte	(.L9-.L6)/2
+ 163 0049 24       		.byte	(.L8-.L6)/2
+ 164 004a 28       		.byte	(.L7-.L6)/2
+ 165 004b 2C       		.byte	(.L5-.L6)/2
+ 166              		.p2align 1
+ 167              	.L9:
+ 151:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	{
+ 152:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 		case (0):
+ 153:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 			HAL_Delay (5);
+ 168              		.loc 1 153 4 is_stmt 1 view .LVU30
+ 169 004c 0520     		movs	r0, #5
+ 170 004e FFF7FEFF 		bl	HAL_Delay
+ 171              	.LVL8:
+ 154:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 			break;
+ 172              		.loc 1 154 4 view .LVU31
+ 173              	.L4:
+ 155:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 		case (1):
+ 156:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 			HAL_Delay (8);
+ 157:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 			break;
+ 158:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 		case (2):
+ 159:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 			HAL_Delay (14);
+ 160:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 			break;
+ 161:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 		case (3):
+ 162:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 			HAL_Delay (26);
+ 163:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 			break;
+ 164:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	}
+ 165:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	HAL_I2C_Mem_Read(sensor_x->hi2c_bmp180_air_pressure_sensor, BMP180_ADDRESS, 0xF6, 1, Press_RAW, 3,
+ 174              		.loc 1 165 2 view .LVU32
+ 175 0052 4FF47A73 		mov	r3, #1000
+ 176 0056 0293     		str	r3, [sp, #8]
+ 177 0058 0323     		movs	r3, #3
+ 178 005a 0193     		str	r3, [sp, #4]
+ 179 005c 05AB     		add	r3, sp, #20
+ 180 005e 0093     		str	r3, [sp]
+ARM GAS  /tmp/ccot5CYK.s 			page 7
+
+
+ 181 0060 0123     		movs	r3, #1
+ 182 0062 F622     		movs	r2, #246
+ 183 0064 EE21     		movs	r1, #238
+ 184 0066 2068     		ldr	r0, [r4]
+ 185 0068 FFF7FEFF 		bl	HAL_I2C_Mem_Read
+ 186              	.LVL9:
+ 166:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	return (((Press_RAW[0]<<16)+(Press_RAW[1]<<8)+Press_RAW[2]) >> (8-sensor_x->oss));
+ 187              		.loc 1 166 2 view .LVU33
+ 188              		.loc 1 166 21 is_stmt 0 view .LVU34
+ 189 006c 9DF81420 		ldrb	r2, [sp, #20]	@ zero_extendqisi2
+ 190              		.loc 1 166 40 view .LVU35
+ 191 0070 9DF81530 		ldrb	r3, [sp, #21]	@ zero_extendqisi2
+ 192              		.loc 1 166 43 view .LVU36
+ 193 0074 1B02     		lsls	r3, r3, #8
+ 194              		.loc 1 166 29 view .LVU37
+ 195 0076 03EB0243 		add	r3, r3, r2, lsl #16
+ 196              		.loc 1 166 57 view .LVU38
+ 197 007a 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
+ 198              		.loc 1 166 47 view .LVU39
+ 199 007e 1344     		add	r3, r3, r2
+ 200              		.loc 1 166 76 view .LVU40
+ 201 0080 B4F91400 		ldrsh	r0, [r4, #20]
+ 202              		.loc 1 166 67 view .LVU41
+ 203 0084 C0F10800 		rsb	r0, r0, #8
+ 167:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** }
+ 204              		.loc 1 167 1 view .LVU42
+ 205 0088 43FA00F0 		asr	r0, r3, r0
+ 206 008c 06B0     		add	sp, sp, #24
+ 207              	.LCFI5:
+ 208              		.cfi_remember_state
+ 209              		.cfi_def_cfa_offset 8
+ 210              		@ sp needed
+ 211 008e 10BD     		pop	{r4, pc}
+ 212              	.LVL10:
+ 213              	.L8:
+ 214              	.LCFI6:
+ 215              		.cfi_restore_state
+ 156:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 			break;
+ 216              		.loc 1 156 4 is_stmt 1 view .LVU43
+ 217 0090 0820     		movs	r0, #8
+ 218 0092 FFF7FEFF 		bl	HAL_Delay
+ 219              	.LVL11:
+ 157:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 		case (2):
+ 220              		.loc 1 157 4 view .LVU44
+ 221 0096 DCE7     		b	.L4
+ 222              	.L7:
+ 159:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 			break;
+ 223              		.loc 1 159 4 view .LVU45
+ 224 0098 0E20     		movs	r0, #14
+ 225 009a FFF7FEFF 		bl	HAL_Delay
+ 226              	.LVL12:
+ 160:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 		case (3):
+ 227              		.loc 1 160 4 view .LVU46
+ 228 009e D8E7     		b	.L4
+ 229              	.L5:
+ 162:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 			break;
+ 230              		.loc 1 162 4 view .LVU47
+ARM GAS  /tmp/ccot5CYK.s 			page 8
+
+
+ 231 00a0 1A20     		movs	r0, #26
+ 232 00a2 FFF7FEFF 		bl	HAL_Delay
+ 233              	.LVL13:
+ 163:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	}
+ 234              		.loc 1 163 4 view .LVU48
+ 235 00a6 D4E7     		b	.L4
+ 236              	.L13:
+ 237              		.align	2
+ 238              	.L12:
+ 239 00a8 00000000 		.word	.LANCHOR0
+ 240              		.cfi_endproc
+ 241              	.LFE69:
+ 243              		.section	.text.BMP_180_Air_Pressure_Sensor_Init,"ax",%progbits
+ 244              		.align	1
+ 245              		.global	BMP_180_Air_Pressure_Sensor_Init
+ 246              		.syntax unified
+ 247              		.thumb
+ 248              		.thumb_func
+ 250              	BMP_180_Air_Pressure_Sensor_Init:
+ 251              	.LVL14:
+ 252              	.LFB65:
+  53:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->hi2c_bmp180_air_pressure_sensor = hi2c_x;
+ 253              		.loc 1 53 1 view -0
+ 254              		.cfi_startproc
+ 255              		@ args = 0, pretend = 0, frame = 0
+ 256              		@ frame_needed = 0, uses_anonymous_args = 0
+ 257              		@ link register save eliminated.
+  54:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC1 = 0;
+ 258              		.loc 1 54 2 view .LVU50
+  54:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC1 = 0;
+ 259              		.loc 1 54 44 is_stmt 0 view .LVU51
+ 260 0000 0160     		str	r1, [r0]
+  55:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC2 = 0;
+ 261              		.loc 1 55 2 is_stmt 1 view .LVU52
+  55:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC2 = 0;
+ 262              		.loc 1 55 16 is_stmt 0 view .LVU53
+ 263 0002 0023     		movs	r3, #0
+ 264 0004 8380     		strh	r3, [r0, #4]	@ movhi
+  56:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC3 = 0;
+ 265              		.loc 1 56 2 is_stmt 1 view .LVU54
+  56:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC3 = 0;
+ 266              		.loc 1 56 16 is_stmt 0 view .LVU55
+ 267 0006 C380     		strh	r3, [r0, #6]	@ movhi
+  57:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC4 = 0;
+ 268              		.loc 1 57 2 is_stmt 1 view .LVU56
+  57:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC4 = 0;
+ 269              		.loc 1 57 16 is_stmt 0 view .LVU57
+ 270 0008 0381     		strh	r3, [r0, #8]	@ movhi
+  58:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC5 = 0;
+ 271              		.loc 1 58 2 is_stmt 1 view .LVU58
+  58:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC5 = 0;
+ 272              		.loc 1 58 16 is_stmt 0 view .LVU59
+ 273 000a C382     		strh	r3, [r0, #22]	@ movhi
+  59:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B1 = 0;
+ 274              		.loc 1 59 2 is_stmt 1 view .LVU60
+  59:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B1 = 0;
+ 275              		.loc 1 59 16 is_stmt 0 view .LVU61
+ARM GAS  /tmp/ccot5CYK.s 			page 9
+
+
+ 276 000c 0383     		strh	r3, [r0, #24]	@ movhi
+  60:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B2 = 0;
+ 277              		.loc 1 60 2 is_stmt 1 view .LVU62
+  60:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B2 = 0;
+ 278              		.loc 1 60 15 is_stmt 0 view .LVU63
+ 279 000e 4381     		strh	r3, [r0, #10]	@ movhi
+  61:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B3 = 0;
+ 280              		.loc 1 61 2 is_stmt 1 view .LVU64
+  61:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B3 = 0;
+ 281              		.loc 1 61 15 is_stmt 0 view .LVU65
+ 282 0010 8381     		strh	r3, [r0, #12]	@ movhi
+  62:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B4 = 0;
+ 283              		.loc 1 62 2 is_stmt 1 view .LVU66
+  62:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B4 = 0;
+ 284              		.loc 1 62 15 is_stmt 0 view .LVU67
+ 285 0012 0363     		str	r3, [r0, #48]
+  63:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B5 = 0;
+ 286              		.loc 1 63 2 is_stmt 1 view .LVU68
+  63:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B5 = 0;
+ 287              		.loc 1 63 15 is_stmt 0 view .LVU69
+ 288 0014 4364     		str	r3, [r0, #68]
+  64:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B6 = 0;
+ 289              		.loc 1 64 2 is_stmt 1 view .LVU70
+  64:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B6 = 0;
+ 290              		.loc 1 64 15 is_stmt 0 view .LVU71
+ 291 0016 4363     		str	r3, [r0, #52]
+  65:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B7 = 0;
+ 292              		.loc 1 65 2 is_stmt 1 view .LVU72
+  65:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B7 = 0;
+ 293              		.loc 1 65 15 is_stmt 0 view .LVU73
+ 294 0018 8363     		str	r3, [r0, #56]
+  66:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MB = 0;
+ 295              		.loc 1 66 2 is_stmt 1 view .LVU74
+  66:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MB = 0;
+ 296              		.loc 1 66 15 is_stmt 0 view .LVU75
+ 297 001a 8364     		str	r3, [r0, #72]
+  67:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MC = 0;
+ 298              		.loc 1 67 2 is_stmt 1 view .LVU76
+  67:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MC = 0;
+ 299              		.loc 1 67 15 is_stmt 0 view .LVU77
+ 300 001c C381     		strh	r3, [r0, #14]	@ movhi
+  68:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MD = 0;
+ 301              		.loc 1 68 2 is_stmt 1 view .LVU78
+  68:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MD = 0;
+ 302              		.loc 1 68 15 is_stmt 0 view .LVU79
+ 303 001e 0382     		strh	r3, [r0, #16]	@ movhi
+  69:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->oss = oversmapling_setting;
+ 304              		.loc 1 69 2 is_stmt 1 view .LVU80
+  69:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->oss = oversmapling_setting;
+ 305              		.loc 1 69 15 is_stmt 0 view .LVU81
+ 306 0020 4382     		strh	r3, [r0, #18]	@ movhi
+  70:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->Press = 0;
+ 307              		.loc 1 70 2 is_stmt 1 view .LVU82
+  70:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->Press = 0;
+ 308              		.loc 1 70 16 is_stmt 0 view .LVU83
+ 309 0022 8282     		strh	r2, [r0, #20]	@ movhi
+  71:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->Temp = 0;
+ARM GAS  /tmp/ccot5CYK.s 			page 10
+
+
+ 310              		.loc 1 71 2 is_stmt 1 view .LVU84
+  71:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->Temp = 0;
+ 311              		.loc 1 71 18 is_stmt 0 view .LVU85
+ 312 0024 C363     		str	r3, [r0, #60]
+  72:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->UT = 0;
+ 313              		.loc 1 72 2 is_stmt 1 view .LVU86
+  72:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->UT = 0;
+ 314              		.loc 1 72 17 is_stmt 0 view .LVU87
+ 315 0026 0364     		str	r3, [r0, #64]
+  73:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->UP = 0;
+ 316              		.loc 1 73 2 is_stmt 1 view .LVU88
+  73:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->UP = 0;
+ 317              		.loc 1 73 15 is_stmt 0 view .LVU89
+ 318 0028 C361     		str	r3, [r0, #28]
+  74:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X1 = 0;
+ 319              		.loc 1 74 2 is_stmt 1 view .LVU90
+  74:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X1 = 0;
+ 320              		.loc 1 74 15 is_stmt 0 view .LVU91
+ 321 002a 0362     		str	r3, [r0, #32]
+  75:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X2 = 0;
+ 322              		.loc 1 75 2 is_stmt 1 view .LVU92
+  75:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X2 = 0;
+ 323              		.loc 1 75 15 is_stmt 0 view .LVU93
+ 324 002c 4362     		str	r3, [r0, #36]
+  76:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X3 = 0;
+ 325              		.loc 1 76 2 is_stmt 1 view .LVU94
+  76:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X3 = 0;
+ 326              		.loc 1 76 15 is_stmt 0 view .LVU95
+ 327 002e 8362     		str	r3, [r0, #40]
+  77:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** }
+ 328              		.loc 1 77 2 is_stmt 1 view .LVU96
+  77:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** }
+ 329              		.loc 1 77 15 is_stmt 0 view .LVU97
+ 330 0030 C362     		str	r3, [r0, #44]
+  78:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+ 331              		.loc 1 78 1 view .LVU98
+ 332 0032 7047     		bx	lr
+ 333              		.cfi_endproc
+ 334              	.LFE65:
+ 336              		.section	.text.BMP180_Start_Read_Calliberation_Data,"ax",%progbits
+ 337              		.align	1
+ 338              		.global	BMP180_Start_Read_Calliberation_Data
+ 339              		.syntax unified
+ 340              		.thumb
+ 341              		.thumb_func
+ 343              	BMP180_Start_Read_Calliberation_Data:
+ 344              	.LVL15:
+ 345              	.LFB66:
+  87:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	uint8_t Callib_Data[22] = {0};
+ 346              		.loc 1 87 1 is_stmt 1 view -0
+ 347              		.cfi_startproc
+ 348              		@ args = 0, pretend = 0, frame = 24
+ 349              		@ frame_needed = 0, uses_anonymous_args = 0
+  87:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	uint8_t Callib_Data[22] = {0};
+ 350              		.loc 1 87 1 is_stmt 0 view .LVU100
+ 351 0000 30B5     		push	{r4, r5, lr}
+ 352              	.LCFI7:
+ARM GAS  /tmp/ccot5CYK.s 			page 11
+
+
+ 353              		.cfi_def_cfa_offset 12
+ 354              		.cfi_offset 4, -12
+ 355              		.cfi_offset 5, -8
+ 356              		.cfi_offset 14, -4
+ 357 0002 8BB0     		sub	sp, sp, #44
+ 358              	.LCFI8:
+ 359              		.cfi_def_cfa_offset 56
+ 360 0004 0446     		mov	r4, r0
+  88:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	uint16_t Callib_Start = 0xAA;
+ 361              		.loc 1 88 2 is_stmt 1 view .LVU101
+  88:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	uint16_t Callib_Start = 0xAA;
+ 362              		.loc 1 88 10 is_stmt 0 view .LVU102
+ 363 0006 0025     		movs	r5, #0
+ 364 0008 0495     		str	r5, [sp, #16]
+ 365 000a 0595     		str	r5, [sp, #20]
+ 366 000c 0695     		str	r5, [sp, #24]
+ 367 000e 0795     		str	r5, [sp, #28]
+ 368 0010 0895     		str	r5, [sp, #32]
+ 369 0012 ADF82450 		strh	r5, [sp, #36]	@ movhi
+  89:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	HAL_I2C_Mem_Read(sensor_x->hi2c_bmp180_air_pressure_sensor, BMP180_ADDRESS, Callib_Start, 1, Calli
+ 370              		.loc 1 89 2 is_stmt 1 view .LVU103
+ 371              	.LVL16:
+  90:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+ 372              		.loc 1 90 2 view .LVU104
+ 373 0016 4FF47A73 		mov	r3, #1000
+ 374 001a 0293     		str	r3, [sp, #8]
+ 375 001c 1623     		movs	r3, #22
+ 376 001e 0193     		str	r3, [sp, #4]
+ 377 0020 04AB     		add	r3, sp, #16
+ 378 0022 0093     		str	r3, [sp]
+ 379 0024 0123     		movs	r3, #1
+ 380 0026 AA22     		movs	r2, #170
+ 381 0028 EE21     		movs	r1, #238
+ 382 002a 0068     		ldr	r0, [r0]
+ 383              	.LVL17:
+  90:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+ 384              		.loc 1 90 2 is_stmt 0 view .LVU105
+ 385 002c FFF7FEFF 		bl	HAL_I2C_Mem_Read
+ 386              	.LVL18:
+  92:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC2 = ((Callib_Data[2] << 8) | Callib_Data[3]);
+ 387              		.loc 1 92 2 is_stmt 1 view .LVU106
+  92:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC2 = ((Callib_Data[2] << 8) | Callib_Data[3]);
+ 388              		.loc 1 92 31 is_stmt 0 view .LVU107
+ 389 0030 9DF81020 		ldrb	r2, [sp, #16]	@ zero_extendqisi2
+  92:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC2 = ((Callib_Data[2] << 8) | Callib_Data[3]);
+ 390              		.loc 1 92 54 view .LVU108
+ 391 0034 9DF81130 		ldrb	r3, [sp, #17]	@ zero_extendqisi2
+  92:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC2 = ((Callib_Data[2] << 8) | Callib_Data[3]);
+ 392              		.loc 1 92 41 view .LVU109
+ 393 0038 43EA0223 		orr	r3, r3, r2, lsl #8
+  92:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC2 = ((Callib_Data[2] << 8) | Callib_Data[3]);
+ 394              		.loc 1 92 16 view .LVU110
+ 395 003c A380     		strh	r3, [r4, #4]	@ movhi
+  93:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC3 = ((Callib_Data[4] << 8) | Callib_Data[5]);
+ 396              		.loc 1 93 2 is_stmt 1 view .LVU111
+  93:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC3 = ((Callib_Data[4] << 8) | Callib_Data[5]);
+ 397              		.loc 1 93 31 is_stmt 0 view .LVU112
+ARM GAS  /tmp/ccot5CYK.s 			page 12
+
+
+ 398 003e 9DF81220 		ldrb	r2, [sp, #18]	@ zero_extendqisi2
+  93:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC3 = ((Callib_Data[4] << 8) | Callib_Data[5]);
+ 399              		.loc 1 93 54 view .LVU113
+ 400 0042 9DF81330 		ldrb	r3, [sp, #19]	@ zero_extendqisi2
+  93:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC3 = ((Callib_Data[4] << 8) | Callib_Data[5]);
+ 401              		.loc 1 93 41 view .LVU114
+ 402 0046 43EA0223 		orr	r3, r3, r2, lsl #8
+  93:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC3 = ((Callib_Data[4] << 8) | Callib_Data[5]);
+ 403              		.loc 1 93 16 view .LVU115
+ 404 004a E380     		strh	r3, [r4, #6]	@ movhi
+  94:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC4 = ((Callib_Data[6] << 8) | Callib_Data[7]);
+ 405              		.loc 1 94 2 is_stmt 1 view .LVU116
+  94:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC4 = ((Callib_Data[6] << 8) | Callib_Data[7]);
+ 406              		.loc 1 94 31 is_stmt 0 view .LVU117
+ 407 004c 9DF81420 		ldrb	r2, [sp, #20]	@ zero_extendqisi2
+  94:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC4 = ((Callib_Data[6] << 8) | Callib_Data[7]);
+ 408              		.loc 1 94 54 view .LVU118
+ 409 0050 9DF81530 		ldrb	r3, [sp, #21]	@ zero_extendqisi2
+  94:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC4 = ((Callib_Data[6] << 8) | Callib_Data[7]);
+ 410              		.loc 1 94 41 view .LVU119
+ 411 0054 43EA0223 		orr	r3, r3, r2, lsl #8
+  94:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC4 = ((Callib_Data[6] << 8) | Callib_Data[7]);
+ 412              		.loc 1 94 16 view .LVU120
+ 413 0058 2381     		strh	r3, [r4, #8]	@ movhi
+  95:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC5 = ((Callib_Data[8] << 8) | Callib_Data[9]);
+ 414              		.loc 1 95 2 is_stmt 1 view .LVU121
+  95:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC5 = ((Callib_Data[8] << 8) | Callib_Data[9]);
+ 415              		.loc 1 95 31 is_stmt 0 view .LVU122
+ 416 005a 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
+  95:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC5 = ((Callib_Data[8] << 8) | Callib_Data[9]);
+ 417              		.loc 1 95 54 view .LVU123
+ 418 005e 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+  95:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC5 = ((Callib_Data[8] << 8) | Callib_Data[9]);
+ 419              		.loc 1 95 41 view .LVU124
+ 420 0062 43EA0223 		orr	r3, r3, r2, lsl #8
+  95:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC5 = ((Callib_Data[8] << 8) | Callib_Data[9]);
+ 421              		.loc 1 95 16 view .LVU125
+ 422 0066 E382     		strh	r3, [r4, #22]	@ movhi
+  96:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC6 = ((Callib_Data[10] << 8) | Callib_Data[11]);
+ 423              		.loc 1 96 2 is_stmt 1 view .LVU126
+  96:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC6 = ((Callib_Data[10] << 8) | Callib_Data[11]);
+ 424              		.loc 1 96 31 is_stmt 0 view .LVU127
+ 425 0068 9DF81820 		ldrb	r2, [sp, #24]	@ zero_extendqisi2
+  96:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC6 = ((Callib_Data[10] << 8) | Callib_Data[11]);
+ 426              		.loc 1 96 54 view .LVU128
+ 427 006c 9DF81930 		ldrb	r3, [sp, #25]	@ zero_extendqisi2
+  96:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC6 = ((Callib_Data[10] << 8) | Callib_Data[11]);
+ 428              		.loc 1 96 41 view .LVU129
+ 429 0070 43EA0223 		orr	r3, r3, r2, lsl #8
+  96:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->AC6 = ((Callib_Data[10] << 8) | Callib_Data[11]);
+ 430              		.loc 1 96 16 view .LVU130
+ 431 0074 2383     		strh	r3, [r4, #24]	@ movhi
+  97:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B1 = ((Callib_Data[12] << 8) | Callib_Data[13]);
+ 432              		.loc 1 97 2 is_stmt 1 view .LVU131
+  97:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B1 = ((Callib_Data[12] << 8) | Callib_Data[13]);
+ 433              		.loc 1 97 31 is_stmt 0 view .LVU132
+ 434 0076 9DF81A20 		ldrb	r2, [sp, #26]	@ zero_extendqisi2
+ARM GAS  /tmp/ccot5CYK.s 			page 13
+
+
+  97:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B1 = ((Callib_Data[12] << 8) | Callib_Data[13]);
+ 435              		.loc 1 97 55 view .LVU133
+ 436 007a 9DF81B30 		ldrb	r3, [sp, #27]	@ zero_extendqisi2
+  97:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B1 = ((Callib_Data[12] << 8) | Callib_Data[13]);
+ 437              		.loc 1 97 42 view .LVU134
+ 438 007e 43EA0223 		orr	r3, r3, r2, lsl #8
+  97:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B1 = ((Callib_Data[12] << 8) | Callib_Data[13]);
+ 439              		.loc 1 97 16 view .LVU135
+ 440 0082 6383     		strh	r3, [r4, #26]	@ movhi
+  98:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B2 = ((Callib_Data[14] << 8) | Callib_Data[15]);
+ 441              		.loc 1 98 2 is_stmt 1 view .LVU136
+  98:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B2 = ((Callib_Data[14] << 8) | Callib_Data[15]);
+ 442              		.loc 1 98 30 is_stmt 0 view .LVU137
+ 443 0084 9DF81C20 		ldrb	r2, [sp, #28]	@ zero_extendqisi2
+  98:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B2 = ((Callib_Data[14] << 8) | Callib_Data[15]);
+ 444              		.loc 1 98 54 view .LVU138
+ 445 0088 9DF81D30 		ldrb	r3, [sp, #29]	@ zero_extendqisi2
+  98:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B2 = ((Callib_Data[14] << 8) | Callib_Data[15]);
+ 446              		.loc 1 98 41 view .LVU139
+ 447 008c 43EA0223 		orr	r3, r3, r2, lsl #8
+  98:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B2 = ((Callib_Data[14] << 8) | Callib_Data[15]);
+ 448              		.loc 1 98 15 view .LVU140
+ 449 0090 6381     		strh	r3, [r4, #10]	@ movhi
+  99:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MB = ((Callib_Data[16] << 8) | Callib_Data[17]);
+ 450              		.loc 1 99 2 is_stmt 1 view .LVU141
+  99:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MB = ((Callib_Data[16] << 8) | Callib_Data[17]);
+ 451              		.loc 1 99 30 is_stmt 0 view .LVU142
+ 452 0092 9DF81E20 		ldrb	r2, [sp, #30]	@ zero_extendqisi2
+  99:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MB = ((Callib_Data[16] << 8) | Callib_Data[17]);
+ 453              		.loc 1 99 54 view .LVU143
+ 454 0096 9DF81F30 		ldrb	r3, [sp, #31]	@ zero_extendqisi2
+  99:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MB = ((Callib_Data[16] << 8) | Callib_Data[17]);
+ 455              		.loc 1 99 41 view .LVU144
+ 456 009a 43EA0223 		orr	r3, r3, r2, lsl #8
+  99:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MB = ((Callib_Data[16] << 8) | Callib_Data[17]);
+ 457              		.loc 1 99 15 view .LVU145
+ 458 009e A381     		strh	r3, [r4, #12]	@ movhi
+ 100:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MC = ((Callib_Data[18] << 8) | Callib_Data[19]);
+ 459              		.loc 1 100 2 is_stmt 1 view .LVU146
+ 100:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MC = ((Callib_Data[18] << 8) | Callib_Data[19]);
+ 460              		.loc 1 100 30 is_stmt 0 view .LVU147
+ 461 00a0 9DF82020 		ldrb	r2, [sp, #32]	@ zero_extendqisi2
+ 100:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MC = ((Callib_Data[18] << 8) | Callib_Data[19]);
+ 462              		.loc 1 100 54 view .LVU148
+ 463 00a4 9DF82130 		ldrb	r3, [sp, #33]	@ zero_extendqisi2
+ 100:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MC = ((Callib_Data[18] << 8) | Callib_Data[19]);
+ 464              		.loc 1 100 41 view .LVU149
+ 465 00a8 43EA0223 		orr	r3, r3, r2, lsl #8
+ 100:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MC = ((Callib_Data[18] << 8) | Callib_Data[19]);
+ 466              		.loc 1 100 15 view .LVU150
+ 467 00ac E381     		strh	r3, [r4, #14]	@ movhi
+ 101:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MD = ((Callib_Data[20] << 8) | Callib_Data[21]);
+ 468              		.loc 1 101 2 is_stmt 1 view .LVU151
+ 101:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MD = ((Callib_Data[20] << 8) | Callib_Data[21]);
+ 469              		.loc 1 101 30 is_stmt 0 view .LVU152
+ 470 00ae 9DF82220 		ldrb	r2, [sp, #34]	@ zero_extendqisi2
+ 101:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MD = ((Callib_Data[20] << 8) | Callib_Data[21]);
+ARM GAS  /tmp/ccot5CYK.s 			page 14
+
+
+ 471              		.loc 1 101 54 view .LVU153
+ 472 00b2 9DF82330 		ldrb	r3, [sp, #35]	@ zero_extendqisi2
+ 101:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MD = ((Callib_Data[20] << 8) | Callib_Data[21]);
+ 473              		.loc 1 101 41 view .LVU154
+ 474 00b6 43EA0223 		orr	r3, r3, r2, lsl #8
+ 101:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->MD = ((Callib_Data[20] << 8) | Callib_Data[21]);
+ 475              		.loc 1 101 15 view .LVU155
+ 476 00ba 2382     		strh	r3, [r4, #16]	@ movhi
+ 102:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****     return 0;
+ 477              		.loc 1 102 2 is_stmt 1 view .LVU156
+ 102:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****     return 0;
+ 478              		.loc 1 102 30 is_stmt 0 view .LVU157
+ 479 00bc 9DF82420 		ldrb	r2, [sp, #36]	@ zero_extendqisi2
+ 102:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****     return 0;
+ 480              		.loc 1 102 54 view .LVU158
+ 481 00c0 9DF82530 		ldrb	r3, [sp, #37]	@ zero_extendqisi2
+ 102:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****     return 0;
+ 482              		.loc 1 102 41 view .LVU159
+ 483 00c4 43EA0223 		orr	r3, r3, r2, lsl #8
+ 102:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****     return 0;
+ 484              		.loc 1 102 15 view .LVU160
+ 485 00c8 6382     		strh	r3, [r4, #18]	@ movhi
+ 103:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** }
+ 486              		.loc 1 103 5 is_stmt 1 view .LVU161
+ 104:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+ 487              		.loc 1 104 1 is_stmt 0 view .LVU162
+ 488 00ca 2846     		mov	r0, r5
+ 489 00cc 0BB0     		add	sp, sp, #44
+ 490              	.LCFI9:
+ 491              		.cfi_def_cfa_offset 12
+ 492              		@ sp needed
+ 493 00ce 30BD     		pop	{r4, r5, pc}
+ 104:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+ 494              		.loc 1 104 1 view .LVU163
+ 495              		.cfi_endproc
+ 496              	.LFE66:
+ 498              		.global	__aeabi_i2d
+ 499              		.global	__aeabi_dmul
+ 500              		.global	__aeabi_d2iz
+ 501              		.global	__aeabi_ddiv
+ 502              		.global	__aeabi_d2f
+ 503              		.section	.text.BMP180_GetTemp,"ax",%progbits
+ 504              		.align	1
+ 505              		.global	BMP180_GetTemp
+ 506              		.syntax unified
+ 507              		.thumb
+ 508              		.thumb_func
+ 510              	BMP180_GetTemp:
+ 511              	.LVL19:
+ 512              	.LFB68:
+ 129:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->UT = BMP180_Get_UTemp(sensor_x);
+ 513              		.loc 1 129 1 is_stmt 1 view -0
+ 514              		.cfi_startproc
+ 515              		@ args = 0, pretend = 0, frame = 0
+ 516              		@ frame_needed = 0, uses_anonymous_args = 0
+ 129:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->UT = BMP180_Get_UTemp(sensor_x);
+ 517              		.loc 1 129 1 is_stmt 0 view .LVU165
+ARM GAS  /tmp/ccot5CYK.s 			page 15
+
+
+ 518 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 519              	.LCFI10:
+ 520              		.cfi_def_cfa_offset 24
+ 521              		.cfi_offset 3, -24
+ 522              		.cfi_offset 4, -20
+ 523              		.cfi_offset 5, -16
+ 524              		.cfi_offset 6, -12
+ 525              		.cfi_offset 7, -8
+ 526              		.cfi_offset 14, -4
+ 527 0002 0446     		mov	r4, r0
+ 130:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X1 = ((sensor_x->UT - sensor_x->AC6) * (sensor_x->AC5/(pow(2,15))));
+ 528              		.loc 1 130 2 is_stmt 1 view .LVU166
+ 130:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X1 = ((sensor_x->UT - sensor_x->AC6) * (sensor_x->AC5/(pow(2,15))));
+ 529              		.loc 1 130 17 is_stmt 0 view .LVU167
+ 530 0004 FFF7FEFF 		bl	BMP180_Get_UTemp
+ 531              	.LVL20:
+ 130:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X1 = ((sensor_x->UT - sensor_x->AC6) * (sensor_x->AC5/(pow(2,15))));
+ 532              		.loc 1 130 15 view .LVU168
+ 533 0008 E061     		str	r0, [r4, #28]
+ 131:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X2 = ((sensor_x->MC*(pow(2,11))) / (sensor_x->X1 + sensor_x->MD));
+ 534              		.loc 1 131 2 is_stmt 1 view .LVU169
+ 131:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X2 = ((sensor_x->MC*(pow(2,11))) / (sensor_x->X1 + sensor_x->MD));
+ 535              		.loc 1 131 42 is_stmt 0 view .LVU170
+ 536 000a 638B     		ldrh	r3, [r4, #26]
+ 131:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X2 = ((sensor_x->MC*(pow(2,11))) / (sensor_x->X1 + sensor_x->MD));
+ 537              		.loc 1 131 32 view .LVU171
+ 538 000c C51A     		subs	r5, r0, r3
+ 131:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X2 = ((sensor_x->MC*(pow(2,11))) / (sensor_x->X1 + sensor_x->MD));
+ 539              		.loc 1 131 65 view .LVU172
+ 540 000e 208B     		ldrh	r0, [r4, #24]
+ 541 0010 FFF7FEFF 		bl	__aeabi_i2d
+ 542              	.LVL21:
+ 543 0014 0022     		movs	r2, #0
+ 544 0016 4FF07C53 		mov	r3, #1056964608
+ 545 001a FFF7FEFF 		bl	__aeabi_dmul
+ 546              	.LVL22:
+ 547 001e 0646     		mov	r6, r0
+ 548 0020 0F46     		mov	r7, r1
+ 131:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X2 = ((sensor_x->MC*(pow(2,11))) / (sensor_x->X1 + sensor_x->MD));
+ 549              		.loc 1 131 49 view .LVU173
+ 550 0022 2846     		mov	r0, r5
+ 551 0024 FFF7FEFF 		bl	__aeabi_i2d
+ 552              	.LVL23:
+ 553 0028 3246     		mov	r2, r6
+ 554 002a 3B46     		mov	r3, r7
+ 555 002c FFF7FEFF 		bl	__aeabi_dmul
+ 556              	.LVL24:
+ 131:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X2 = ((sensor_x->MC*(pow(2,11))) / (sensor_x->X1 + sensor_x->MD));
+ 557              		.loc 1 131 15 view .LVU174
+ 558 0030 FFF7FEFF 		bl	__aeabi_d2iz
+ 559              	.LVL25:
+ 560 0034 0546     		mov	r5, r0
+ 561 0036 6062     		str	r0, [r4, #36]
+ 132:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B5 = sensor_x->X1 + sensor_x->X2;
+ 562              		.loc 1 132 2 is_stmt 1 view .LVU175
+ 132:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B5 = sensor_x->X1 + sensor_x->X2;
+ 563              		.loc 1 132 31 is_stmt 0 view .LVU176
+ARM GAS  /tmp/ccot5CYK.s 			page 16
+
+
+ 564 0038 B4F91000 		ldrsh	r0, [r4, #16]
+ 565 003c FFF7FEFF 		bl	__aeabi_i2d
+ 566              	.LVL26:
+ 567 0040 0022     		movs	r2, #0
+ 568 0042 144B     		ldr	r3, .L19
+ 569 0044 FFF7FEFF 		bl	__aeabi_dmul
+ 570              	.LVL27:
+ 571 0048 0646     		mov	r6, r0
+ 572 004a 0F46     		mov	r7, r1
+ 132:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B5 = sensor_x->X1 + sensor_x->X2;
+ 573              		.loc 1 132 71 view .LVU177
+ 574 004c B4F91200 		ldrsh	r0, [r4, #18]
+ 132:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B5 = sensor_x->X1 + sensor_x->X2;
+ 575              		.loc 1 132 45 view .LVU178
+ 576 0050 2844     		add	r0, r0, r5
+ 577 0052 FFF7FEFF 		bl	__aeabi_i2d
+ 578              	.LVL28:
+ 579 0056 0246     		mov	r2, r0
+ 580 0058 0B46     		mov	r3, r1
+ 581 005a 3046     		mov	r0, r6
+ 582 005c 3946     		mov	r1, r7
+ 583 005e FFF7FEFF 		bl	__aeabi_ddiv
+ 584              	.LVL29:
+ 132:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B5 = sensor_x->X1 + sensor_x->X2;
+ 585              		.loc 1 132 15 view .LVU179
+ 586 0062 FFF7FEFF 		bl	__aeabi_d2iz
+ 587              	.LVL30:
+ 588 0066 A062     		str	r0, [r4, #40]
+ 133:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->Temp = (sensor_x->B5 + 8)/(pow(2,4));
+ 589              		.loc 1 133 2 is_stmt 1 view .LVU180
+ 133:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->Temp = (sensor_x->B5 + 8)/(pow(2,4));
+ 590              		.loc 1 133 30 is_stmt 0 view .LVU181
+ 591 0068 2844     		add	r0, r0, r5
+ 133:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->Temp = (sensor_x->B5 + 8)/(pow(2,4));
+ 592              		.loc 1 133 15 view .LVU182
+ 593 006a 6063     		str	r0, [r4, #52]
+ 134:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	return sensor_x->Temp / 10.0;
+ 594              		.loc 1 134 2 is_stmt 1 view .LVU183
+ 134:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	return sensor_x->Temp / 10.0;
+ 595              		.loc 1 134 37 is_stmt 0 view .LVU184
+ 596 006c 0830     		adds	r0, r0, #8
+ 597 006e FFF7FEFF 		bl	__aeabi_i2d
+ 598              	.LVL31:
+ 599 0072 0022     		movs	r2, #0
+ 600 0074 084B     		ldr	r3, .L19+4
+ 601 0076 FFF7FEFF 		bl	__aeabi_dmul
+ 602              	.LVL32:
+ 134:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	return sensor_x->Temp / 10.0;
+ 603              		.loc 1 134 17 view .LVU185
+ 604 007a FFF7FEFF 		bl	__aeabi_d2iz
+ 605              	.LVL33:
+ 606 007e 2064     		str	r0, [r4, #64]
+ 135:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** }
+ 607              		.loc 1 135 2 is_stmt 1 view .LVU186
+ 135:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** }
+ 608              		.loc 1 135 24 is_stmt 0 view .LVU187
+ 609 0080 FFF7FEFF 		bl	__aeabi_i2d
+ARM GAS  /tmp/ccot5CYK.s 			page 17
+
+
+ 610              	.LVL34:
+ 611 0084 0022     		movs	r2, #0
+ 612 0086 054B     		ldr	r3, .L19+8
+ 613 0088 FFF7FEFF 		bl	__aeabi_ddiv
+ 614              	.LVL35:
+ 615 008c FFF7FEFF 		bl	__aeabi_d2f
+ 616              	.LVL36:
+ 136:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+ 617              		.loc 1 136 1 view .LVU188
+ 618 0090 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 619              	.LVL37:
+ 620              	.L20:
+ 136:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+ 621              		.loc 1 136 1 view .LVU189
+ 622 0092 00BF     		.align	2
+ 623              	.L19:
+ 624 0094 0000A040 		.word	1084227584
+ 625 0098 0000B03F 		.word	1068498944
+ 626 009c 00002440 		.word	1076101120
+ 627              		.cfi_endproc
+ 628              	.LFE68:
+ 630              		.global	__aeabi_ui2d
+ 631              		.global	__aeabi_d2uiz
+ 632              		.global	__aeabi_dadd
+ 633              		.section	.text.BMP180_GetPress,"ax",%progbits
+ 634              		.align	1
+ 635              		.global	BMP180_GetPress
+ 636              		.syntax unified
+ 637              		.thumb
+ 638              		.thumb_func
+ 640              	BMP180_GetPress:
+ 641              	.LVL38:
+ 642              	.LFB70:
+ 168:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+ 169:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** /**
+ 170:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @brief BMP180_GetPress
+ 171:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * 
+ 172:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @param oss 
+ 173:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @param hi2c 
+ 174:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @return float 
+ 175:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  */
+ 176:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** int32_t BMP180_GetPress(BMP180_Air_Pressure_Sensor_Name *sensor_x)
+ 177:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** {
+ 643              		.loc 1 177 1 is_stmt 1 view -0
+ 644              		.cfi_startproc
+ 645              		@ args = 0, pretend = 0, frame = 0
+ 646              		@ frame_needed = 0, uses_anonymous_args = 0
+ 647              		.loc 1 177 1 is_stmt 0 view .LVU191
+ 648 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 649              	.LCFI11:
+ 650              		.cfi_def_cfa_offset 32
+ 651              		.cfi_offset 4, -32
+ 652              		.cfi_offset 5, -28
+ 653              		.cfi_offset 6, -24
+ 654              		.cfi_offset 7, -20
+ 655              		.cfi_offset 8, -16
+ 656              		.cfi_offset 9, -12
+ARM GAS  /tmp/ccot5CYK.s 			page 18
+
+
+ 657              		.cfi_offset 10, -8
+ 658              		.cfi_offset 14, -4
+ 659 0004 0446     		mov	r4, r0
+ 178:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->UP = BMP180_Get_UPress(sensor_x);
+ 660              		.loc 1 178 2 is_stmt 1 view .LVU192
+ 661              		.loc 1 178 17 is_stmt 0 view .LVU193
+ 662 0006 FFF7FEFF 		bl	BMP180_Get_UPress
+ 663              	.LVL39:
+ 664              		.loc 1 178 17 view .LVU194
+ 665 000a 8046     		mov	r8, r0
+ 666              		.loc 1 178 15 view .LVU195
+ 667 000c 2062     		str	r0, [r4, #32]
+ 179:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X1 = ((sensor_x->UT - sensor_x->AC6) * (sensor_x->AC5/(pow(2,15))));
+ 668              		.loc 1 179 2 is_stmt 1 view .LVU196
+ 669              		.loc 1 179 27 is_stmt 0 view .LVU197
+ 670 000e E569     		ldr	r5, [r4, #28]
+ 671              		.loc 1 179 42 view .LVU198
+ 672 0010 638B     		ldrh	r3, [r4, #26]
+ 673              		.loc 1 179 32 view .LVU199
+ 674 0012 ED1A     		subs	r5, r5, r3
+ 675              		.loc 1 179 65 view .LVU200
+ 676 0014 208B     		ldrh	r0, [r4, #24]
+ 677 0016 FFF7FEFF 		bl	__aeabi_i2d
+ 678              	.LVL40:
+ 679 001a 0022     		movs	r2, #0
+ 680 001c 4FF07C53 		mov	r3, #1056964608
+ 681 0020 FFF7FEFF 		bl	__aeabi_dmul
+ 682              	.LVL41:
+ 683 0024 0646     		mov	r6, r0
+ 684 0026 0F46     		mov	r7, r1
+ 685              		.loc 1 179 49 view .LVU201
+ 686 0028 2846     		mov	r0, r5
+ 687 002a FFF7FEFF 		bl	__aeabi_i2d
+ 688              	.LVL42:
+ 689 002e 3246     		mov	r2, r6
+ 690 0030 3B46     		mov	r3, r7
+ 691 0032 FFF7FEFF 		bl	__aeabi_dmul
+ 692              	.LVL43:
+ 693              		.loc 1 179 15 view .LVU202
+ 694 0036 FFF7FEFF 		bl	__aeabi_d2iz
+ 695              	.LVL44:
+ 696 003a 0546     		mov	r5, r0
+ 697 003c 6062     		str	r0, [r4, #36]
+ 180:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X2 = ((sensor_x->MC * (pow(2,11))) / (sensor_x->X1 + sensor_x->MD));
+ 698              		.loc 1 180 2 is_stmt 1 view .LVU203
+ 699              		.loc 1 180 32 is_stmt 0 view .LVU204
+ 700 003e B4F91000 		ldrsh	r0, [r4, #16]
+ 701 0042 FFF7FEFF 		bl	__aeabi_i2d
+ 702              	.LVL45:
+ 703 0046 0022     		movs	r2, #0
+ 704 0048 6F4B     		ldr	r3, .L27
+ 705 004a FFF7FEFF 		bl	__aeabi_dmul
+ 706              	.LVL46:
+ 707 004e 0646     		mov	r6, r0
+ 708 0050 0F46     		mov	r7, r1
+ 709              		.loc 1 180 73 view .LVU205
+ 710 0052 B4F91200 		ldrsh	r0, [r4, #18]
+ARM GAS  /tmp/ccot5CYK.s 			page 19
+
+
+ 711              		.loc 1 180 47 view .LVU206
+ 712 0056 2844     		add	r0, r0, r5
+ 713 0058 FFF7FEFF 		bl	__aeabi_i2d
+ 714              	.LVL47:
+ 715 005c 0246     		mov	r2, r0
+ 716 005e 0B46     		mov	r3, r1
+ 717 0060 3046     		mov	r0, r6
+ 718 0062 3946     		mov	r1, r7
+ 719 0064 FFF7FEFF 		bl	__aeabi_ddiv
+ 720              	.LVL48:
+ 721              		.loc 1 180 15 view .LVU207
+ 722 0068 FFF7FEFF 		bl	__aeabi_d2iz
+ 723              	.LVL49:
+ 724 006c A062     		str	r0, [r4, #40]
+ 181:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B5 = sensor_x->X1 + sensor_x->X2;
+ 725              		.loc 1 181 2 is_stmt 1 view .LVU208
+ 726              		.loc 1 181 30 is_stmt 0 view .LVU209
+ 727 006e 0544     		add	r5, r5, r0
+ 728              		.loc 1 181 15 view .LVU210
+ 729 0070 6563     		str	r5, [r4, #52]
+ 182:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B6 = sensor_x->B5 - 4000;
+ 730              		.loc 1 182 2 is_stmt 1 view .LVU211
+ 731              		.loc 1 182 30 is_stmt 0 view .LVU212
+ 732 0072 A5F57A69 		sub	r9, r5, #4000
+ 733              		.loc 1 182 15 view .LVU213
+ 734 0076 C4F83890 		str	r9, [r4, #56]
+ 183:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X1 = (sensor_x->B2 * (sensor_x->B6 *sensor_x->B6/(pow(2,12))))/(pow(2,11));
+ 735              		.loc 1 183 2 is_stmt 1 view .LVU214
+ 736              		.loc 1 183 26 is_stmt 0 view .LVU215
+ 737 007a B4F90C50 		ldrsh	r5, [r4, #12]
+ 738              		.loc 1 183 60 view .LVU216
+ 739 007e 09FB09F0 		mul	r0, r9, r9
+ 740 0082 FFF7FEFF 		bl	__aeabi_i2d
+ 741              	.LVL50:
+ 742 0086 0022     		movs	r2, #0
+ 743 0088 604B     		ldr	r3, .L27+4
+ 744 008a FFF7FEFF 		bl	__aeabi_dmul
+ 745              	.LVL51:
+ 746 008e 0646     		mov	r6, r0
+ 747 0090 0F46     		mov	r7, r1
+ 748              		.loc 1 183 31 view .LVU217
+ 749 0092 2846     		mov	r0, r5
+ 750 0094 FFF7FEFF 		bl	__aeabi_i2d
+ 751              	.LVL52:
+ 752 0098 3246     		mov	r2, r6
+ 753 009a 3B46     		mov	r3, r7
+ 754 009c FFF7FEFF 		bl	__aeabi_dmul
+ 755              	.LVL53:
+ 756              		.loc 1 183 74 view .LVU218
+ 757 00a0 0022     		movs	r2, #0
+ 758 00a2 4FF07D53 		mov	r3, #1061158912
+ 759 00a6 FFF7FEFF 		bl	__aeabi_dmul
+ 760              	.LVL54:
+ 761              		.loc 1 183 15 view .LVU219
+ 762 00aa FFF7FEFF 		bl	__aeabi_d2iz
+ 763              	.LVL55:
+ 764 00ae 0546     		mov	r5, r0
+ARM GAS  /tmp/ccot5CYK.s 			page 20
+
+
+ 765 00b0 6062     		str	r0, [r4, #36]
+ 184:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X2 = sensor_x->AC2 * sensor_x->B6/(pow(2,11));
+ 766              		.loc 1 184 2 is_stmt 1 view .LVU220
+ 767              		.loc 1 184 25 is_stmt 0 view .LVU221
+ 768 00b2 B4F90600 		ldrsh	r0, [r4, #6]
+ 769              		.loc 1 184 45 view .LVU222
+ 770 00b6 00FB09F0 		mul	r0, r0, r9
+ 771 00ba FFF7FEFF 		bl	__aeabi_i2d
+ 772              	.LVL56:
+ 773 00be 0022     		movs	r2, #0
+ 774 00c0 4FF07D53 		mov	r3, #1061158912
+ 775 00c4 FFF7FEFF 		bl	__aeabi_dmul
+ 776              	.LVL57:
+ 777              		.loc 1 184 15 view .LVU223
+ 778 00c8 FFF7FEFF 		bl	__aeabi_d2iz
+ 779              	.LVL58:
+ 780 00cc A062     		str	r0, [r4, #40]
+ 185:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X3 = sensor_x->X1 + sensor_x->X2;
+ 781              		.loc 1 185 2 is_stmt 1 view .LVU224
+ 782              		.loc 1 185 30 is_stmt 0 view .LVU225
+ 783 00ce 0544     		add	r5, r5, r0
+ 784              		.loc 1 185 15 view .LVU226
+ 785 00d0 E562     		str	r5, [r4, #44]
+ 186:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B3 = (((sensor_x->AC1 * 4 + sensor_x->X3) << sensor_x->oss)+2)/4;
+ 786              		.loc 1 186 2 is_stmt 1 view .LVU227
+ 787              		.loc 1 186 28 is_stmt 0 view .LVU228
+ 788 00d2 B4F90430 		ldrsh	r3, [r4, #4]
+ 789              		.loc 1 186 38 view .LVU229
+ 790 00d6 05EB8305 		add	r5, r5, r3, lsl #2
+ 791              		.loc 1 186 65 view .LVU230
+ 792 00da B4F914A0 		ldrsh	r10, [r4, #20]
+ 793              		.loc 1 186 54 view .LVU231
+ 794 00de 05FA0AF5 		lsl	r5, r5, r10
+ 795              		.loc 1 186 74 view .LVU232
+ 796 00e2 0235     		adds	r5, r5, #2
+ 797 00e4 00F18880 		bmi	.L26
+ 798              	.L22:
+ 799 00e8 AD10     		asrs	r5, r5, #2
+ 800              		.loc 1 186 15 view .LVU233
+ 801 00ea 2563     		str	r5, [r4, #48]
+ 187:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X1 = sensor_x->AC3 * sensor_x->B6/pow(2,13);
+ 802              		.loc 1 187 2 is_stmt 1 view .LVU234
+ 803              		.loc 1 187 25 is_stmt 0 view .LVU235
+ 804 00ec B4F90800 		ldrsh	r0, [r4, #8]
+ 805              		.loc 1 187 45 view .LVU236
+ 806 00f0 00FB09F0 		mul	r0, r0, r9
+ 807 00f4 FFF7FEFF 		bl	__aeabi_i2d
+ 808              	.LVL59:
+ 809 00f8 0022     		movs	r2, #0
+ 810 00fa 454B     		ldr	r3, .L27+8
+ 811 00fc FFF7FEFF 		bl	__aeabi_dmul
+ 812              	.LVL60:
+ 813              		.loc 1 187 15 view .LVU237
+ 814 0100 FFF7FEFF 		bl	__aeabi_d2iz
+ 815              	.LVL61:
+ 816 0104 8146     		mov	r9, r0
+ 817 0106 6062     		str	r0, [r4, #36]
+ARM GAS  /tmp/ccot5CYK.s 			page 21
+
+
+ 188:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X2 = (sensor_x->B1 * (sensor_x->B6 * sensor_x->B6/(pow(2,12))))/(pow(2,16));
+ 818              		.loc 1 188 2 is_stmt 1 view .LVU238
+ 819              		.loc 1 188 31 is_stmt 0 view .LVU239
+ 820 0108 B4F90A00 		ldrsh	r0, [r4, #10]
+ 821 010c FFF7FEFF 		bl	__aeabi_i2d
+ 822              	.LVL62:
+ 823 0110 3246     		mov	r2, r6
+ 824 0112 3B46     		mov	r3, r7
+ 825 0114 FFF7FEFF 		bl	__aeabi_dmul
+ 826              	.LVL63:
+ 827              		.loc 1 188 75 view .LVU240
+ 828 0118 0022     		movs	r2, #0
+ 829 011a 3E4B     		ldr	r3, .L27+12
+ 830 011c FFF7FEFF 		bl	__aeabi_dmul
+ 831              	.LVL64:
+ 832              		.loc 1 188 15 view .LVU241
+ 833 0120 FFF7FEFF 		bl	__aeabi_d2iz
+ 834              	.LVL65:
+ 835 0124 A062     		str	r0, [r4, #40]
+ 189:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X3 = ((sensor_x->X1 + sensor_x->X2)+2)/pow(2,2);
+ 836              		.loc 1 189 2 is_stmt 1 view .LVU242
+ 837              		.loc 1 189 32 is_stmt 0 view .LVU243
+ 838 0126 4844     		add	r0, r0, r9
+ 839              		.loc 1 189 50 view .LVU244
+ 840 0128 0230     		adds	r0, r0, #2
+ 841 012a FFF7FEFF 		bl	__aeabi_i2d
+ 842              	.LVL66:
+ 843 012e 0022     		movs	r2, #0
+ 844 0130 394B     		ldr	r3, .L27+16
+ 845 0132 FFF7FEFF 		bl	__aeabi_dmul
+ 846              	.LVL67:
+ 847              		.loc 1 189 15 view .LVU245
+ 848 0136 FFF7FEFF 		bl	__aeabi_d2iz
+ 849              	.LVL68:
+ 850 013a E062     		str	r0, [r4, #44]
+ 190:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B4 = sensor_x->AC4*(uint32_t)(sensor_x->X3 + 32768)/(pow(2,15));
+ 851              		.loc 1 190 2 is_stmt 1 view .LVU246
+ 852              		.loc 1 190 25 is_stmt 0 view .LVU247
+ 853 013c E38A     		ldrh	r3, [r4, #22]
+ 854              		.loc 1 190 55 view .LVU248
+ 855 013e 00F50040 		add	r0, r0, #32768
+ 856              		.loc 1 190 63 view .LVU249
+ 857 0142 03FB00F0 		mul	r0, r3, r0
+ 858 0146 FFF7FEFF 		bl	__aeabi_ui2d
+ 859              	.LVL69:
+ 860 014a 0022     		movs	r2, #0
+ 861 014c 4FF07C53 		mov	r3, #1056964608
+ 862 0150 FFF7FEFF 		bl	__aeabi_dmul
+ 863              	.LVL70:
+ 864              		.loc 1 190 15 view .LVU250
+ 865 0154 FFF7FEFF 		bl	__aeabi_d2uiz
+ 866              	.LVL71:
+ 867 0158 6064     		str	r0, [r4, #68]
+ 191:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->B7 = ((uint32_t)(sensor_x->UP - sensor_x->B3))*(50000>>sensor_x->oss);
+ 868              		.loc 1 191 2 is_stmt 1 view .LVU251
+ 869              		.loc 1 191 42 is_stmt 0 view .LVU252
+ 870 015a A8EB0508 		sub	r8, r8, r5
+ARM GAS  /tmp/ccot5CYK.s 			page 22
+
+
+ 871              		.loc 1 191 65 view .LVU253
+ 872 015e 4CF25033 		movw	r3, #50000
+ 873 0162 43FA0AF3 		asr	r3, r3, r10
+ 874              		.loc 1 191 58 view .LVU254
+ 875 0166 03FB08F3 		mul	r3, r3, r8
+ 876              		.loc 1 191 15 view .LVU255
+ 877 016a A364     		str	r3, [r4, #72]
+ 192:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	if (sensor_x->B7<0x80000000) 
+ 878              		.loc 1 192 2 is_stmt 1 view .LVU256
+ 879              		.loc 1 192 5 is_stmt 0 view .LVU257
+ 880 016c 002B     		cmp	r3, #0
+ 881 016e 45DB     		blt	.L23
+ 193:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	{
+ 194:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 		sensor_x->Press = (sensor_x->B7*2)/sensor_x->B4;
+ 882              		.loc 1 194 3 is_stmt 1 view .LVU258
+ 883              		.loc 1 194 34 is_stmt 0 view .LVU259
+ 884 0170 5B00     		lsls	r3, r3, #1
+ 885              		.loc 1 194 37 view .LVU260
+ 886 0172 B3FBF0F0 		udiv	r0, r3, r0
+ 887              		.loc 1 194 19 view .LVU261
+ 888 0176 E063     		str	r0, [r4, #60]
+ 889              	.L24:
+ 195:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	}
+ 196:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	else
+ 197:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	{
+ 198:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 		sensor_x->Press = (sensor_x->B7/sensor_x->B4)*2;
+ 199:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	} 
+ 200:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X1 = (sensor_x->Press/(pow(2,8)))*(sensor_x->Press/(pow(2,8)));
+ 890              		.loc 1 200 2 is_stmt 1 view .LVU262
+ 891              		.loc 1 200 26 is_stmt 0 view .LVU263
+ 892 0178 D4F83C80 		ldr	r8, [r4, #60]
+ 893              		.loc 1 200 33 view .LVU264
+ 894 017c 4046     		mov	r0, r8
+ 895 017e FFF7FEFF 		bl	__aeabi_i2d
+ 896              	.LVL72:
+ 897 0182 0646     		mov	r6, r0
+ 898 0184 0F46     		mov	r7, r1
+ 899 0186 0022     		movs	r2, #0
+ 900 0188 244B     		ldr	r3, .L27+20
+ 901 018a FFF7FEFF 		bl	__aeabi_dmul
+ 902              	.LVL73:
+ 903 018e 0246     		mov	r2, r0
+ 904 0190 0B46     		mov	r3, r1
+ 905              		.loc 1 200 45 view .LVU265
+ 906 0192 FFF7FEFF 		bl	__aeabi_dmul
+ 907              	.LVL74:
+ 908              		.loc 1 200 15 view .LVU266
+ 909 0196 FFF7FEFF 		bl	__aeabi_d2iz
+ 910              	.LVL75:
+ 911 019a 6062     		str	r0, [r4, #36]
+ 201:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X1 = (sensor_x->X1*3038)/(pow(2,16));
+ 912              		.loc 1 201 2 is_stmt 1 view .LVU267
+ 913              		.loc 1 201 36 is_stmt 0 view .LVU268
+ 914 019c 40F6DE33 		movw	r3, #3038
+ 915 01a0 03FB00F0 		mul	r0, r3, r0
+ 916 01a4 FFF7FEFF 		bl	__aeabi_i2d
+ 917              	.LVL76:
+ARM GAS  /tmp/ccot5CYK.s 			page 23
+
+
+ 918 01a8 0022     		movs	r2, #0
+ 919 01aa 1A4B     		ldr	r3, .L27+12
+ 920 01ac FFF7FEFF 		bl	__aeabi_dmul
+ 921              	.LVL77:
+ 922              		.loc 1 201 15 view .LVU269
+ 923 01b0 FFF7FEFF 		bl	__aeabi_d2iz
+ 924              	.LVL78:
+ 925 01b4 0546     		mov	r5, r0
+ 926 01b6 6062     		str	r0, [r4, #36]
+ 202:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X2 = (-7357 * sensor_x->Press)/(pow(2,16));
+ 927              		.loc 1 202 2 is_stmt 1 view .LVU270
+ 928              		.loc 1 202 42 is_stmt 0 view .LVU271
+ 929 01b8 1948     		ldr	r0, .L27+24
+ 930 01ba 00FB08F0 		mul	r0, r0, r8
+ 931 01be FFF7FEFF 		bl	__aeabi_i2d
+ 932              	.LVL79:
+ 933 01c2 0022     		movs	r2, #0
+ 934 01c4 134B     		ldr	r3, .L27+12
+ 935 01c6 FFF7FEFF 		bl	__aeabi_dmul
+ 936              	.LVL80:
+ 937              		.loc 1 202 15 view .LVU272
+ 938 01ca FFF7FEFF 		bl	__aeabi_d2iz
+ 939              	.LVL81:
+ 940 01ce A062     		str	r0, [r4, #40]
+ 203:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->Press = sensor_x->Press + (sensor_x->X1 + sensor_x->X2+3791)/(pow(2,4));
+ 941              		.loc 1 203 2 is_stmt 1 view .LVU273
+ 942              		.loc 1 203 52 is_stmt 0 view .LVU274
+ 943 01d0 2844     		add	r0, r0, r5
+ 944              		.loc 1 203 72 view .LVU275
+ 945 01d2 00F6CF60 		addw	r0, r0, #3791
+ 946 01d6 FFF7FEFF 		bl	__aeabi_i2d
+ 947              	.LVL82:
+ 948 01da 0022     		movs	r2, #0
+ 949 01dc 114B     		ldr	r3, .L27+28
+ 950 01de FFF7FEFF 		bl	__aeabi_dmul
+ 951              	.LVL83:
+ 952 01e2 0246     		mov	r2, r0
+ 953 01e4 0B46     		mov	r3, r1
+ 954              		.loc 1 203 36 view .LVU276
+ 955 01e6 3046     		mov	r0, r6
+ 956 01e8 3946     		mov	r1, r7
+ 957 01ea FFF7FEFF 		bl	__aeabi_dadd
+ 958              	.LVL84:
+ 959              		.loc 1 203 18 view .LVU277
+ 960 01ee FFF7FEFF 		bl	__aeabi_d2iz
+ 961              	.LVL85:
+ 962 01f2 E063     		str	r0, [r4, #60]
+ 204:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	return 	sensor_x->Press;
+ 963              		.loc 1 204 2 is_stmt 1 view .LVU278
+ 205:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** }
+ 964              		.loc 1 205 1 is_stmt 0 view .LVU279
+ 965 01f4 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 966              	.LVL86:
+ 967              	.L26:
+ 186:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	sensor_x->X1 = sensor_x->AC3 * sensor_x->B6/pow(2,13);
+ 968              		.loc 1 186 74 view .LVU280
+ 969 01f8 0335     		adds	r5, r5, #3
+ARM GAS  /tmp/ccot5CYK.s 			page 24
+
+
+ 970 01fa 75E7     		b	.L22
+ 971              	.L23:
+ 198:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	} 
+ 972              		.loc 1 198 3 is_stmt 1 view .LVU281
+ 198:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	} 
+ 973              		.loc 1 198 34 is_stmt 0 view .LVU282
+ 974 01fc B3FBF0F3 		udiv	r3, r3, r0
+ 198:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	} 
+ 975              		.loc 1 198 48 view .LVU283
+ 976 0200 5B00     		lsls	r3, r3, #1
+ 198:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	} 
+ 977              		.loc 1 198 19 view .LVU284
+ 978 0202 E363     		str	r3, [r4, #60]
+ 979 0204 B8E7     		b	.L24
+ 980              	.L28:
+ 981 0206 00BF     		.align	2
+ 982              	.L27:
+ 983 0208 0000A040 		.word	1084227584
+ 984 020c 0000303F 		.word	1060110336
+ 985 0210 0000203F 		.word	1059061760
+ 986 0214 0000F03E 		.word	1055916032
+ 987 0218 0000D03F 		.word	1070596096
+ 988 021c 0000703F 		.word	1064304640
+ 989 0220 43E3FFFF 		.word	-7357
+ 990 0224 0000B03F 		.word	1068498944
+ 991              		.cfi_endproc
+ 992              	.LFE70:
+ 994              		.global	__aeabi_i2f
+ 995              		.global	__aeabi_fdiv
+ 996              		.global	__aeabi_f2d
+ 997              		.global	__aeabi_dsub
+ 998              		.section	.text.BMP180_GetAlt,"ax",%progbits
+ 999              		.align	1
+ 1000              		.global	BMP180_GetAlt
+ 1001              		.syntax unified
+ 1002              		.thumb
+ 1003              		.thumb_func
+ 1005              	BMP180_GetAlt:
+ 1006              	.LVL87:
+ 1007              	.LFB71:
+ 206:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+ 207:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 
+ 208:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** /**
+ 209:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @brief BMP180_GetAlt
+ 210:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * 
+ 211:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @param oss 
+ 212:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @param hi2c 
+ 213:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  * @return float 
+ 214:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c ****  */
+ 215:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** float BMP180_GetAlt (BMP180_Air_Pressure_Sensor_Name *sensor_x)
+ 216:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** {
+ 1008              		.loc 1 216 1 is_stmt 1 view -0
+ 1009              		.cfi_startproc
+ 1010              		@ args = 0, pretend = 0, frame = 0
+ 1011              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1012              		.loc 1 216 1 is_stmt 0 view .LVU286
+ 1013 0000 10B5     		push	{r4, lr}
+ARM GAS  /tmp/ccot5CYK.s 			page 25
+
+
+ 1014              	.LCFI12:
+ 1015              		.cfi_def_cfa_offset 8
+ 1016              		.cfi_offset 4, -8
+ 1017              		.cfi_offset 14, -4
+ 1018 0002 0446     		mov	r4, r0
+ 217:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	BMP180_GetPress(sensor_x);
+ 1019              		.loc 1 217 2 is_stmt 1 view .LVU287
+ 1020 0004 FFF7FEFF 		bl	BMP180_GetPress
+ 1021              	.LVL88:
+ 218:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	// return 44330*(1-(pow((sensor_x->Press/(float)atmPress), 0.19029495718)));
+ 219:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** 	return (1-(pow(((float)sensor_x->Press/(float)atmPress), 0.19029495718)));
+ 1022              		.loc 1 219 2 view .LVU288
+ 1023              		.loc 1 219 18 is_stmt 0 view .LVU289
+ 1024 0008 E06B     		ldr	r0, [r4, #60]
+ 1025 000a FFF7FEFF 		bl	__aeabi_i2f
+ 1026              	.LVL89:
+ 1027              		.loc 1 219 40 view .LVU290
+ 1028 000e 0C49     		ldr	r1, .L31+8
+ 1029 0010 FFF7FEFF 		bl	__aeabi_fdiv
+ 1030              	.LVL90:
+ 1031              		.loc 1 219 13 view .LVU291
+ 1032 0014 FFF7FEFF 		bl	__aeabi_f2d
+ 1033              	.LVL91:
+ 1034 0018 07A3     		adr	r3, .L31
+ 1035 001a D3E90023 		ldrd	r2, [r3]
+ 1036 001e FFF7FEFF 		bl	pow
+ 1037              	.LVL92:
+ 1038 0022 0246     		mov	r2, r0
+ 1039 0024 0B46     		mov	r3, r1
+ 1040              		.loc 1 219 11 view .LVU292
+ 1041 0026 0020     		movs	r0, #0
+ 1042 0028 0649     		ldr	r1, .L31+12
+ 1043 002a FFF7FEFF 		bl	__aeabi_dsub
+ 1044              	.LVL93:
+ 1045 002e FFF7FEFF 		bl	__aeabi_d2f
+ 1046              	.LVL94:
+ 220:BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.c **** }
+ 1047              		.loc 1 220 1 view .LVU293
+ 1048 0032 10BD     		pop	{r4, pc}
+ 1049              	.LVL95:
+ 1050              	.L32:
+ 1051              		.loc 1 220 1 view .LVU294
+ 1052 0034 AFF30080 		.align	3
+ 1053              	.L31:
+ 1054 0038 E445D7CC 		.word	-858307100
+ 1055 003c 955BC83F 		.word	1070095253
+ 1056 0040 80E6C547 		.word	1204151936
+ 1057 0044 0000F03F 		.word	1072693248
+ 1058              		.cfi_endproc
+ 1059              	.LFE71:
+ 1061              		.section	.rodata
+ 1062              		.align	2
+ 1063              		.set	.LANCHOR0,. + 0
+ 1064              	.LC0:
+ 1065 0000 0000     		.ascii	"\000\000"
+ 1066 0002 00       		.space	1
+ 1067              		.text
+ARM GAS  /tmp/ccot5CYK.s 			page 26
+
+
+ 1068              	.Letext0:
+ 1069              		.file 2 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 1070              		.file 3 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 1071              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 1072              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 1073              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 1074              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h"
+ 1075              		.file 8 "BMP180_Air_Pressure_Sensor/BMP180_Air_Pressure_Sensor.h"
+ 1076              		.file 9 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 1077              		.file 10 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ARM GAS  /tmp/ccot5CYK.s 			page 27
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 BMP180_Air_Pressure_Sensor.c
+     /tmp/ccot5CYK.s:18     .text.BMP180_Get_UTemp:0000000000000000 $t
+     /tmp/ccot5CYK.s:23     .text.BMP180_Get_UTemp:0000000000000000 BMP180_Get_UTemp
+     /tmp/ccot5CYK.s:101    .text.BMP180_Get_UPress:0000000000000000 $t
+     /tmp/ccot5CYK.s:106    .text.BMP180_Get_UPress:0000000000000000 BMP180_Get_UPress
+     /tmp/ccot5CYK.s:162    .text.BMP180_Get_UPress:0000000000000048 $d
+     /tmp/ccot5CYK.s:166    .text.BMP180_Get_UPress:000000000000004c $t
+     /tmp/ccot5CYK.s:239    .text.BMP180_Get_UPress:00000000000000a8 $d
+     /tmp/ccot5CYK.s:244    .text.BMP_180_Air_Pressure_Sensor_Init:0000000000000000 $t
+     /tmp/ccot5CYK.s:250    .text.BMP_180_Air_Pressure_Sensor_Init:0000000000000000 BMP_180_Air_Pressure_Sensor_Init
+     /tmp/ccot5CYK.s:337    .text.BMP180_Start_Read_Calliberation_Data:0000000000000000 $t
+     /tmp/ccot5CYK.s:343    .text.BMP180_Start_Read_Calliberation_Data:0000000000000000 BMP180_Start_Read_Calliberation_Data
+     /tmp/ccot5CYK.s:504    .text.BMP180_GetTemp:0000000000000000 $t
+     /tmp/ccot5CYK.s:510    .text.BMP180_GetTemp:0000000000000000 BMP180_GetTemp
+     /tmp/ccot5CYK.s:624    .text.BMP180_GetTemp:0000000000000094 $d
+     /tmp/ccot5CYK.s:634    .text.BMP180_GetPress:0000000000000000 $t
+     /tmp/ccot5CYK.s:640    .text.BMP180_GetPress:0000000000000000 BMP180_GetPress
+     /tmp/ccot5CYK.s:983    .text.BMP180_GetPress:0000000000000208 $d
+     /tmp/ccot5CYK.s:999    .text.BMP180_GetAlt:0000000000000000 $t
+     /tmp/ccot5CYK.s:1005   .text.BMP180_GetAlt:0000000000000000 BMP180_GetAlt
+     /tmp/ccot5CYK.s:1054   .text.BMP180_GetAlt:0000000000000038 $d
+     /tmp/ccot5CYK.s:1062   .rodata:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+HAL_I2C_Mem_Write
+HAL_Delay
+HAL_I2C_Mem_Read
+__aeabi_i2d
+__aeabi_dmul
+__aeabi_d2iz
+__aeabi_ddiv
+__aeabi_d2f
+__aeabi_ui2d
+__aeabi_d2uiz
+__aeabi_dadd
+__aeabi_i2f
+__aeabi_fdiv
+__aeabi_f2d
+__aeabi_dsub
+pow

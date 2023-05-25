@@ -1,0 +1,7 @@
+../MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c:28:6:Mh_Z19B_Co2_Sensor_Init	16	static
+../MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c:38:9:Zero_Point_Calibration	16	static
+../MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c:52:9:Span_Point_Calibration	16	static
+../MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c:64:9:Sensor_Detection_Range_Setting	16	static
+../MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c:76:9:Sensor_Set_Auto_Calibration	16	static
+../MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c:90:10:Mh_Z19B_Co2_Sensor_Concentration	24	static
+../MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c:117:7:Mh_Z19B_Co2_Sensor_Caclulator_Average	88	dynamic

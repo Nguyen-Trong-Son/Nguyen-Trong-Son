@@ -1,0 +1,919 @@
+ARM GAS  /tmp/ccA5wRMo.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"CLCD_I2C.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.CLCD_Delay,"ax",%progbits
+  18              		.align	1
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  23              	CLCD_Delay:
+  24              	.LVL0:
+  25              	.LFB65:
+  26              		.file 1 "I2C_LCD/CLCD_I2C.c"
+   1:I2C_LCD/CLCD_I2C.c **** #include "CLCD_I2C.h"
+   2:I2C_LCD/CLCD_I2C.c **** 
+   3:I2C_LCD/CLCD_I2C.c **** //************************** Low Level Function ***************************************************
+   4:I2C_LCD/CLCD_I2C.c **** static void CLCD_Delay(uint16_t Time)
+   5:I2C_LCD/CLCD_I2C.c **** {
+  27              		.loc 1 5 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              		.loc 1 5 1 is_stmt 0 view .LVU1
+  32 0000 08B5     		push	{r3, lr}
+  33              	.LCFI0:
+  34              		.cfi_def_cfa_offset 8
+  35              		.cfi_offset 3, -8
+  36              		.cfi_offset 14, -4
+   6:I2C_LCD/CLCD_I2C.c **** 	HAL_Delay(Time);
+  37              		.loc 1 6 2 is_stmt 1 view .LVU2
+  38 0002 FFF7FEFF 		bl	HAL_Delay
+  39              	.LVL1:
+   7:I2C_LCD/CLCD_I2C.c **** }
+  40              		.loc 1 7 1 is_stmt 0 view .LVU3
+  41 0006 08BD     		pop	{r3, pc}
+  42              		.cfi_endproc
+  43              	.LFE65:
+  45              		.section	.text.CLCD_WriteI2C,"ax",%progbits
+  46              		.align	1
+  47              		.syntax unified
+  48              		.thumb
+  49              		.thumb_func
+  51              	CLCD_WriteI2C:
+  52              	.LVL2:
+  53              	.LFB66:
+ARM GAS  /tmp/ccA5wRMo.s 			page 2
+
+
+   8:I2C_LCD/CLCD_I2C.c **** static void CLCD_WriteI2C(CLCD_I2C_Name* LCD, uint8_t Data, uint8_t Mode)
+   9:I2C_LCD/CLCD_I2C.c **** {
+  54              		.loc 1 9 1 is_stmt 1 view -0
+  55              		.cfi_startproc
+  56              		@ args = 0, pretend = 0, frame = 8
+  57              		@ frame_needed = 0, uses_anonymous_args = 0
+  58              		.loc 1 9 1 is_stmt 0 view .LVU5
+  59 0000 70B5     		push	{r4, r5, r6, lr}
+  60              	.LCFI1:
+  61              		.cfi_def_cfa_offset 16
+  62              		.cfi_offset 4, -16
+  63              		.cfi_offset 5, -12
+  64              		.cfi_offset 6, -8
+  65              		.cfi_offset 14, -4
+  66 0002 84B0     		sub	sp, sp, #16
+  67              	.LCFI2:
+  68              		.cfi_def_cfa_offset 32
+  69 0004 0546     		mov	r5, r0
+  10:I2C_LCD/CLCD_I2C.c **** 	char Data_H;
+  70              		.loc 1 10 2 is_stmt 1 view .LVU6
+  11:I2C_LCD/CLCD_I2C.c **** 	char Data_L;
+  71              		.loc 1 11 2 view .LVU7
+  12:I2C_LCD/CLCD_I2C.c **** 	uint8_t Data_I2C[4];
+  72              		.loc 1 12 2 view .LVU8
+  13:I2C_LCD/CLCD_I2C.c **** 	Data_H = Data&0xF0;
+  73              		.loc 1 13 2 view .LVU9
+  74              		.loc 1 13 9 is_stmt 0 view .LVU10
+  75 0006 01F0F006 		and	r6, r1, #240
+  76              	.LVL3:
+  14:I2C_LCD/CLCD_I2C.c **** 	Data_L = (Data<<4)&0xF0;
+  77              		.loc 1 14 2 is_stmt 1 view .LVU11
+  78              		.loc 1 14 16 is_stmt 0 view .LVU12
+  79 000a 0901     		lsls	r1, r1, #4
+  80              	.LVL4:
+  81              		.loc 1 14 9 view .LVU13
+  82 000c CCB2     		uxtb	r4, r1
+  83              	.LVL5:
+  15:I2C_LCD/CLCD_I2C.c **** 	if(LCD->BACKLIGHT)
+  84              		.loc 1 15 2 is_stmt 1 view .LVU14
+  85              		.loc 1 15 8 is_stmt 0 view .LVU15
+  86 000e C37A     		ldrb	r3, [r0, #11]	@ zero_extendqisi2
+  87              		.loc 1 15 4 view .LVU16
+  88 0010 1BB1     		cbz	r3, .L4
+  16:I2C_LCD/CLCD_I2C.c **** 	{
+  17:I2C_LCD/CLCD_I2C.c **** 		Data_H |= LCD_BACKLIGHT; 
+  89              		.loc 1 17 3 is_stmt 1 view .LVU17
+  90              		.loc 1 17 10 is_stmt 0 view .LVU18
+  91 0012 46F00806 		orr	r6, r6, #8
+  92              	.LVL6:
+  18:I2C_LCD/CLCD_I2C.c **** 		Data_L |= LCD_BACKLIGHT; 
+  93              		.loc 1 18 3 is_stmt 1 view .LVU19
+  94              		.loc 1 18 10 is_stmt 0 view .LVU20
+  95 0016 44F00804 		orr	r4, r4, #8
+  96              	.LVL7:
+  97              	.L4:
+  19:I2C_LCD/CLCD_I2C.c **** 	}
+  20:I2C_LCD/CLCD_I2C.c **** 	if(Mode == CLCD_DATA)
+ARM GAS  /tmp/ccA5wRMo.s 			page 3
+
+
+  98              		.loc 1 20 2 is_stmt 1 view .LVU21
+  99              		.loc 1 20 4 is_stmt 0 view .LVU22
+ 100 001a 012A     		cmp	r2, #1
+ 101 001c 05D0     		beq	.L8
+  21:I2C_LCD/CLCD_I2C.c **** 	{
+  22:I2C_LCD/CLCD_I2C.c **** 		Data_H |= LCD_RS;
+  23:I2C_LCD/CLCD_I2C.c **** 		Data_L |= LCD_RS;
+  24:I2C_LCD/CLCD_I2C.c **** 	}
+  25:I2C_LCD/CLCD_I2C.c **** 	else if(Mode == CLCD_COMMAND)
+ 102              		.loc 1 25 7 is_stmt 1 view .LVU23
+ 103              		.loc 1 25 9 is_stmt 0 view .LVU24
+ 104 001e 42B9     		cbnz	r2, .L6
+  26:I2C_LCD/CLCD_I2C.c **** 	{
+  27:I2C_LCD/CLCD_I2C.c **** 		Data_H &= ~LCD_RS;
+ 105              		.loc 1 27 3 is_stmt 1 view .LVU25
+ 106              		.loc 1 27 10 is_stmt 0 view .LVU26
+ 107 0020 06F0FE06 		and	r6, r6, #254
+ 108              	.LVL8:
+  28:I2C_LCD/CLCD_I2C.c **** 		Data_L &= ~LCD_RS;
+ 109              		.loc 1 28 3 is_stmt 1 view .LVU27
+ 110              		.loc 1 28 10 is_stmt 0 view .LVU28
+ 111 0024 04F0FE04 		and	r4, r4, #254
+ 112              	.LVL9:
+ 113              		.loc 1 28 10 view .LVU29
+ 114 0028 03E0     		b	.L6
+ 115              	.L8:
+  22:I2C_LCD/CLCD_I2C.c **** 		Data_L |= LCD_RS;
+ 116              		.loc 1 22 3 is_stmt 1 view .LVU30
+  22:I2C_LCD/CLCD_I2C.c **** 		Data_L |= LCD_RS;
+ 117              		.loc 1 22 10 is_stmt 0 view .LVU31
+ 118 002a 46F00106 		orr	r6, r6, #1
+ 119              	.LVL10:
+  23:I2C_LCD/CLCD_I2C.c **** 	}
+ 120              		.loc 1 23 3 is_stmt 1 view .LVU32
+  23:I2C_LCD/CLCD_I2C.c **** 	}
+ 121              		.loc 1 23 10 is_stmt 0 view .LVU33
+ 122 002e 44F00104 		orr	r4, r4, #1
+ 123              	.LVL11:
+ 124              	.L6:
+  29:I2C_LCD/CLCD_I2C.c **** 	}
+  30:I2C_LCD/CLCD_I2C.c **** 	Data_I2C[0] = Data_H|LCD_EN;
+ 125              		.loc 1 30 2 is_stmt 1 view .LVU34
+ 126              		.loc 1 30 14 is_stmt 0 view .LVU35
+ 127 0032 46F00403 		orr	r3, r6, #4
+ 128 0036 8DF80C30 		strb	r3, [sp, #12]
+  31:I2C_LCD/CLCD_I2C.c **** 	CLCD_Delay(1);
+ 129              		.loc 1 31 2 is_stmt 1 view .LVU36
+ 130 003a 0120     		movs	r0, #1
+ 131              	.LVL12:
+ 132              		.loc 1 31 2 is_stmt 0 view .LVU37
+ 133 003c FFF7FEFF 		bl	CLCD_Delay
+ 134              	.LVL13:
+  32:I2C_LCD/CLCD_I2C.c **** 	Data_I2C[1] = Data_H;
+ 135              		.loc 1 32 2 is_stmt 1 view .LVU38
+ 136              		.loc 1 32 14 is_stmt 0 view .LVU39
+ 137 0040 8DF80D60 		strb	r6, [sp, #13]
+  33:I2C_LCD/CLCD_I2C.c **** 	Data_I2C[2] = Data_L|LCD_EN;
+ARM GAS  /tmp/ccA5wRMo.s 			page 4
+
+
+ 138              		.loc 1 33 2 is_stmt 1 view .LVU40
+ 139              		.loc 1 33 14 is_stmt 0 view .LVU41
+ 140 0044 44F00403 		orr	r3, r4, #4
+ 141 0048 8DF80E30 		strb	r3, [sp, #14]
+  34:I2C_LCD/CLCD_I2C.c **** 	CLCD_Delay(1);
+ 142              		.loc 1 34 2 is_stmt 1 view .LVU42
+ 143 004c 0120     		movs	r0, #1
+ 144 004e FFF7FEFF 		bl	CLCD_Delay
+ 145              	.LVL14:
+  35:I2C_LCD/CLCD_I2C.c **** 	Data_I2C[3] = Data_L;
+ 146              		.loc 1 35 2 view .LVU43
+ 147              		.loc 1 35 14 is_stmt 0 view .LVU44
+ 148 0052 8DF80F40 		strb	r4, [sp, #15]
+  36:I2C_LCD/CLCD_I2C.c **** 	HAL_I2C_Master_Transmit(LCD->I2C, LCD->ADDRESS, (uint8_t *)Data_I2C, sizeof(Data_I2C), 1000);
+ 149              		.loc 1 36 2 is_stmt 1 view .LVU45
+ 150 0056 4FF47A73 		mov	r3, #1000
+ 151 005a 0093     		str	r3, [sp]
+ 152 005c 0423     		movs	r3, #4
+ 153 005e 03AA     		add	r2, sp, #12
+ 154 0060 2979     		ldrb	r1, [r5, #4]	@ zero_extendqisi2
+ 155 0062 2868     		ldr	r0, [r5]
+ 156 0064 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 157              	.LVL15:
+  37:I2C_LCD/CLCD_I2C.c **** }
+ 158              		.loc 1 37 1 is_stmt 0 view .LVU46
+ 159 0068 04B0     		add	sp, sp, #16
+ 160              	.LCFI3:
+ 161              		.cfi_def_cfa_offset 16
+ 162              		@ sp needed
+ 163 006a 70BD     		pop	{r4, r5, r6, pc}
+ 164              		.loc 1 37 1 view .LVU47
+ 165              		.cfi_endproc
+ 166              	.LFE66:
+ 168              		.section	.text.CLCD_I2C_Init,"ax",%progbits
+ 169              		.align	1
+ 170              		.global	CLCD_I2C_Init
+ 171              		.syntax unified
+ 172              		.thumb
+ 173              		.thumb_func
+ 175              	CLCD_I2C_Init:
+ 176              	.LVL16:
+ 177              	.LFB67:
+  38:I2C_LCD/CLCD_I2C.c **** 
+  39:I2C_LCD/CLCD_I2C.c **** 
+  40:I2C_LCD/CLCD_I2C.c **** //************************** High Level Function **************************************************
+  41:I2C_LCD/CLCD_I2C.c **** void CLCD_I2C_Init(CLCD_I2C_Name* LCD, I2C_HandleTypeDef* hi2c_CLCD, uint8_t Address, uint8_t Colum
+  42:I2C_LCD/CLCD_I2C.c **** {
+ 178              		.loc 1 42 1 is_stmt 1 view -0
+ 179              		.cfi_startproc
+ 180              		@ args = 4, pretend = 0, frame = 0
+ 181              		@ frame_needed = 0, uses_anonymous_args = 0
+ 182              		.loc 1 42 1 is_stmt 0 view .LVU49
+ 183 0000 10B5     		push	{r4, lr}
+ 184              	.LCFI4:
+ 185              		.cfi_def_cfa_offset 8
+ 186              		.cfi_offset 4, -8
+ 187              		.cfi_offset 14, -4
+ARM GAS  /tmp/ccA5wRMo.s 			page 5
+
+
+ 188 0002 0446     		mov	r4, r0
+  43:I2C_LCD/CLCD_I2C.c **** 	LCD->I2C = hi2c_CLCD;
+ 189              		.loc 1 43 2 is_stmt 1 view .LVU50
+ 190              		.loc 1 43 11 is_stmt 0 view .LVU51
+ 191 0004 0160     		str	r1, [r0]
+  44:I2C_LCD/CLCD_I2C.c **** 	LCD->ADDRESS = Address;
+ 192              		.loc 1 44 2 is_stmt 1 view .LVU52
+ 193              		.loc 1 44 15 is_stmt 0 view .LVU53
+ 194 0006 0271     		strb	r2, [r0, #4]
+  45:I2C_LCD/CLCD_I2C.c **** 	LCD->COLUMS = Colums;
+ 195              		.loc 1 45 2 is_stmt 1 view .LVU54
+ 196              		.loc 1 45 14 is_stmt 0 view .LVU55
+ 197 0008 4371     		strb	r3, [r0, #5]
+  46:I2C_LCD/CLCD_I2C.c **** 	LCD->ROWS = Rows;
+ 198              		.loc 1 46 2 is_stmt 1 view .LVU56
+ 199              		.loc 1 46 12 is_stmt 0 view .LVU57
+ 200 000a 9DF80830 		ldrb	r3, [sp, #8]	@ zero_extendqisi2
+ 201              	.LVL17:
+ 202              		.loc 1 46 12 view .LVU58
+ 203 000e 8371     		strb	r3, [r0, #6]
+  47:I2C_LCD/CLCD_I2C.c **** 	
+  48:I2C_LCD/CLCD_I2C.c **** 	LCD->FUNCTIONSET = LCD_FUNCTIONSET|LCD_4BITMODE|LCD_2LINE|LCD_5x8DOTS;
+ 204              		.loc 1 48 2 is_stmt 1 view .LVU59
+ 205              		.loc 1 48 19 is_stmt 0 view .LVU60
+ 206 0010 2823     		movs	r3, #40
+ 207 0012 8372     		strb	r3, [r0, #10]
+  49:I2C_LCD/CLCD_I2C.c **** 	LCD->ENTRYMODE = LCD_ENTRYMODESET|LCD_ENTRYLEFT|LCD_ENTRYSHIFTDECREMENT;
+ 208              		.loc 1 49 2 is_stmt 1 view .LVU61
+ 209              		.loc 1 49 17 is_stmt 0 view .LVU62
+ 210 0014 0623     		movs	r3, #6
+ 211 0016 C371     		strb	r3, [r0, #7]
+  50:I2C_LCD/CLCD_I2C.c **** 	LCD->DISPLAYCTRL = LCD_DISPLAYCONTROL|LCD_DISPLAYON|LCD_CURSOROFF|LCD_BLINKOFF;
+ 212              		.loc 1 50 2 is_stmt 1 view .LVU63
+ 213              		.loc 1 50 19 is_stmt 0 view .LVU64
+ 214 0018 0C23     		movs	r3, #12
+ 215 001a 0372     		strb	r3, [r0, #8]
+  51:I2C_LCD/CLCD_I2C.c **** 	LCD->CURSORSHIFT = LCD_CURSORSHIFT|LCD_CURSORMOVE|LCD_MOVERIGHT;
+ 216              		.loc 1 51 2 is_stmt 1 view .LVU65
+ 217              		.loc 1 51 19 is_stmt 0 view .LVU66
+ 218 001c 1423     		movs	r3, #20
+ 219 001e 4372     		strb	r3, [r0, #9]
+  52:I2C_LCD/CLCD_I2C.c **** 	LCD->BACKLIGHT = LCD_BACKLIGHT;
+ 220              		.loc 1 52 2 is_stmt 1 view .LVU67
+ 221              		.loc 1 52 17 is_stmt 0 view .LVU68
+ 222 0020 0823     		movs	r3, #8
+ 223 0022 C372     		strb	r3, [r0, #11]
+  53:I2C_LCD/CLCD_I2C.c **** 
+  54:I2C_LCD/CLCD_I2C.c **** 	CLCD_Delay(50);
+ 224              		.loc 1 54 2 is_stmt 1 view .LVU69
+ 225 0024 3220     		movs	r0, #50
+ 226              	.LVL18:
+ 227              		.loc 1 54 2 is_stmt 0 view .LVU70
+ 228 0026 FFF7FEFF 		bl	CLCD_Delay
+ 229              	.LVL19:
+  55:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, 0x33, CLCD_COMMAND);
+ 230              		.loc 1 55 2 is_stmt 1 view .LVU71
+ 231 002a 0022     		movs	r2, #0
+ARM GAS  /tmp/ccA5wRMo.s 			page 6
+
+
+ 232 002c 3321     		movs	r1, #51
+ 233 002e 2046     		mov	r0, r4
+ 234 0030 FFF7FEFF 		bl	CLCD_WriteI2C
+ 235              	.LVL20:
+  56:I2C_LCD/CLCD_I2C.c **** //	CLCD_Delay(5);
+  57:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, 0x33, CLCD_COMMAND);
+ 236              		.loc 1 57 2 view .LVU72
+ 237 0034 0022     		movs	r2, #0
+ 238 0036 3321     		movs	r1, #51
+ 239 0038 2046     		mov	r0, r4
+ 240 003a FFF7FEFF 		bl	CLCD_WriteI2C
+ 241              	.LVL21:
+  58:I2C_LCD/CLCD_I2C.c **** 	CLCD_Delay(5);
+ 242              		.loc 1 58 2 view .LVU73
+ 243 003e 0520     		movs	r0, #5
+ 244 0040 FFF7FEFF 		bl	CLCD_Delay
+ 245              	.LVL22:
+  59:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, 0x32, CLCD_COMMAND);
+ 246              		.loc 1 59 2 view .LVU74
+ 247 0044 0022     		movs	r2, #0
+ 248 0046 3221     		movs	r1, #50
+ 249 0048 2046     		mov	r0, r4
+ 250 004a FFF7FEFF 		bl	CLCD_WriteI2C
+ 251              	.LVL23:
+  60:I2C_LCD/CLCD_I2C.c **** 	CLCD_Delay(5);
+ 252              		.loc 1 60 2 view .LVU75
+ 253 004e 0520     		movs	r0, #5
+ 254 0050 FFF7FEFF 		bl	CLCD_Delay
+ 255              	.LVL24:
+  61:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, 0x20, CLCD_COMMAND);
+ 256              		.loc 1 61 2 view .LVU76
+ 257 0054 0022     		movs	r2, #0
+ 258 0056 2021     		movs	r1, #32
+ 259 0058 2046     		mov	r0, r4
+ 260 005a FFF7FEFF 		bl	CLCD_WriteI2C
+ 261              	.LVL25:
+  62:I2C_LCD/CLCD_I2C.c **** 	CLCD_Delay(5);
+ 262              		.loc 1 62 2 view .LVU77
+ 263 005e 0520     		movs	r0, #5
+ 264 0060 FFF7FEFF 		bl	CLCD_Delay
+ 265              	.LVL26:
+  63:I2C_LCD/CLCD_I2C.c **** 	
+  64:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, LCD->ENTRYMODE,CLCD_COMMAND);
+ 266              		.loc 1 64 2 view .LVU78
+ 267 0064 0022     		movs	r2, #0
+ 268 0066 E179     		ldrb	r1, [r4, #7]	@ zero_extendqisi2
+ 269 0068 2046     		mov	r0, r4
+ 270 006a FFF7FEFF 		bl	CLCD_WriteI2C
+ 271              	.LVL27:
+  65:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, LCD->DISPLAYCTRL,CLCD_COMMAND);
+ 272              		.loc 1 65 2 view .LVU79
+ 273 006e 0022     		movs	r2, #0
+ 274 0070 217A     		ldrb	r1, [r4, #8]	@ zero_extendqisi2
+ 275 0072 2046     		mov	r0, r4
+ 276 0074 FFF7FEFF 		bl	CLCD_WriteI2C
+ 277              	.LVL28:
+  66:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, LCD->CURSORSHIFT,CLCD_COMMAND);
+ARM GAS  /tmp/ccA5wRMo.s 			page 7
+
+
+ 278              		.loc 1 66 2 view .LVU80
+ 279 0078 0022     		movs	r2, #0
+ 280 007a 617A     		ldrb	r1, [r4, #9]	@ zero_extendqisi2
+ 281 007c 2046     		mov	r0, r4
+ 282 007e FFF7FEFF 		bl	CLCD_WriteI2C
+ 283              	.LVL29:
+  67:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, LCD->FUNCTIONSET,CLCD_COMMAND);
+ 284              		.loc 1 67 2 view .LVU81
+ 285 0082 0022     		movs	r2, #0
+ 286 0084 A17A     		ldrb	r1, [r4, #10]	@ zero_extendqisi2
+ 287 0086 2046     		mov	r0, r4
+ 288 0088 FFF7FEFF 		bl	CLCD_WriteI2C
+ 289              	.LVL30:
+  68:I2C_LCD/CLCD_I2C.c **** 	
+  69:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, LCD_CLEARDISPLAY,CLCD_COMMAND);
+ 290              		.loc 1 69 2 view .LVU82
+ 291 008c 0022     		movs	r2, #0
+ 292 008e 0121     		movs	r1, #1
+ 293 0090 2046     		mov	r0, r4
+ 294 0092 FFF7FEFF 		bl	CLCD_WriteI2C
+ 295              	.LVL31:
+  70:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, LCD_RETURNHOME,CLCD_COMMAND);
+ 296              		.loc 1 70 2 view .LVU83
+ 297 0096 0022     		movs	r2, #0
+ 298 0098 0221     		movs	r1, #2
+ 299 009a 2046     		mov	r0, r4
+ 300 009c FFF7FEFF 		bl	CLCD_WriteI2C
+ 301              	.LVL32:
+  71:I2C_LCD/CLCD_I2C.c **** }
+ 302              		.loc 1 71 1 is_stmt 0 view .LVU84
+ 303 00a0 10BD     		pop	{r4, pc}
+ 304              		.loc 1 71 1 view .LVU85
+ 305              		.cfi_endproc
+ 306              	.LFE67:
+ 308              		.section	.text.CLCD_I2C_SetCursor,"ax",%progbits
+ 309              		.align	1
+ 310              		.global	CLCD_I2C_SetCursor
+ 311              		.syntax unified
+ 312              		.thumb
+ 313              		.thumb_func
+ 315              	CLCD_I2C_SetCursor:
+ 316              	.LVL33:
+ 317              	.LFB68:
+  72:I2C_LCD/CLCD_I2C.c **** void CLCD_I2C_SetCursor(CLCD_I2C_Name* LCD, uint8_t Xpos, uint8_t Ypos)
+  73:I2C_LCD/CLCD_I2C.c **** {
+ 318              		.loc 1 73 1 is_stmt 1 view -0
+ 319              		.cfi_startproc
+ 320              		@ args = 0, pretend = 0, frame = 0
+ 321              		@ frame_needed = 0, uses_anonymous_args = 0
+ 322              		.loc 1 73 1 is_stmt 0 view .LVU87
+ 323 0000 08B5     		push	{r3, lr}
+ 324              	.LCFI5:
+ 325              		.cfi_def_cfa_offset 8
+ 326              		.cfi_offset 3, -8
+ 327              		.cfi_offset 14, -4
+  74:I2C_LCD/CLCD_I2C.c **** 	uint8_t DRAM_ADDRESS = 0x00;
+ 328              		.loc 1 74 2 is_stmt 1 view .LVU88
+ARM GAS  /tmp/ccA5wRMo.s 			page 8
+
+
+ 329              	.LVL34:
+  75:I2C_LCD/CLCD_I2C.c **** 	if(Xpos >= LCD->COLUMS)
+ 330              		.loc 1 75 2 view .LVU89
+ 331              		.loc 1 75 16 is_stmt 0 view .LVU90
+ 332 0002 4379     		ldrb	r3, [r0, #5]	@ zero_extendqisi2
+ 333              		.loc 1 75 4 view .LVU91
+ 334 0004 8B42     		cmp	r3, r1
+ 335 0006 01D8     		bhi	.L12
+  76:I2C_LCD/CLCD_I2C.c **** 	{
+  77:I2C_LCD/CLCD_I2C.c **** 		Xpos = LCD->COLUMS - 1;
+ 336              		.loc 1 77 3 is_stmt 1 view .LVU92
+ 337              		.loc 1 77 8 is_stmt 0 view .LVU93
+ 338 0008 013B     		subs	r3, r3, #1
+ 339 000a D9B2     		uxtb	r1, r3
+ 340              	.LVL35:
+ 341              	.L12:
+  78:I2C_LCD/CLCD_I2C.c **** 	}
+  79:I2C_LCD/CLCD_I2C.c **** 	if(Ypos >= LCD->ROWS)
+ 342              		.loc 1 79 2 is_stmt 1 view .LVU94
+ 343              		.loc 1 79 16 is_stmt 0 view .LVU95
+ 344 000c 8379     		ldrb	r3, [r0, #6]	@ zero_extendqisi2
+ 345              		.loc 1 79 4 view .LVU96
+ 346 000e 9342     		cmp	r3, r2
+ 347 0010 01D8     		bhi	.L13
+  80:I2C_LCD/CLCD_I2C.c **** 	{
+  81:I2C_LCD/CLCD_I2C.c **** 		Ypos = LCD->ROWS -1;
+ 348              		.loc 1 81 3 is_stmt 1 view .LVU97
+ 349              		.loc 1 81 8 is_stmt 0 view .LVU98
+ 350 0012 013B     		subs	r3, r3, #1
+ 351 0014 DAB2     		uxtb	r2, r3
+ 352              	.LVL36:
+ 353              	.L13:
+  82:I2C_LCD/CLCD_I2C.c **** 	}
+  83:I2C_LCD/CLCD_I2C.c **** 	if(Ypos == 0)
+ 354              		.loc 1 83 2 is_stmt 1 view .LVU99
+ 355              		.loc 1 83 4 is_stmt 0 view .LVU100
+ 356 0016 4AB1     		cbz	r2, .L14
+  84:I2C_LCD/CLCD_I2C.c **** 	{
+  85:I2C_LCD/CLCD_I2C.c **** 		DRAM_ADDRESS = 0x00 + Xpos;
+  86:I2C_LCD/CLCD_I2C.c **** 	}
+  87:I2C_LCD/CLCD_I2C.c **** 	else if(Ypos == 1)
+ 357              		.loc 1 87 7 is_stmt 1 view .LVU101
+ 358              		.loc 1 87 9 is_stmt 0 view .LVU102
+ 359 0018 012A     		cmp	r2, #1
+ 360 001a 05D0     		beq	.L19
+  88:I2C_LCD/CLCD_I2C.c **** 	{
+  89:I2C_LCD/CLCD_I2C.c **** 		DRAM_ADDRESS = 0x40 + Xpos;
+  90:I2C_LCD/CLCD_I2C.c **** 	}
+  91:I2C_LCD/CLCD_I2C.c **** 	else if(Ypos == 2)
+ 361              		.loc 1 91 7 is_stmt 1 view .LVU103
+ 362              		.loc 1 91 9 is_stmt 0 view .LVU104
+ 363 001c 022A     		cmp	r2, #2
+ 364 001e 0BD0     		beq	.L20
+  92:I2C_LCD/CLCD_I2C.c **** 	{
+  93:I2C_LCD/CLCD_I2C.c **** 		DRAM_ADDRESS = 0x10 + Xpos;
+  94:I2C_LCD/CLCD_I2C.c **** 	}
+  95:I2C_LCD/CLCD_I2C.c **** 	else if(Ypos == 3)
+ARM GAS  /tmp/ccA5wRMo.s 			page 9
+
+
+ 365              		.loc 1 95 7 is_stmt 1 view .LVU105
+ 366              		.loc 1 95 9 is_stmt 0 view .LVU106
+ 367 0020 032A     		cmp	r2, #3
+ 368 0022 0CD0     		beq	.L21
+  74:I2C_LCD/CLCD_I2C.c **** 	if(Xpos >= LCD->COLUMS)
+ 369              		.loc 1 74 10 view .LVU107
+ 370 0024 0021     		movs	r1, #0
+ 371              	.LVL37:
+  74:I2C_LCD/CLCD_I2C.c **** 	if(Xpos >= LCD->COLUMS)
+ 372              		.loc 1 74 10 view .LVU108
+ 373 0026 01E0     		b	.L14
+ 374              	.LVL38:
+ 375              	.L19:
+  89:I2C_LCD/CLCD_I2C.c **** 	}
+ 376              		.loc 1 89 3 is_stmt 1 view .LVU109
+  89:I2C_LCD/CLCD_I2C.c **** 	}
+ 377              		.loc 1 89 16 is_stmt 0 view .LVU110
+ 378 0028 4031     		adds	r1, r1, #64
+ 379              	.LVL39:
+  89:I2C_LCD/CLCD_I2C.c **** 	}
+ 380              		.loc 1 89 16 view .LVU111
+ 381 002a C9B2     		uxtb	r1, r1
+ 382              	.LVL40:
+ 383              	.L14:
+  96:I2C_LCD/CLCD_I2C.c **** 	{
+  97:I2C_LCD/CLCD_I2C.c **** 		DRAM_ADDRESS = 0x50 + Xpos;
+  98:I2C_LCD/CLCD_I2C.c **** 	}
+  99:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, LCD_SETDDRAMADDR|DRAM_ADDRESS, CLCD_COMMAND);
+ 384              		.loc 1 99 2 is_stmt 1 view .LVU112
+ 385 002c 0022     		movs	r2, #0
+ 386              	.LVL41:
+ 387              		.loc 1 99 2 is_stmt 0 view .LVU113
+ 388 002e 41F08001 		orr	r1, r1, #128
+ 389              	.LVL42:
+ 390              		.loc 1 99 2 view .LVU114
+ 391 0032 FFF7FEFF 		bl	CLCD_WriteI2C
+ 392              	.LVL43:
+ 100:I2C_LCD/CLCD_I2C.c **** }
+ 393              		.loc 1 100 1 view .LVU115
+ 394 0036 08BD     		pop	{r3, pc}
+ 395              	.LVL44:
+ 396              	.L20:
+  93:I2C_LCD/CLCD_I2C.c **** 	}
+ 397              		.loc 1 93 3 is_stmt 1 view .LVU116
+  93:I2C_LCD/CLCD_I2C.c **** 	}
+ 398              		.loc 1 93 16 is_stmt 0 view .LVU117
+ 399 0038 1031     		adds	r1, r1, #16
+ 400              	.LVL45:
+  93:I2C_LCD/CLCD_I2C.c **** 	}
+ 401              		.loc 1 93 16 view .LVU118
+ 402 003a C9B2     		uxtb	r1, r1
+ 403              	.LVL46:
+  93:I2C_LCD/CLCD_I2C.c **** 	}
+ 404              		.loc 1 93 16 view .LVU119
+ 405 003c F6E7     		b	.L14
+ 406              	.LVL47:
+ 407              	.L21:
+ARM GAS  /tmp/ccA5wRMo.s 			page 10
+
+
+  97:I2C_LCD/CLCD_I2C.c **** 	}
+ 408              		.loc 1 97 3 is_stmt 1 view .LVU120
+  97:I2C_LCD/CLCD_I2C.c **** 	}
+ 409              		.loc 1 97 16 is_stmt 0 view .LVU121
+ 410 003e 5031     		adds	r1, r1, #80
+ 411              	.LVL48:
+  97:I2C_LCD/CLCD_I2C.c **** 	}
+ 412              		.loc 1 97 16 view .LVU122
+ 413 0040 C9B2     		uxtb	r1, r1
+ 414              	.LVL49:
+  97:I2C_LCD/CLCD_I2C.c **** 	}
+ 415              		.loc 1 97 16 view .LVU123
+ 416 0042 F3E7     		b	.L14
+ 417              		.cfi_endproc
+ 418              	.LFE68:
+ 420              		.section	.text.CLCD_I2C_WriteChar,"ax",%progbits
+ 421              		.align	1
+ 422              		.global	CLCD_I2C_WriteChar
+ 423              		.syntax unified
+ 424              		.thumb
+ 425              		.thumb_func
+ 427              	CLCD_I2C_WriteChar:
+ 428              	.LVL50:
+ 429              	.LFB69:
+ 101:I2C_LCD/CLCD_I2C.c **** void CLCD_I2C_WriteChar(CLCD_I2C_Name* LCD, char character)
+ 102:I2C_LCD/CLCD_I2C.c **** {
+ 430              		.loc 1 102 1 is_stmt 1 view -0
+ 431              		.cfi_startproc
+ 432              		@ args = 0, pretend = 0, frame = 0
+ 433              		@ frame_needed = 0, uses_anonymous_args = 0
+ 434              		.loc 1 102 1 is_stmt 0 view .LVU125
+ 435 0000 08B5     		push	{r3, lr}
+ 436              	.LCFI6:
+ 437              		.cfi_def_cfa_offset 8
+ 438              		.cfi_offset 3, -8
+ 439              		.cfi_offset 14, -4
+ 103:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, character, CLCD_DATA);
+ 440              		.loc 1 103 2 is_stmt 1 view .LVU126
+ 441 0002 0122     		movs	r2, #1
+ 442 0004 FFF7FEFF 		bl	CLCD_WriteI2C
+ 443              	.LVL51:
+ 104:I2C_LCD/CLCD_I2C.c **** }
+ 444              		.loc 1 104 1 is_stmt 0 view .LVU127
+ 445 0008 08BD     		pop	{r3, pc}
+ 446              		.cfi_endproc
+ 447              	.LFE69:
+ 449              		.section	.text.CLCD_I2C_WriteString,"ax",%progbits
+ 450              		.align	1
+ 451              		.global	CLCD_I2C_WriteString
+ 452              		.syntax unified
+ 453              		.thumb
+ 454              		.thumb_func
+ 456              	CLCD_I2C_WriteString:
+ 457              	.LVL52:
+ 458              	.LFB70:
+ 105:I2C_LCD/CLCD_I2C.c **** void CLCD_I2C_WriteString(CLCD_I2C_Name* LCD, char *String)
+ 106:I2C_LCD/CLCD_I2C.c **** {
+ARM GAS  /tmp/ccA5wRMo.s 			page 11
+
+
+ 459              		.loc 1 106 1 is_stmt 1 view -0
+ 460              		.cfi_startproc
+ 461              		@ args = 0, pretend = 0, frame = 0
+ 462              		@ frame_needed = 0, uses_anonymous_args = 0
+ 463              		.loc 1 106 1 is_stmt 0 view .LVU129
+ 464 0000 38B5     		push	{r3, r4, r5, lr}
+ 465              	.LCFI7:
+ 466              		.cfi_def_cfa_offset 16
+ 467              		.cfi_offset 3, -16
+ 468              		.cfi_offset 4, -12
+ 469              		.cfi_offset 5, -8
+ 470              		.cfi_offset 14, -4
+ 471 0002 0546     		mov	r5, r0
+ 472 0004 0C46     		mov	r4, r1
+ 107:I2C_LCD/CLCD_I2C.c **** 	while(*String)CLCD_I2C_WriteChar(LCD, *String++);
+ 473              		.loc 1 107 2 is_stmt 1 view .LVU130
+ 474              		.loc 1 107 7 is_stmt 0 view .LVU131
+ 475 0006 03E0     		b	.L25
+ 476              	.LVL53:
+ 477              	.L26:
+ 478              		.loc 1 107 16 is_stmt 1 discriminator 2 view .LVU132
+ 479              		.loc 1 107 47 is_stmt 0 discriminator 2 view .LVU133
+ 480 0008 0134     		adds	r4, r4, #1
+ 481              	.LVL54:
+ 482              		.loc 1 107 16 discriminator 2 view .LVU134
+ 483 000a 2846     		mov	r0, r5
+ 484 000c FFF7FEFF 		bl	CLCD_I2C_WriteChar
+ 485              	.LVL55:
+ 486              	.L25:
+ 487              		.loc 1 107 8 is_stmt 1 discriminator 1 view .LVU135
+ 488 0010 2178     		ldrb	r1, [r4]	@ zero_extendqisi2
+ 489 0012 0029     		cmp	r1, #0
+ 490 0014 F8D1     		bne	.L26
+ 108:I2C_LCD/CLCD_I2C.c **** }
+ 491              		.loc 1 108 1 is_stmt 0 view .LVU136
+ 492 0016 38BD     		pop	{r3, r4, r5, pc}
+ 493              		.loc 1 108 1 view .LVU137
+ 494              		.cfi_endproc
+ 495              	.LFE70:
+ 497              		.section	.text.CLCD_I2C_Clear,"ax",%progbits
+ 498              		.align	1
+ 499              		.global	CLCD_I2C_Clear
+ 500              		.syntax unified
+ 501              		.thumb
+ 502              		.thumb_func
+ 504              	CLCD_I2C_Clear:
+ 505              	.LVL56:
+ 506              	.LFB71:
+ 109:I2C_LCD/CLCD_I2C.c **** void CLCD_I2C_Clear(CLCD_I2C_Name* LCD)
+ 110:I2C_LCD/CLCD_I2C.c **** {
+ 507              		.loc 1 110 1 is_stmt 1 view -0
+ 508              		.cfi_startproc
+ 509              		@ args = 0, pretend = 0, frame = 0
+ 510              		@ frame_needed = 0, uses_anonymous_args = 0
+ 511              		.loc 1 110 1 is_stmt 0 view .LVU139
+ 512 0000 08B5     		push	{r3, lr}
+ 513              	.LCFI8:
+ARM GAS  /tmp/ccA5wRMo.s 			page 12
+
+
+ 514              		.cfi_def_cfa_offset 8
+ 515              		.cfi_offset 3, -8
+ 516              		.cfi_offset 14, -4
+ 111:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, LCD_CLEARDISPLAY, CLCD_COMMAND);
+ 517              		.loc 1 111 2 is_stmt 1 view .LVU140
+ 518 0002 0022     		movs	r2, #0
+ 519 0004 0121     		movs	r1, #1
+ 520 0006 FFF7FEFF 		bl	CLCD_WriteI2C
+ 521              	.LVL57:
+ 112:I2C_LCD/CLCD_I2C.c **** 	CLCD_Delay(5);
+ 522              		.loc 1 112 2 view .LVU141
+ 523 000a 0520     		movs	r0, #5
+ 524 000c FFF7FEFF 		bl	CLCD_Delay
+ 525              	.LVL58:
+ 113:I2C_LCD/CLCD_I2C.c **** }
+ 526              		.loc 1 113 1 is_stmt 0 view .LVU142
+ 527 0010 08BD     		pop	{r3, pc}
+ 528              		.cfi_endproc
+ 529              	.LFE71:
+ 531              		.section	.text.CLCD_I2C_ReturnHome,"ax",%progbits
+ 532              		.align	1
+ 533              		.global	CLCD_I2C_ReturnHome
+ 534              		.syntax unified
+ 535              		.thumb
+ 536              		.thumb_func
+ 538              	CLCD_I2C_ReturnHome:
+ 539              	.LVL59:
+ 540              	.LFB72:
+ 114:I2C_LCD/CLCD_I2C.c **** void CLCD_I2C_ReturnHome(CLCD_I2C_Name* LCD)
+ 115:I2C_LCD/CLCD_I2C.c **** {
+ 541              		.loc 1 115 1 is_stmt 1 view -0
+ 542              		.cfi_startproc
+ 543              		@ args = 0, pretend = 0, frame = 0
+ 544              		@ frame_needed = 0, uses_anonymous_args = 0
+ 545              		.loc 1 115 1 is_stmt 0 view .LVU144
+ 546 0000 08B5     		push	{r3, lr}
+ 547              	.LCFI9:
+ 548              		.cfi_def_cfa_offset 8
+ 549              		.cfi_offset 3, -8
+ 550              		.cfi_offset 14, -4
+ 116:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, LCD_RETURNHOME, CLCD_COMMAND);
+ 551              		.loc 1 116 2 is_stmt 1 view .LVU145
+ 552 0002 0022     		movs	r2, #0
+ 553 0004 0221     		movs	r1, #2
+ 554 0006 FFF7FEFF 		bl	CLCD_WriteI2C
+ 555              	.LVL60:
+ 117:I2C_LCD/CLCD_I2C.c **** 	CLCD_Delay(5);
+ 556              		.loc 1 117 2 view .LVU146
+ 557 000a 0520     		movs	r0, #5
+ 558 000c FFF7FEFF 		bl	CLCD_Delay
+ 559              	.LVL61:
+ 118:I2C_LCD/CLCD_I2C.c **** }
+ 560              		.loc 1 118 1 is_stmt 0 view .LVU147
+ 561 0010 08BD     		pop	{r3, pc}
+ 562              		.cfi_endproc
+ 563              	.LFE72:
+ 565              		.section	.text.CLCD_I2C_CursorOn,"ax",%progbits
+ARM GAS  /tmp/ccA5wRMo.s 			page 13
+
+
+ 566              		.align	1
+ 567              		.global	CLCD_I2C_CursorOn
+ 568              		.syntax unified
+ 569              		.thumb
+ 570              		.thumb_func
+ 572              	CLCD_I2C_CursorOn:
+ 573              	.LVL62:
+ 574              	.LFB73:
+ 119:I2C_LCD/CLCD_I2C.c **** void CLCD_I2C_CursorOn(CLCD_I2C_Name* LCD)
+ 120:I2C_LCD/CLCD_I2C.c **** {
+ 575              		.loc 1 120 1 is_stmt 1 view -0
+ 576              		.cfi_startproc
+ 577              		@ args = 0, pretend = 0, frame = 0
+ 578              		@ frame_needed = 0, uses_anonymous_args = 0
+ 579              		.loc 1 120 1 is_stmt 0 view .LVU149
+ 580 0000 08B5     		push	{r3, lr}
+ 581              	.LCFI10:
+ 582              		.cfi_def_cfa_offset 8
+ 583              		.cfi_offset 3, -8
+ 584              		.cfi_offset 14, -4
+ 121:I2C_LCD/CLCD_I2C.c **** 	LCD->DISPLAYCTRL |= LCD_CURSORON;
+ 585              		.loc 1 121 2 is_stmt 1 view .LVU150
+ 586              		.loc 1 121 19 is_stmt 0 view .LVU151
+ 587 0002 017A     		ldrb	r1, [r0, #8]	@ zero_extendqisi2
+ 588 0004 41F00201 		orr	r1, r1, #2
+ 589 0008 0172     		strb	r1, [r0, #8]
+ 122:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, LCD->DISPLAYCTRL, CLCD_COMMAND);
+ 590              		.loc 1 122 2 is_stmt 1 view .LVU152
+ 591 000a 0022     		movs	r2, #0
+ 592 000c FFF7FEFF 		bl	CLCD_WriteI2C
+ 593              	.LVL63:
+ 123:I2C_LCD/CLCD_I2C.c **** }
+ 594              		.loc 1 123 1 is_stmt 0 view .LVU153
+ 595 0010 08BD     		pop	{r3, pc}
+ 596              		.cfi_endproc
+ 597              	.LFE73:
+ 599              		.section	.text.CLCD_I2C_CursorOff,"ax",%progbits
+ 600              		.align	1
+ 601              		.global	CLCD_I2C_CursorOff
+ 602              		.syntax unified
+ 603              		.thumb
+ 604              		.thumb_func
+ 606              	CLCD_I2C_CursorOff:
+ 607              	.LVL64:
+ 608              	.LFB74:
+ 124:I2C_LCD/CLCD_I2C.c **** void CLCD_I2C_CursorOff(CLCD_I2C_Name* LCD)
+ 125:I2C_LCD/CLCD_I2C.c **** {
+ 609              		.loc 1 125 1 is_stmt 1 view -0
+ 610              		.cfi_startproc
+ 611              		@ args = 0, pretend = 0, frame = 0
+ 612              		@ frame_needed = 0, uses_anonymous_args = 0
+ 613              		.loc 1 125 1 is_stmt 0 view .LVU155
+ 614 0000 08B5     		push	{r3, lr}
+ 615              	.LCFI11:
+ 616              		.cfi_def_cfa_offset 8
+ 617              		.cfi_offset 3, -8
+ 618              		.cfi_offset 14, -4
+ARM GAS  /tmp/ccA5wRMo.s 			page 14
+
+
+ 126:I2C_LCD/CLCD_I2C.c **** 	LCD->DISPLAYCTRL &= ~LCD_CURSORON;
+ 619              		.loc 1 126 2 is_stmt 1 view .LVU156
+ 620              		.loc 1 126 19 is_stmt 0 view .LVU157
+ 621 0002 017A     		ldrb	r1, [r0, #8]	@ zero_extendqisi2
+ 622 0004 01F0FD01 		and	r1, r1, #253
+ 623 0008 0172     		strb	r1, [r0, #8]
+ 127:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, LCD->DISPLAYCTRL, CLCD_COMMAND);
+ 624              		.loc 1 127 2 is_stmt 1 view .LVU158
+ 625 000a 0022     		movs	r2, #0
+ 626 000c FFF7FEFF 		bl	CLCD_WriteI2C
+ 627              	.LVL65:
+ 128:I2C_LCD/CLCD_I2C.c **** }
+ 628              		.loc 1 128 1 is_stmt 0 view .LVU159
+ 629 0010 08BD     		pop	{r3, pc}
+ 630              		.cfi_endproc
+ 631              	.LFE74:
+ 633              		.section	.text.CLCD_I2C_BlinkOn,"ax",%progbits
+ 634              		.align	1
+ 635              		.global	CLCD_I2C_BlinkOn
+ 636              		.syntax unified
+ 637              		.thumb
+ 638              		.thumb_func
+ 640              	CLCD_I2C_BlinkOn:
+ 641              	.LVL66:
+ 642              	.LFB75:
+ 129:I2C_LCD/CLCD_I2C.c **** void CLCD_I2C_BlinkOn(CLCD_I2C_Name* LCD)
+ 130:I2C_LCD/CLCD_I2C.c **** {
+ 643              		.loc 1 130 1 is_stmt 1 view -0
+ 644              		.cfi_startproc
+ 645              		@ args = 0, pretend = 0, frame = 0
+ 646              		@ frame_needed = 0, uses_anonymous_args = 0
+ 647              		.loc 1 130 1 is_stmt 0 view .LVU161
+ 648 0000 08B5     		push	{r3, lr}
+ 649              	.LCFI12:
+ 650              		.cfi_def_cfa_offset 8
+ 651              		.cfi_offset 3, -8
+ 652              		.cfi_offset 14, -4
+ 131:I2C_LCD/CLCD_I2C.c **** 	LCD->DISPLAYCTRL |= LCD_BLINKON;
+ 653              		.loc 1 131 2 is_stmt 1 view .LVU162
+ 654              		.loc 1 131 19 is_stmt 0 view .LVU163
+ 655 0002 017A     		ldrb	r1, [r0, #8]	@ zero_extendqisi2
+ 656 0004 41F00101 		orr	r1, r1, #1
+ 657 0008 0172     		strb	r1, [r0, #8]
+ 132:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, LCD->DISPLAYCTRL, CLCD_COMMAND);
+ 658              		.loc 1 132 2 is_stmt 1 view .LVU164
+ 659 000a 0022     		movs	r2, #0
+ 660 000c FFF7FEFF 		bl	CLCD_WriteI2C
+ 661              	.LVL67:
+ 133:I2C_LCD/CLCD_I2C.c **** }
+ 662              		.loc 1 133 1 is_stmt 0 view .LVU165
+ 663 0010 08BD     		pop	{r3, pc}
+ 664              		.cfi_endproc
+ 665              	.LFE75:
+ 667              		.section	.text.CLCD_I2C_BlinkOff,"ax",%progbits
+ 668              		.align	1
+ 669              		.global	CLCD_I2C_BlinkOff
+ 670              		.syntax unified
+ARM GAS  /tmp/ccA5wRMo.s 			page 15
+
+
+ 671              		.thumb
+ 672              		.thumb_func
+ 674              	CLCD_I2C_BlinkOff:
+ 675              	.LVL68:
+ 676              	.LFB76:
+ 134:I2C_LCD/CLCD_I2C.c **** void CLCD_I2C_BlinkOff(CLCD_I2C_Name* LCD)
+ 135:I2C_LCD/CLCD_I2C.c **** {
+ 677              		.loc 1 135 1 is_stmt 1 view -0
+ 678              		.cfi_startproc
+ 679              		@ args = 0, pretend = 0, frame = 0
+ 680              		@ frame_needed = 0, uses_anonymous_args = 0
+ 681              		.loc 1 135 1 is_stmt 0 view .LVU167
+ 682 0000 08B5     		push	{r3, lr}
+ 683              	.LCFI13:
+ 684              		.cfi_def_cfa_offset 8
+ 685              		.cfi_offset 3, -8
+ 686              		.cfi_offset 14, -4
+ 136:I2C_LCD/CLCD_I2C.c **** 	LCD->DISPLAYCTRL &= ~LCD_BLINKON;
+ 687              		.loc 1 136 2 is_stmt 1 view .LVU168
+ 688              		.loc 1 136 19 is_stmt 0 view .LVU169
+ 689 0002 017A     		ldrb	r1, [r0, #8]	@ zero_extendqisi2
+ 690 0004 01F0FE01 		and	r1, r1, #254
+ 691 0008 0172     		strb	r1, [r0, #8]
+ 137:I2C_LCD/CLCD_I2C.c **** 	CLCD_WriteI2C(LCD, LCD->DISPLAYCTRL, CLCD_COMMAND);
+ 692              		.loc 1 137 2 is_stmt 1 view .LVU170
+ 693 000a 0022     		movs	r2, #0
+ 694 000c FFF7FEFF 		bl	CLCD_WriteI2C
+ 695              	.LVL69:
+ 138:I2C_LCD/CLCD_I2C.c **** }
+ 696              		.loc 1 138 1 is_stmt 0 view .LVU171
+ 697 0010 08BD     		pop	{r3, pc}
+ 698              		.cfi_endproc
+ 699              	.LFE76:
+ 701              		.text
+ 702              	.Letext0:
+ 703              		.file 2 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 704              		.file 3 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 705              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 706              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 707              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 708              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h"
+ 709              		.file 8 "I2C_LCD/CLCD_I2C.h"
+ 710              		.file 9 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ARM GAS  /tmp/ccA5wRMo.s 			page 16
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 CLCD_I2C.c
+     /tmp/ccA5wRMo.s:18     .text.CLCD_Delay:0000000000000000 $t
+     /tmp/ccA5wRMo.s:23     .text.CLCD_Delay:0000000000000000 CLCD_Delay
+     /tmp/ccA5wRMo.s:46     .text.CLCD_WriteI2C:0000000000000000 $t
+     /tmp/ccA5wRMo.s:51     .text.CLCD_WriteI2C:0000000000000000 CLCD_WriteI2C
+     /tmp/ccA5wRMo.s:169    .text.CLCD_I2C_Init:0000000000000000 $t
+     /tmp/ccA5wRMo.s:175    .text.CLCD_I2C_Init:0000000000000000 CLCD_I2C_Init
+     /tmp/ccA5wRMo.s:309    .text.CLCD_I2C_SetCursor:0000000000000000 $t
+     /tmp/ccA5wRMo.s:315    .text.CLCD_I2C_SetCursor:0000000000000000 CLCD_I2C_SetCursor
+     /tmp/ccA5wRMo.s:421    .text.CLCD_I2C_WriteChar:0000000000000000 $t
+     /tmp/ccA5wRMo.s:427    .text.CLCD_I2C_WriteChar:0000000000000000 CLCD_I2C_WriteChar
+     /tmp/ccA5wRMo.s:450    .text.CLCD_I2C_WriteString:0000000000000000 $t
+     /tmp/ccA5wRMo.s:456    .text.CLCD_I2C_WriteString:0000000000000000 CLCD_I2C_WriteString
+     /tmp/ccA5wRMo.s:498    .text.CLCD_I2C_Clear:0000000000000000 $t
+     /tmp/ccA5wRMo.s:504    .text.CLCD_I2C_Clear:0000000000000000 CLCD_I2C_Clear
+     /tmp/ccA5wRMo.s:532    .text.CLCD_I2C_ReturnHome:0000000000000000 $t
+     /tmp/ccA5wRMo.s:538    .text.CLCD_I2C_ReturnHome:0000000000000000 CLCD_I2C_ReturnHome
+     /tmp/ccA5wRMo.s:566    .text.CLCD_I2C_CursorOn:0000000000000000 $t
+     /tmp/ccA5wRMo.s:572    .text.CLCD_I2C_CursorOn:0000000000000000 CLCD_I2C_CursorOn
+     /tmp/ccA5wRMo.s:600    .text.CLCD_I2C_CursorOff:0000000000000000 $t
+     /tmp/ccA5wRMo.s:606    .text.CLCD_I2C_CursorOff:0000000000000000 CLCD_I2C_CursorOff
+     /tmp/ccA5wRMo.s:634    .text.CLCD_I2C_BlinkOn:0000000000000000 $t
+     /tmp/ccA5wRMo.s:640    .text.CLCD_I2C_BlinkOn:0000000000000000 CLCD_I2C_BlinkOn
+     /tmp/ccA5wRMo.s:668    .text.CLCD_I2C_BlinkOff:0000000000000000 $t
+     /tmp/ccA5wRMo.s:674    .text.CLCD_I2C_BlinkOff:0000000000000000 CLCD_I2C_BlinkOff
+
+UNDEFINED SYMBOLS
+HAL_Delay
+HAL_I2C_Master_Transmit

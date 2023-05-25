@@ -1,0 +1,1140 @@
+ARM GAS  /tmp/cc9sV368.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"DHTxx_Humidity_Sensor.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.DHT_DelayInit,"ax",%progbits
+  18              		.align	1
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  23              	DHT_DelayInit:
+  24              	.LVL0:
+  25              	.LFB65:
+  26              		.file 1 "DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c"
+   1:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** /**
+   2:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****  * @file DHTxx_Humidity_Sensor.c
+   3:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****  * @author Nguyen Trong Son LoH Tech ...Ldt
+   4:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****  * 
+   5:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** */
+   6:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** #include "DHTxx_Humidity_Sensor.h"
+   7:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** #include "Delay_Timer.h"
+   8:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** #include "stdlib.h"
+   9:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+  10:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** /**
+  11:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****  * @brief DHT_DelayInit
+  12:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****  * 
+  13:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** */
+  14:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** static void DHT_DelayInit(DHTxx_Humidity_Sensor_Name *DHTxx_sensor_x)
+  15:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** {
+  27              		.loc 1 15 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              		.loc 1 15 1 is_stmt 0 view .LVU1
+  32 0000 08B5     		push	{r3, lr}
+  33              	.LCFI0:
+  34              		.cfi_def_cfa_offset 8
+  35              		.cfi_offset 3, -8
+  36              		.cfi_offset 14, -4
+  16:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	Delay_Tim_Init(DHTxx_sensor_x->Timer_DHTxx);
+  37              		.loc 1 16 2 is_stmt 1 view .LVU2
+  38 0002 0068     		ldr	r0, [r0]
+  39              	.LVL1:
+  40              		.loc 1 16 2 is_stmt 0 view .LVU3
+  41 0004 FFF7FEFF 		bl	Delay_Tim_Init
+  42              	.LVL2:
+ARM GAS  /tmp/cc9sV368.s 			page 2
+
+
+  17:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** }
+  43              		.loc 1 17 1 view .LVU4
+  44 0008 08BD     		pop	{r3, pc}
+  45              		.cfi_endproc
+  46              	.LFE65:
+  48              		.section	.text.DHT_Set_Pin_Output,"ax",%progbits
+  49              		.align	1
+  50              		.syntax unified
+  51              		.thumb
+  52              		.thumb_func
+  54              	DHT_Set_Pin_Output:
+  55              	.LVL3:
+  56              	.LFB67:
+  18:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+  19:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** /**
+  20:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****  * @brief DHT_DelayUs
+  21:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** */
+  22:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** static void DHT_DelayUs(DHTxx_Humidity_Sensor_Name *DHTxx_sensor_x, uint16_t Time)
+  23:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** {
+  24:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	Delay_Timer_Us(DHTxx_sensor_x->Timer_DHTxx, Time);
+  25:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** }
+  26:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+  27:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** /**
+  28:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****  * @brief DHT_Set_Pin_Output
+  29:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** */
+  30:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** static void  DHT_Set_Pin_Output(DHTxx_Humidity_Sensor_Name *DHTxx_sensor_x)
+  31:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** {
+  57              		.loc 1 31 1 is_stmt 1 view -0
+  58              		.cfi_startproc
+  59              		@ args = 0, pretend = 0, frame = 16
+  60              		@ frame_needed = 0, uses_anonymous_args = 0
+  61              		.loc 1 31 1 is_stmt 0 view .LVU6
+  62 0000 00B5     		push	{lr}
+  63              	.LCFI1:
+  64              		.cfi_def_cfa_offset 4
+  65              		.cfi_offset 14, -4
+  66 0002 85B0     		sub	sp, sp, #20
+  67              	.LCFI2:
+  68              		.cfi_def_cfa_offset 24
+  32:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	GPIO_InitTypeDef GPIO_InitStruct = {0};
+  69              		.loc 1 32 2 is_stmt 1 view .LVU7
+  70              		.loc 1 32 19 is_stmt 0 view .LVU8
+  71 0004 0023     		movs	r3, #0
+  72 0006 0093     		str	r3, [sp]
+  73 0008 0193     		str	r3, [sp, #4]
+  74 000a 0293     		str	r3, [sp, #8]
+  75 000c 0393     		str	r3, [sp, #12]
+  33:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	GPIO_InitStruct.Pin = DHTxx_sensor_x->Pin;
+  76              		.loc 1 33 2 is_stmt 1 view .LVU9
+  77              		.loc 1 33 38 is_stmt 0 view .LVU10
+  78 000e 8388     		ldrh	r3, [r0, #4]
+  79              		.loc 1 33 22 view .LVU11
+  80 0010 0093     		str	r3, [sp]
+  34:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  81              		.loc 1 34 2 is_stmt 1 view .LVU12
+  82              		.loc 1 34 23 is_stmt 0 view .LVU13
+  83 0012 0123     		movs	r3, #1
+ARM GAS  /tmp/cc9sV368.s 			page 3
+
+
+  84 0014 0193     		str	r3, [sp, #4]
+  35:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  85              		.loc 1 35 2 is_stmt 1 view .LVU14
+  86              		.loc 1 35 24 is_stmt 0 view .LVU15
+  87 0016 0223     		movs	r3, #2
+  88 0018 0393     		str	r3, [sp, #12]
+  36:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	HAL_GPIO_Init(DHTxx_sensor_x->Port_DHTxx, &GPIO_InitStruct);
+  89              		.loc 1 36 2 is_stmt 1 view .LVU16
+  90 001a 6946     		mov	r1, sp
+  91 001c 8068     		ldr	r0, [r0, #8]
+  92              	.LVL4:
+  93              		.loc 1 36 2 is_stmt 0 view .LVU17
+  94 001e FFF7FEFF 		bl	HAL_GPIO_Init
+  95              	.LVL5:
+  37:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** }
+  96              		.loc 1 37 1 view .LVU18
+  97 0022 05B0     		add	sp, sp, #20
+  98              	.LCFI3:
+  99              		.cfi_def_cfa_offset 4
+ 100              		@ sp needed
+ 101 0024 5DF804FB 		ldr	pc, [sp], #4
+ 102              		.cfi_endproc
+ 103              	.LFE67:
+ 105              		.section	.text.DHT_Set_Pin_Input,"ax",%progbits
+ 106              		.align	1
+ 107              		.syntax unified
+ 108              		.thumb
+ 109              		.thumb_func
+ 111              	DHT_Set_Pin_Input:
+ 112              	.LVL6:
+ 113              	.LFB68:
+  38:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+  39:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** /**
+  40:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****  * @brief DHT_Set_Pin_Input
+  41:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** */
+  42:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** static void DHT_Set_Pin_Input(DHTxx_Humidity_Sensor_Name *DHTxx_sensor_x)
+  43:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** {
+ 114              		.loc 1 43 1 is_stmt 1 view -0
+ 115              		.cfi_startproc
+ 116              		@ args = 0, pretend = 0, frame = 16
+ 117              		@ frame_needed = 0, uses_anonymous_args = 0
+ 118              		.loc 1 43 1 is_stmt 0 view .LVU20
+ 119 0000 00B5     		push	{lr}
+ 120              	.LCFI4:
+ 121              		.cfi_def_cfa_offset 4
+ 122              		.cfi_offset 14, -4
+ 123 0002 85B0     		sub	sp, sp, #20
+ 124              	.LCFI5:
+ 125              		.cfi_def_cfa_offset 24
+  44:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 126              		.loc 1 44 2 is_stmt 1 view .LVU21
+ 127              		.loc 1 44 19 is_stmt 0 view .LVU22
+ 128 0004 0023     		movs	r3, #0
+ 129 0006 0093     		str	r3, [sp]
+ 130 0008 0193     		str	r3, [sp, #4]
+ 131 000a 0293     		str	r3, [sp, #8]
+ 132 000c 0393     		str	r3, [sp, #12]
+ARM GAS  /tmp/cc9sV368.s 			page 4
+
+
+  45:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	GPIO_InitStruct.Pin = DHTxx_sensor_x->Pin;
+ 133              		.loc 1 45 2 is_stmt 1 view .LVU23
+ 134              		.loc 1 45 38 is_stmt 0 view .LVU24
+ 135 000e 8388     		ldrh	r3, [r0, #4]
+ 136              		.loc 1 45 22 view .LVU25
+ 137 0010 0093     		str	r3, [sp]
+  46:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+ 138              		.loc 1 46 2 is_stmt 1 view .LVU26
+  47:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 139              		.loc 1 47 2 view .LVU27
+ 140              		.loc 1 47 23 is_stmt 0 view .LVU28
+ 141 0012 0123     		movs	r3, #1
+ 142 0014 0293     		str	r3, [sp, #8]
+  48:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	HAL_GPIO_Init(DHTxx_sensor_x->Port_DHTxx, &GPIO_InitStruct);
+ 143              		.loc 1 48 2 is_stmt 1 view .LVU29
+ 144 0016 6946     		mov	r1, sp
+ 145 0018 8068     		ldr	r0, [r0, #8]
+ 146              	.LVL7:
+ 147              		.loc 1 48 2 is_stmt 0 view .LVU30
+ 148 001a FFF7FEFF 		bl	HAL_GPIO_Init
+ 149              	.LVL8:
+  49:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** }
+ 150              		.loc 1 49 1 view .LVU31
+ 151 001e 05B0     		add	sp, sp, #20
+ 152              	.LCFI6:
+ 153              		.cfi_def_cfa_offset 4
+ 154              		@ sp needed
+ 155 0020 5DF804FB 		ldr	pc, [sp], #4
+ 156              		.cfi_endproc
+ 157              	.LFE68:
+ 159              		.section	.text.DHT_WritePin,"ax",%progbits
+ 160              		.align	1
+ 161              		.syntax unified
+ 162              		.thumb
+ 163              		.thumb_func
+ 165              	DHT_WritePin:
+ 166              	.LVL9:
+ 167              	.LFB69:
+  50:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+  51:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** /**
+  52:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****  * @brief DHT_WritePin
+  53:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** */
+  54:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** static void DHT_WritePin(DHTxx_Humidity_Sensor_Name *DHTxx_sensor_x, uint8_t Value)
+  55:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** {
+ 168              		.loc 1 55 1 is_stmt 1 view -0
+ 169              		.cfi_startproc
+ 170              		@ args = 0, pretend = 0, frame = 0
+ 171              		@ frame_needed = 0, uses_anonymous_args = 0
+ 172              		.loc 1 55 1 is_stmt 0 view .LVU33
+ 173 0000 08B5     		push	{r3, lr}
+ 174              	.LCFI7:
+ 175              		.cfi_def_cfa_offset 8
+ 176              		.cfi_offset 3, -8
+ 177              		.cfi_offset 14, -4
+ 178 0002 0A46     		mov	r2, r1
+  56:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	HAL_GPIO_WritePin(DHTxx_sensor_x->Port_DHTxx, DHTxx_sensor_x->Pin, Value);
+ 179              		.loc 1 56 2 is_stmt 1 view .LVU34
+ARM GAS  /tmp/cc9sV368.s 			page 5
+
+
+ 180 0004 8188     		ldrh	r1, [r0, #4]
+ 181              	.LVL10:
+ 182              		.loc 1 56 2 is_stmt 0 view .LVU35
+ 183 0006 8068     		ldr	r0, [r0, #8]
+ 184              	.LVL11:
+ 185              		.loc 1 56 2 view .LVU36
+ 186 0008 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 187              	.LVL12:
+  57:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** }
+ 188              		.loc 1 57 1 view .LVU37
+ 189 000c 08BD     		pop	{r3, pc}
+ 190              		.cfi_endproc
+ 191              	.LFE69:
+ 193              		.section	.text.DHT_DelayUs,"ax",%progbits
+ 194              		.align	1
+ 195              		.syntax unified
+ 196              		.thumb
+ 197              		.thumb_func
+ 199              	DHT_DelayUs:
+ 200              	.LVL13:
+ 201              	.LFB66:
+  23:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	Delay_Timer_Us(DHTxx_sensor_x->Timer_DHTxx, Time);
+ 202              		.loc 1 23 1 is_stmt 1 view -0
+ 203              		.cfi_startproc
+ 204              		@ args = 0, pretend = 0, frame = 0
+ 205              		@ frame_needed = 0, uses_anonymous_args = 0
+  23:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	Delay_Timer_Us(DHTxx_sensor_x->Timer_DHTxx, Time);
+ 206              		.loc 1 23 1 is_stmt 0 view .LVU39
+ 207 0000 08B5     		push	{r3, lr}
+ 208              	.LCFI8:
+ 209              		.cfi_def_cfa_offset 8
+ 210              		.cfi_offset 3, -8
+ 211              		.cfi_offset 14, -4
+  24:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** }
+ 212              		.loc 1 24 2 is_stmt 1 view .LVU40
+ 213 0002 0068     		ldr	r0, [r0]
+ 214              	.LVL14:
+  24:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** }
+ 215              		.loc 1 24 2 is_stmt 0 view .LVU41
+ 216 0004 FFF7FEFF 		bl	Delay_Timer_Us
+ 217              	.LVL15:
+  25:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+ 218              		.loc 1 25 1 view .LVU42
+ 219 0008 08BD     		pop	{r3, pc}
+ 220              		.cfi_endproc
+ 221              	.LFE66:
+ 223              		.section	.text.DHT_ReadPin,"ax",%progbits
+ 224              		.align	1
+ 225              		.syntax unified
+ 226              		.thumb
+ 227              		.thumb_func
+ 229              	DHT_ReadPin:
+ 230              	.LVL16:
+ 231              	.LFB70:
+  58:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+  59:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** /**
+  60:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****  * @brief DHT_ReadPin
+ARM GAS  /tmp/cc9sV368.s 			page 6
+
+
+  61:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** */
+  62:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** static uint8_t DHT_ReadPin(DHTxx_Humidity_Sensor_Name *DHTxx_sensor_x)
+  63:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** {
+ 232              		.loc 1 63 1 is_stmt 1 view -0
+ 233              		.cfi_startproc
+ 234              		@ args = 0, pretend = 0, frame = 0
+ 235              		@ frame_needed = 0, uses_anonymous_args = 0
+ 236              		.loc 1 63 1 is_stmt 0 view .LVU44
+ 237 0000 08B5     		push	{r3, lr}
+ 238              	.LCFI9:
+ 239              		.cfi_def_cfa_offset 8
+ 240              		.cfi_offset 3, -8
+ 241              		.cfi_offset 14, -4
+  64:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	uint8_t value;
+ 242              		.loc 1 64 2 is_stmt 1 view .LVU45
+  65:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	value = HAL_GPIO_ReadPin(DHTxx_sensor_x->Port_DHTxx, DHTxx_sensor_x->Pin);
+ 243              		.loc 1 65 2 view .LVU46
+ 244              		.loc 1 65 10 is_stmt 0 view .LVU47
+ 245 0002 8188     		ldrh	r1, [r0, #4]
+ 246 0004 8068     		ldr	r0, [r0, #8]
+ 247              	.LVL17:
+ 248              		.loc 1 65 10 view .LVU48
+ 249 0006 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 250              	.LVL18:
+  66:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	return value;
+ 251              		.loc 1 66 2 is_stmt 1 view .LVU49
+  67:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** }
+ 252              		.loc 1 67 1 is_stmt 0 view .LVU50
+ 253 000a 08BD     		pop	{r3, pc}
+ 254              		.cfi_endproc
+ 255              	.LFE70:
+ 257              		.section	.text.DHT22_Start,"ax",%progbits
+ 258              		.align	1
+ 259              		.syntax unified
+ 260              		.thumb
+ 261              		.thumb_func
+ 263              	DHT22_Start:
+ 264              	.LVL19:
+ 265              	.LFB71:
+  68:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+  69:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** /**
+  70:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****  * @brief DHT22_Start
+  71:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** */
+  72:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** static uint8_t DHT22_Start (DHTxx_Humidity_Sensor_Name *DHTxx_sensor_x)
+  73:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** {
+ 266              		.loc 1 73 1 is_stmt 1 view -0
+ 267              		.cfi_startproc
+ 268              		@ args = 0, pretend = 0, frame = 0
+ 269              		@ frame_needed = 0, uses_anonymous_args = 0
+ 270              		.loc 1 73 1 is_stmt 0 view .LVU52
+ 271 0000 38B5     		push	{r3, r4, r5, lr}
+ 272              	.LCFI10:
+ 273              		.cfi_def_cfa_offset 16
+ 274              		.cfi_offset 3, -16
+ 275              		.cfi_offset 4, -12
+ 276              		.cfi_offset 5, -8
+ 277              		.cfi_offset 14, -4
+ARM GAS  /tmp/cc9sV368.s 			page 7
+
+
+ 278 0002 0446     		mov	r4, r0
+  74:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	uint8_t Response = 0;
+ 279              		.loc 1 74 2 is_stmt 1 view .LVU53
+ 280              	.LVL20:
+  75:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	DHT_Set_Pin_Output(DHTxx_sensor_x); 			// set the pin as output
+ 281              		.loc 1 75 2 view .LVU54
+ 282 0004 FFF7FEFF 		bl	DHT_Set_Pin_Output
+ 283              	.LVL21:
+  76:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	DHT_WritePin(DHTxx_sensor_x,0);  		 		// pull the pin low
+ 284              		.loc 1 76 2 view .LVU55
+ 285 0008 0021     		movs	r1, #0
+ 286 000a 2046     		mov	r0, r4
+ 287 000c FFF7FEFF 		bl	DHT_WritePin
+ 288              	.LVL22:
+  77:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	DHT_DelayUs(DHTxx_sensor_x, 1200);   			// wait for > 1ms
+ 289              		.loc 1 77 2 view .LVU56
+ 290 0010 4FF49661 		mov	r1, #1200
+ 291 0014 2046     		mov	r0, r4
+ 292 0016 FFF7FEFF 		bl	DHT_DelayUs
+ 293              	.LVL23:
+  78:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+  79:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	DHT_Set_Pin_Input(DHTxx_sensor_x);   			// set as input
+ 294              		.loc 1 79 2 view .LVU57
+ 295 001a 2046     		mov	r0, r4
+ 296 001c FFF7FEFF 		bl	DHT_Set_Pin_Input
+ 297              	.LVL24:
+  80:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	DHT_DelayUs(DHTxx_sensor_x, 40);  				// wait for 40us
+ 298              		.loc 1 80 2 view .LVU58
+ 299 0020 2821     		movs	r1, #40
+ 300 0022 2046     		mov	r0, r4
+ 301 0024 FFF7FEFF 		bl	DHT_DelayUs
+ 302              	.LVL25:
+  81:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	if (!(DHT_ReadPin(DHTxx_sensor_x))) 			// if the pin is low
+ 303              		.loc 1 81 2 view .LVU59
+ 304              		.loc 1 81 8 is_stmt 0 view .LVU60
+ 305 0028 2046     		mov	r0, r4
+ 306 002a FFF7FEFF 		bl	DHT_ReadPin
+ 307              	.LVL26:
+ 308              		.loc 1 81 5 view .LVU61
+ 309 002e 38B1     		cbz	r0, .L18
+  74:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	DHT_Set_Pin_Output(DHTxx_sensor_x); 			// set the pin as output
+ 310              		.loc 1 74 10 view .LVU62
+ 311 0030 0025     		movs	r5, #0
+ 312              	.LVL27:
+ 313              	.L15:
+  82:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	{
+  83:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	  	DHT_DelayUs(DHTxx_sensor_x, 80);   					// wait for 80us
+  84:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		if ((DHT_ReadPin(DHTxx_sensor_x))) Response = 1;  	// if the pin is high, response is ok
+  85:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		else Response = 0;
+  86:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	}
+  87:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	while ((DHT_ReadPin(DHTxx_sensor_x)));   				// wait for the pin to go low
+ 314              		.loc 1 87 9 is_stmt 1 discriminator 1 view .LVU63
+ 315              		.loc 1 87 10 is_stmt 0 discriminator 1 view .LVU64
+ 316 0032 2046     		mov	r0, r4
+ 317 0034 FFF7FEFF 		bl	DHT_ReadPin
+ 318              	.LVL28:
+ 319              		.loc 1 87 9 discriminator 1 view .LVU65
+ARM GAS  /tmp/cc9sV368.s 			page 8
+
+
+ 320 0038 0028     		cmp	r0, #0
+ 321 003a FAD1     		bne	.L15
+  88:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	return Response;
+ 322              		.loc 1 88 2 is_stmt 1 view .LVU66
+  89:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** }
+ 323              		.loc 1 89 1 is_stmt 0 view .LVU67
+ 324 003c 2846     		mov	r0, r5
+ 325 003e 38BD     		pop	{r3, r4, r5, pc}
+ 326              	.LVL29:
+ 327              	.L18:
+  83:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		if ((DHT_ReadPin(DHTxx_sensor_x))) Response = 1;  	// if the pin is high, response is ok
+ 328              		.loc 1 83 5 is_stmt 1 view .LVU68
+ 329 0040 5021     		movs	r1, #80
+ 330 0042 2046     		mov	r0, r4
+ 331 0044 FFF7FEFF 		bl	DHT_DelayUs
+ 332              	.LVL30:
+  84:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		else Response = 0;
+ 333              		.loc 1 84 3 view .LVU69
+  84:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		else Response = 0;
+ 334              		.loc 1 84 8 is_stmt 0 view .LVU70
+ 335 0048 2046     		mov	r0, r4
+ 336 004a FFF7FEFF 		bl	DHT_ReadPin
+ 337              	.LVL31:
+  84:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		else Response = 0;
+ 338              		.loc 1 84 6 view .LVU71
+ 339 004e 0546     		mov	r5, r0
+ 340 0050 0028     		cmp	r0, #0
+ 341 0052 EED0     		beq	.L15
+  84:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		else Response = 0;
+ 342              		.loc 1 84 47 view .LVU72
+ 343 0054 0125     		movs	r5, #1
+ 344 0056 ECE7     		b	.L15
+ 345              		.cfi_endproc
+ 346              	.LFE71:
+ 348              		.section	.text.DHT22_Read,"ax",%progbits
+ 349              		.align	1
+ 350              		.syntax unified
+ 351              		.thumb
+ 352              		.thumb_func
+ 354              	DHT22_Read:
+ 355              	.LVL32:
+ 356              	.LFB72:
+  90:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+  91:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** /**
+  92:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****  * @brief DHT22_Read
+  93:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** */
+  94:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** static uint8_t DHT22_Read (DHTxx_Humidity_Sensor_Name *DHTxx_sensor_x)
+  95:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** {
+ 357              		.loc 1 95 1 is_stmt 1 view -0
+ 358              		.cfi_startproc
+ 359              		@ args = 0, pretend = 0, frame = 0
+ 360              		@ frame_needed = 0, uses_anonymous_args = 0
+ 361              		.loc 1 95 1 is_stmt 0 view .LVU74
+ 362 0000 70B5     		push	{r4, r5, r6, lr}
+ 363              	.LCFI11:
+ 364              		.cfi_def_cfa_offset 16
+ 365              		.cfi_offset 4, -16
+ARM GAS  /tmp/cc9sV368.s 			page 9
+
+
+ 366              		.cfi_offset 5, -12
+ 367              		.cfi_offset 6, -8
+ 368              		.cfi_offset 14, -4
+ 369 0002 0446     		mov	r4, r0
+  96:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	uint8_t value = 0;
+ 370              		.loc 1 96 2 is_stmt 1 view .LVU75
+ 371              	.LVL33:
+  97:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	DHT_Set_Pin_Input(DHTxx_sensor_x);
+ 372              		.loc 1 97 2 view .LVU76
+ 373 0004 FFF7FEFF 		bl	DHT_Set_Pin_Input
+ 374              	.LVL34:
+  98:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	for (uint8_t i=0 ; i<8; i++)
+ 375              		.loc 1 98 2 view .LVU77
+ 376              	.LBB2:
+ 377              		.loc 1 98 7 view .LVU78
+ 378              		.loc 1 98 15 is_stmt 0 view .LVU79
+ 379 0008 0025     		movs	r5, #0
+ 380              	.LBE2:
+  96:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	uint8_t value = 0;
+ 381              		.loc 1 96 10 view .LVU80
+ 382 000a 2E46     		mov	r6, r5
+ 383              	.LBB3:
+ 384              		.loc 1 98 2 view .LVU81
+ 385 000c 0CE0     		b	.L20
+ 386              	.LVL35:
+ 387              	.L22:
+  99:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	{
+ 100:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		while (!(DHT_ReadPin(DHTxx_sensor_x)));   			// wait for the pin to go high
+ 101:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	    DHT_DelayUs(DHTxx_sensor_x, 40);  					// wait for 40 us
+ 102:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+ 103:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		if (!(DHT_ReadPin(DHTxx_sensor_x)))   				// if the pin is low
+ 104:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		{
+ 105:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 			value &= ~(1<<(7-i));  							// write 0
+ 106:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		}
+ 107:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		else value |= 1<<(7-i);  							// if the pin is high, write 1
+ 388              		.loc 1 107 8 is_stmt 1 view .LVU82
+ 389              		.loc 1 107 22 is_stmt 0 view .LVU83
+ 390 000e C5F10702 		rsb	r2, r5, #7
+ 391              		.loc 1 107 18 view .LVU84
+ 392 0012 0123     		movs	r3, #1
+ 393 0014 9340     		lsls	r3, r3, r2
+ 394              		.loc 1 107 14 view .LVU85
+ 395 0016 3343     		orrs	r3, r3, r6
+ 396 0018 DEB2     		uxtb	r6, r3
+ 397              	.LVL36:
+ 398              	.L24:
+ 108:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		while ((DHT_ReadPin(DHTxx_sensor_x)));  			// wait for the pin to go low
+ 399              		.loc 1 108 10 is_stmt 1 discriminator 1 view .LVU86
+ 400              		.loc 1 108 11 is_stmt 0 discriminator 1 view .LVU87
+ 401 001a 2046     		mov	r0, r4
+ 402 001c FFF7FEFF 		bl	DHT_ReadPin
+ 403              	.LVL37:
+ 404              		.loc 1 108 10 discriminator 1 view .LVU88
+ 405 0020 0028     		cmp	r0, #0
+ 406 0022 FAD1     		bne	.L24
+  98:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	for (uint8_t i=0 ; i<8; i++)
+ 407              		.loc 1 98 27 is_stmt 1 discriminator 2 view .LVU89
+ARM GAS  /tmp/cc9sV368.s 			page 10
+
+
+ 408 0024 0135     		adds	r5, r5, #1
+ 409              	.LVL38:
+  98:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	for (uint8_t i=0 ; i<8; i++)
+ 410              		.loc 1 98 27 is_stmt 0 discriminator 2 view .LVU90
+ 411 0026 EDB2     		uxtb	r5, r5
+ 412              	.LVL39:
+ 413              	.L20:
+  98:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	for (uint8_t i=0 ; i<8; i++)
+ 414              		.loc 1 98 22 is_stmt 1 discriminator 1 view .LVU91
+ 415 0028 072D     		cmp	r5, #7
+ 416 002a 15D8     		bhi	.L26
+ 417              	.L21:
+ 100:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	    DHT_DelayUs(DHTxx_sensor_x, 40);  					// wait for 40 us
+ 418              		.loc 1 100 10 discriminator 1 view .LVU92
+ 100:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	    DHT_DelayUs(DHTxx_sensor_x, 40);  					// wait for 40 us
+ 419              		.loc 1 100 12 is_stmt 0 discriminator 1 view .LVU93
+ 420 002c 2046     		mov	r0, r4
+ 421 002e FFF7FEFF 		bl	DHT_ReadPin
+ 422              	.LVL40:
+ 100:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	    DHT_DelayUs(DHTxx_sensor_x, 40);  					// wait for 40 us
+ 423              		.loc 1 100 10 discriminator 1 view .LVU94
+ 424 0032 0028     		cmp	r0, #0
+ 425 0034 FAD0     		beq	.L21
+ 101:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+ 426              		.loc 1 101 6 is_stmt 1 view .LVU95
+ 427 0036 2821     		movs	r1, #40
+ 428 0038 2046     		mov	r0, r4
+ 429 003a FFF7FEFF 		bl	DHT_DelayUs
+ 430              	.LVL41:
+ 103:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		{
+ 431              		.loc 1 103 3 view .LVU96
+ 103:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		{
+ 432              		.loc 1 103 9 is_stmt 0 view .LVU97
+ 433 003e 2046     		mov	r0, r4
+ 434 0040 FFF7FEFF 		bl	DHT_ReadPin
+ 435              	.LVL42:
+ 103:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		{
+ 436              		.loc 1 103 6 view .LVU98
+ 437 0044 0028     		cmp	r0, #0
+ 438 0046 E2D1     		bne	.L22
+ 105:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		}
+ 439              		.loc 1 105 4 is_stmt 1 view .LVU99
+ 105:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		}
+ 440              		.loc 1 105 20 is_stmt 0 view .LVU100
+ 441 0048 C5F10702 		rsb	r2, r5, #7
+ 105:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		}
+ 442              		.loc 1 105 16 view .LVU101
+ 443 004c 0123     		movs	r3, #1
+ 444 004e 9340     		lsls	r3, r3, r2
+ 105:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		}
+ 445              		.loc 1 105 10 view .LVU102
+ 446 0050 DB43     		mvns	r3, r3
+ 447 0052 5BB2     		sxtb	r3, r3
+ 448 0054 1E40     		ands	r6, r6, r3
+ 449              	.LVL43:
+ 105:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		}
+ 450              		.loc 1 105 10 view .LVU103
+ARM GAS  /tmp/cc9sV368.s 			page 11
+
+
+ 451 0056 E0E7     		b	.L24
+ 452              	.L26:
+ 105:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		}
+ 453              		.loc 1 105 10 view .LVU104
+ 454              	.LBE3:
+ 109:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	}
+ 110:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	return value;
+ 455              		.loc 1 110 2 is_stmt 1 view .LVU105
+ 111:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** }
+ 456              		.loc 1 111 1 is_stmt 0 view .LVU106
+ 457 0058 3046     		mov	r0, r6
+ 458 005a 70BD     		pop	{r4, r5, r6, pc}
+ 459              		.loc 1 111 1 view .LVU107
+ 460              		.cfi_endproc
+ 461              	.LFE72:
+ 463              		.section	.text.DHT_Init,"ax",%progbits
+ 464              		.align	1
+ 465              		.global	DHT_Init
+ 466              		.syntax unified
+ 467              		.thumb
+ 468              		.thumb_func
+ 470              	DHT_Init:
+ 471              	.LVL44:
+ 472              	.LFB73:
+ 112:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+ 113:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** /**
+ 114:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****  * @brief DHT_Init
+ 115:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** */
+ 116:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** void DHT_Init(DHTxx_Humidity_Sensor_Name *DHTxx_sensor_x, TIM_HandleTypeDef* Timer, GPIO_TypeDef *D
+ 117:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** {
+ 473              		.loc 1 117 1 is_stmt 1 view -0
+ 474              		.cfi_startproc
+ 475              		@ args = 0, pretend = 0, frame = 0
+ 476              		@ frame_needed = 0, uses_anonymous_args = 0
+ 477              		.loc 1 117 1 is_stmt 0 view .LVU109
+ 478 0000 08B5     		push	{r3, lr}
+ 479              	.LCFI12:
+ 480              		.cfi_def_cfa_offset 8
+ 481              		.cfi_offset 3, -8
+ 482              		.cfi_offset 14, -4
+ 118:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	DHTxx_sensor_x->Port_DHTxx = DHTxx_PORT;
+ 483              		.loc 1 118 2 is_stmt 1 view .LVU110
+ 484              		.loc 1 118 29 is_stmt 0 view .LVU111
+ 485 0002 8260     		str	r2, [r0, #8]
+ 119:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	DHTxx_sensor_x->Pin = DHTxx_Pin;
+ 486              		.loc 1 119 2 is_stmt 1 view .LVU112
+ 487              		.loc 1 119 22 is_stmt 0 view .LVU113
+ 488 0004 8380     		strh	r3, [r0, #4]	@ movhi
+ 120:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	DHTxx_sensor_x->Timer_DHTxx = Timer;
+ 489              		.loc 1 120 2 is_stmt 1 view .LVU114
+ 490              		.loc 1 120 30 is_stmt 0 view .LVU115
+ 491 0006 0160     		str	r1, [r0]
+ 121:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	DHTxx_sensor_x->Temperature = 0;
+ 492              		.loc 1 121 2 is_stmt 1 view .LVU116
+ 493              		.loc 1 121 30 is_stmt 0 view .LVU117
+ 494 0008 0023     		movs	r3, #0
+ 495              	.LVL45:
+ARM GAS  /tmp/cc9sV368.s 			page 12
+
+
+ 496              		.loc 1 121 30 view .LVU118
+ 497 000a C360     		str	r3, [r0, #12]	@ float
+ 122:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	DHTxx_sensor_x->Humidity = 0;
+ 498              		.loc 1 122 2 is_stmt 1 view .LVU119
+ 499              		.loc 1 122 27 is_stmt 0 view .LVU120
+ 500 000c 0361     		str	r3, [r0, #16]	@ float
+ 123:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	DHT_DelayInit(DHTxx_sensor_x);
+ 501              		.loc 1 123 2 is_stmt 1 view .LVU121
+ 502 000e FFF7FEFF 		bl	DHT_DelayInit
+ 503              	.LVL46:
+ 124:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** }
+ 504              		.loc 1 124 1 is_stmt 0 view .LVU122
+ 505 0012 08BD     		pop	{r3, pc}
+ 506              		.cfi_endproc
+ 507              	.LFE73:
+ 509              		.global	__aeabi_i2f
+ 510              		.global	__aeabi_fdiv
+ 511              		.section	.text.DHT_Read_Temperature_Humidity,"ax",%progbits
+ 512              		.align	1
+ 513              		.global	DHT_Read_Temperature_Humidity
+ 514              		.syntax unified
+ 515              		.thumb
+ 516              		.thumb_func
+ 518              	DHT_Read_Temperature_Humidity:
+ 519              	.LVL47:
+ 520              	.LFB74:
+ 125:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+ 126:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** /**
+ 127:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****  * @brief DHT_Read_Temperature_Humidity
+ 128:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** */
+ 129:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** uint8_t DHT_Read_Temperature_Humidity(DHTxx_Humidity_Sensor_Name *DHTxx_sensor_x, float *temperatur
+ 130:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** {
+ 521              		.loc 1 130 1 is_stmt 1 view -0
+ 522              		.cfi_startproc
+ 523              		@ args = 0, pretend = 0, frame = 0
+ 524              		@ frame_needed = 0, uses_anonymous_args = 0
+ 525              		.loc 1 130 1 is_stmt 0 view .LVU124
+ 526 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 527              	.LCFI13:
+ 528              		.cfi_def_cfa_offset 40
+ 529              		.cfi_offset 3, -40
+ 530              		.cfi_offset 4, -36
+ 531              		.cfi_offset 5, -32
+ 532              		.cfi_offset 6, -28
+ 533              		.cfi_offset 7, -24
+ 534              		.cfi_offset 8, -20
+ 535              		.cfi_offset 9, -16
+ 536              		.cfi_offset 10, -12
+ 537              		.cfi_offset 11, -8
+ 538              		.cfi_offset 14, -4
+ 539 0004 0446     		mov	r4, r0
+ 540 0006 8946     		mov	r9, r1
+ 541 0008 9046     		mov	r8, r2
+ 131:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	uint8_t Rh_byte1, Rh_byte2, Temp_byte1, Temp_byte2;
+ 542              		.loc 1 131 2 is_stmt 1 view .LVU125
+ 132:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	uint16_t SUM, RH, TEMP;
+ 543              		.loc 1 132 2 view .LVU126
+ARM GAS  /tmp/cc9sV368.s 			page 13
+
+
+ 133:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+ 134:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	DHT22_Start(DHTxx_sensor_x);
+ 544              		.loc 1 134 2 view .LVU127
+ 545 000a FFF7FEFF 		bl	DHT22_Start
+ 546              	.LVL48:
+ 135:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	Rh_byte1 = DHT22_Read(DHTxx_sensor_x);
+ 547              		.loc 1 135 2 view .LVU128
+ 548              		.loc 1 135 13 is_stmt 0 view .LVU129
+ 549 000e 2046     		mov	r0, r4
+ 550 0010 FFF7FEFF 		bl	DHT22_Read
+ 551              	.LVL49:
+ 552 0014 8246     		mov	r10, r0
+ 553              	.LVL50:
+ 136:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	Rh_byte2 = DHT22_Read(DHTxx_sensor_x);
+ 554              		.loc 1 136 2 is_stmt 1 view .LVU130
+ 555              		.loc 1 136 13 is_stmt 0 view .LVU131
+ 556 0016 2046     		mov	r0, r4
+ 557 0018 FFF7FEFF 		bl	DHT22_Read
+ 558              	.LVL51:
+ 559 001c 0546     		mov	r5, r0
+ 560              	.LVL52:
+ 137:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	Temp_byte1 = DHT22_Read(DHTxx_sensor_x);
+ 561              		.loc 1 137 2 is_stmt 1 view .LVU132
+ 562              		.loc 1 137 15 is_stmt 0 view .LVU133
+ 563 001e 2046     		mov	r0, r4
+ 564 0020 FFF7FEFF 		bl	DHT22_Read
+ 565              	.LVL53:
+ 566 0024 8346     		mov	fp, r0
+ 567              	.LVL54:
+ 138:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	Temp_byte2 = DHT22_Read(DHTxx_sensor_x);
+ 568              		.loc 1 138 2 is_stmt 1 view .LVU134
+ 569              		.loc 1 138 15 is_stmt 0 view .LVU135
+ 570 0026 2046     		mov	r0, r4
+ 571 0028 FFF7FEFF 		bl	DHT22_Read
+ 572              	.LVL55:
+ 573 002c 0646     		mov	r6, r0
+ 574              	.LVL56:
+ 139:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	SUM = DHT22_Read(DHTxx_sensor_x);
+ 575              		.loc 1 139 2 is_stmt 1 view .LVU136
+ 576              		.loc 1 139 8 is_stmt 0 view .LVU137
+ 577 002e 2046     		mov	r0, r4
+ 578 0030 FFF7FEFF 		bl	DHT22_Read
+ 579              	.LVL57:
+ 580 0034 0746     		mov	r7, r0
+ 581              	.LVL58:
+ 140:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+ 141:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	TEMP = ((Temp_byte1<<8)|Temp_byte2);
+ 582              		.loc 1 141 2 is_stmt 1 view .LVU138
+ 583              		.loc 1 141 25 is_stmt 0 view .LVU139
+ 584 0036 46EA0B26 		orr	r6, r6, fp, lsl #8
+ 585              	.LVL59:
+ 142:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	RH = ((Rh_byte1<<8)|Rh_byte2);
+ 586              		.loc 1 142 2 is_stmt 1 view .LVU140
+ 587              		.loc 1 142 21 is_stmt 0 view .LVU141
+ 588 003a 45EA0A25 		orr	r5, r5, r10, lsl #8
+ 589              	.LVL60:
+ 590              		.loc 1 142 5 view .LVU142
+ARM GAS  /tmp/cc9sV368.s 			page 14
+
+
+ 591 003e ADB2     		uxth	r5, r5
+ 592              	.LVL61:
+ 143:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+ 144:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	DHTxx_sensor_x->Temperature = (float)(TEMP/10.0f);
+ 593              		.loc 1 144 2 is_stmt 1 view .LVU143
+ 594              		.loc 1 144 32 is_stmt 0 view .LVU144
+ 595 0040 B0B2     		uxth	r0, r6
+ 596 0042 FFF7FEFF 		bl	__aeabi_i2f
+ 597              	.LVL62:
+ 598 0046 0A49     		ldr	r1, .L31
+ 599 0048 FFF7FEFF 		bl	__aeabi_fdiv
+ 600              	.LVL63:
+ 601 004c 0646     		mov	r6, r0
+ 602              	.LVL64:
+ 603              		.loc 1 144 30 view .LVU145
+ 604 004e E060     		str	r0, [r4, #12]	@ float
+ 145:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	DHTxx_sensor_x->Humidity = (float)(RH/10.0f);
+ 605              		.loc 1 145 2 is_stmt 1 view .LVU146
+ 606              		.loc 1 145 29 is_stmt 0 view .LVU147
+ 607 0050 2846     		mov	r0, r5
+ 608 0052 FFF7FEFF 		bl	__aeabi_i2f
+ 609              	.LVL65:
+ 610 0056 0649     		ldr	r1, .L31
+ 611 0058 FFF7FEFF 		bl	__aeabi_fdiv
+ 612              	.LVL66:
+ 613              		.loc 1 145 27 view .LVU148
+ 614 005c 2061     		str	r0, [r4, #16]	@ float
+ 146:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+ 147:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	*temperature = DHTxx_sensor_x->Temperature;
+ 615              		.loc 1 147 2 is_stmt 1 view .LVU149
+ 616              		.loc 1 147 15 is_stmt 0 view .LVU150
+ 617 005e C9F80060 		str	r6, [r9]	@ float
+ 148:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	*humidity = DHTxx_sensor_x->Humidity;
+ 618              		.loc 1 148 2 is_stmt 1 view .LVU151
+ 619              		.loc 1 148 28 is_stmt 0 view .LVU152
+ 620 0062 2369     		ldr	r3, [r4, #16]	@ float
+ 621              		.loc 1 148 12 view .LVU153
+ 622 0064 C8F80030 		str	r3, [r8]	@ float
+ 149:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+ 150:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	return SUM;
+ 623              		.loc 1 150 2 is_stmt 1 view .LVU154
+ 151:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** }
+ 624              		.loc 1 151 1 is_stmt 0 view .LVU155
+ 625 0068 3846     		mov	r0, r7
+ 626 006a BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 627              	.LVL67:
+ 628              	.L32:
+ 629              		.loc 1 151 1 view .LVU156
+ 630 006e 00BF     		.align	2
+ 631              	.L31:
+ 632 0070 00002041 		.word	1092616192
+ 633              		.cfi_endproc
+ 634              	.LFE74:
+ 636              		.global	__aeabi_fadd
+ 637              		.section	.text.DHT_Read_Temperature_Humidity_Average,"ax",%progbits
+ 638              		.align	1
+ 639              		.global	DHT_Read_Temperature_Humidity_Average
+ARM GAS  /tmp/cc9sV368.s 			page 15
+
+
+ 640              		.syntax unified
+ 641              		.thumb
+ 642              		.thumb_func
+ 644              	DHT_Read_Temperature_Humidity_Average:
+ 645              	.LVL68:
+ 646              	.LFB75:
+ 152:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+ 153:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** /**
+ 154:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****  * @brief DHT_Read_Temperature_Humidity_Average
+ 155:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** */
+ 156:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** void DHT_Read_Temperature_Humidity_Average(DHTxx_Humidity_Sensor_Name *DHTxx_sensor_x, float *tempe
+ 157:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** {
+ 647              		.loc 1 157 1 is_stmt 1 view -0
+ 648              		.cfi_startproc
+ 649              		@ args = 0, pretend = 0, frame = 0
+ 650              		@ frame_needed = 1, uses_anonymous_args = 0
+ 651              		.loc 1 157 1 is_stmt 0 view .LVU158
+ 652 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 653              	.LCFI14:
+ 654              		.cfi_def_cfa_offset 40
+ 655              		.cfi_offset 3, -40
+ 656              		.cfi_offset 4, -36
+ 657              		.cfi_offset 5, -32
+ 658              		.cfi_offset 6, -28
+ 659              		.cfi_offset 7, -24
+ 660              		.cfi_offset 8, -20
+ 661              		.cfi_offset 9, -16
+ 662              		.cfi_offset 10, -12
+ 663              		.cfi_offset 11, -8
+ 664              		.cfi_offset 14, -4
+ 665 0004 00AF     		add	r7, sp, #0
+ 666              	.LCFI15:
+ 667              		.cfi_def_cfa_register 7
+ 668 0006 8346     		mov	fp, r0
+ 669 0008 8A46     		mov	r10, r1
+ 670 000a 1646     		mov	r6, r2
+ 671 000c 1D46     		mov	r5, r3
+ 158:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	float arr1_buff_temp[sample];
+ 672              		.loc 1 158 2 is_stmt 1 view .LVU159
+ 673              	.LVL69:
+ 674              		.loc 1 158 8 is_stmt 0 view .LVU160
+ 675 000e 9B00     		lsls	r3, r3, #2
+ 676              	.LVL70:
+ 677              		.loc 1 158 8 view .LVU161
+ 678 0010 0733     		adds	r3, r3, #7
+ 679 0012 03F4FF63 		and	r3, r3, #2040
+ 680 0016 ADEB030D 		sub	sp, sp, r3
+ 681 001a E946     		mov	r9, sp
+ 682              	.LVL71:
+ 159:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	float arr2_buff_humi[sample];
+ 683              		.loc 1 159 2 is_stmt 1 view .LVU162
+ 684              		.loc 1 159 8 is_stmt 0 view .LVU163
+ 685 001c ADEB030D 		sub	sp, sp, r3
+ 686 0020 E846     		mov	r8, sp
+ 687              	.LVL72:
+ 160:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	uint8_t index = 0;
+ 688              		.loc 1 160 2 is_stmt 1 view .LVU164
+ARM GAS  /tmp/cc9sV368.s 			page 16
+
+
+ 161:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	float sum = 0;
+ 689              		.loc 1 161 2 view .LVU165
+ 162:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	float data  = 0;
+ 690              		.loc 1 162 2 view .LVU166
+ 163:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	for(uint8_t i =0; i < sample; i++)
+ 691              		.loc 1 163 2 view .LVU167
+ 692              	.LBB4:
+ 693              		.loc 1 163 6 view .LVU168
+ 694              		.loc 1 163 14 is_stmt 0 view .LVU169
+ 695 0022 0024     		movs	r4, #0
+ 696              		.loc 1 163 2 view .LVU170
+ 697 0024 11E0     		b	.L34
+ 698              	.LVL73:
+ 699              	.L35:
+ 164:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	{
+ 165:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		DHT_Read_Temperature_Humidity(DHTxx_sensor_x, temperature, humidity);
+ 700              		.loc 1 165 3 is_stmt 1 discriminator 3 view .LVU171
+ 701 0026 3246     		mov	r2, r6
+ 702 0028 5146     		mov	r1, r10
+ 703 002a 5846     		mov	r0, fp
+ 704 002c FFF7FEFF 		bl	DHT_Read_Temperature_Humidity
+ 705              	.LVL74:
+ 166:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		arr1_buff_temp[i] = *temperature;
+ 706              		.loc 1 166 3 discriminator 3 view .LVU172
+ 707              		.loc 1 166 23 is_stmt 0 discriminator 3 view .LVU173
+ 708 0030 DAF80030 		ldr	r3, [r10]	@ float
+ 709              		.loc 1 166 21 discriminator 3 view .LVU174
+ 710 0034 49F82430 		str	r3, [r9, r4, lsl #2]	@ float
+ 167:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		arr2_buff_humi[i] = *humidity;
+ 711              		.loc 1 167 3 is_stmt 1 discriminator 3 view .LVU175
+ 712              		.loc 1 167 23 is_stmt 0 discriminator 3 view .LVU176
+ 713 0038 3368     		ldr	r3, [r6]	@ float
+ 714              		.loc 1 167 21 discriminator 3 view .LVU177
+ 715 003a 48F82430 		str	r3, [r8, r4, lsl #2]	@ float
+ 168:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 		HAL_Delay(1000);
+ 716              		.loc 1 168 3 is_stmt 1 discriminator 3 view .LVU178
+ 717 003e 4FF47A70 		mov	r0, #1000
+ 718 0042 FFF7FEFF 		bl	HAL_Delay
+ 719              	.LVL75:
+ 163:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	{
+ 720              		.loc 1 163 33 discriminator 3 view .LVU179
+ 721 0046 0134     		adds	r4, r4, #1
+ 722              	.LVL76:
+ 163:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	{
+ 723              		.loc 1 163 33 is_stmt 0 discriminator 3 view .LVU180
+ 724 0048 E4B2     		uxtb	r4, r4
+ 725              	.LVL77:
+ 726              	.L34:
+ 163:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	{
+ 727              		.loc 1 163 22 is_stmt 1 discriminator 1 view .LVU181
+ 728 004a AC42     		cmp	r4, r5
+ 729 004c EBD3     		bcc	.L35
+ 730              	.LBE4:
+ 731              	.LBB5:
+ 169:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	}
+ 170:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+ 171:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****     for(uint8_t i = 0; i < sample; i++)
+ARM GAS  /tmp/cc9sV368.s 			page 17
+
+
+ 732              		.loc 1 171 17 is_stmt 0 view .LVU182
+ 733 004e 4FF0000B 		mov	fp, #0
+ 734              	.LVL78:
+ 735              		.loc 1 171 17 view .LVU183
+ 736              	.LBE5:
+ 161:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	float data  = 0;
+ 737              		.loc 1 161 8 view .LVU184
+ 738 0052 0024     		movs	r4, #0
+ 739              	.LVL79:
+ 161:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 	float data  = 0;
+ 740              		.loc 1 161 8 view .LVU185
+ 741 0054 09E0     		b	.L36
+ 742              	.LVL80:
+ 743              	.L37:
+ 744              	.LBB6:
+ 172:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****     {
+ 173:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****     	sum += arr1_buff_temp[i];
+ 745              		.loc 1 173 6 is_stmt 1 discriminator 3 view .LVU186
+ 746              		.loc 1 173 10 is_stmt 0 discriminator 3 view .LVU187
+ 747 0056 59F82B10 		ldr	r1, [r9, fp, lsl #2]	@ float
+ 748 005a 2046     		mov	r0, r4
+ 749 005c FFF7FEFF 		bl	__aeabi_fadd
+ 750              	.LVL81:
+ 751 0060 0446     		mov	r4, r0
+ 752              	.LVL82:
+ 171:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****     {
+ 753              		.loc 1 171 37 is_stmt 1 discriminator 3 view .LVU188
+ 754 0062 0BF1010B 		add	fp, fp, #1
+ 755              	.LVL83:
+ 171:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****     {
+ 756              		.loc 1 171 37 is_stmt 0 discriminator 3 view .LVU189
+ 757 0066 5FFA8BFB 		uxtb	fp, fp
+ 758              	.LVL84:
+ 759              	.L36:
+ 171:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****     {
+ 760              		.loc 1 171 26 is_stmt 1 discriminator 1 view .LVU190
+ 761 006a AB45     		cmp	fp, r5
+ 762 006c F3D3     		bcc	.L37
+ 763              	.LBE6:
+ 174:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****     }
+ 175:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****      data = sum /sample;
+ 764              		.loc 1 175 6 view .LVU191
+ 765              		.loc 1 175 17 is_stmt 0 view .LVU192
+ 766 006e 2846     		mov	r0, r5
+ 767 0070 FFF7FEFF 		bl	__aeabi_i2f
+ 768              	.LVL85:
+ 769 0074 8146     		mov	r9, r0
+ 770              	.LVL86:
+ 771              		.loc 1 175 11 view .LVU193
+ 772 0076 0146     		mov	r1, r0
+ 773 0078 2046     		mov	r0, r4
+ 774 007a FFF7FEFF 		bl	__aeabi_fdiv
+ 775              	.LVL87:
+ 176:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****      *temperature = data;
+ 776              		.loc 1 176 6 is_stmt 1 view .LVU194
+ 777              		.loc 1 176 19 is_stmt 0 view .LVU195
+ 778 007e CAF80000 		str	r0, [r10]	@ float
+ARM GAS  /tmp/cc9sV368.s 			page 18
+
+
+ 177:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** 
+ 178:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****      sum = 0;
+ 779              		.loc 1 178 6 is_stmt 1 view .LVU196
+ 780              	.LVL88:
+ 179:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****      data = 0;
+ 781              		.loc 1 179 6 view .LVU197
+ 180:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****      for(uint8_t i =0; i< sample; i++)
+ 782              		.loc 1 180 6 view .LVU198
+ 783              	.LBB7:
+ 784              		.loc 1 180 10 view .LVU199
+ 785              		.loc 1 180 18 is_stmt 0 view .LVU200
+ 786 0082 0024     		movs	r4, #0
+ 787              	.LBE7:
+ 178:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****      data = 0;
+ 788              		.loc 1 178 10 view .LVU201
+ 789 0084 0020     		movs	r0, #0
+ 790              	.LBB8:
+ 791              		.loc 1 180 6 view .LVU202
+ 792 0086 05E0     		b	.L38
+ 793              	.LVL89:
+ 794              	.L39:
+ 181:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****      {
+ 182:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****     	 sum += arr2_buff_humi[i];
+ 795              		.loc 1 182 7 is_stmt 1 discriminator 3 view .LVU203
+ 796              		.loc 1 182 11 is_stmt 0 discriminator 3 view .LVU204
+ 797 0088 58F82410 		ldr	r1, [r8, r4, lsl #2]	@ float
+ 798 008c FFF7FEFF 		bl	__aeabi_fadd
+ 799              	.LVL90:
+ 180:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****      {
+ 800              		.loc 1 180 36 is_stmt 1 discriminator 3 view .LVU205
+ 801 0090 0134     		adds	r4, r4, #1
+ 802              	.LVL91:
+ 180:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****      {
+ 803              		.loc 1 180 36 is_stmt 0 discriminator 3 view .LVU206
+ 804 0092 E4B2     		uxtb	r4, r4
+ 805              	.LVL92:
+ 806              	.L38:
+ 180:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****      {
+ 807              		.loc 1 180 25 is_stmt 1 discriminator 1 view .LVU207
+ 808 0094 AC42     		cmp	r4, r5
+ 809 0096 F7D3     		bcc	.L39
+ 810              	.LBE8:
+ 183:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****      }
+ 184:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****      data = sum /sample;
+ 811              		.loc 1 184 6 view .LVU208
+ 812              		.loc 1 184 11 is_stmt 0 view .LVU209
+ 813 0098 4946     		mov	r1, r9
+ 814 009a FFF7FEFF 		bl	__aeabi_fdiv
+ 815              	.LVL93:
+ 185:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c ****      *humidity = data;
+ 816              		.loc 1 185 6 is_stmt 1 view .LVU210
+ 817              		.loc 1 185 16 is_stmt 0 view .LVU211
+ 818 009e 3060     		str	r0, [r6]	@ float
+ 186:DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.c **** }
+ 819              		.loc 1 186 1 view .LVU212
+ 820 00a0 BD46     		mov	sp, r7
+ 821              	.LCFI16:
+ARM GAS  /tmp/cc9sV368.s 			page 19
+
+
+ 822              		.cfi_def_cfa_register 13
+ 823              		@ sp needed
+ 824 00a2 BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 825              		.loc 1 186 1 view .LVU213
+ 826              		.cfi_endproc
+ 827              	.LFE75:
+ 829              		.text
+ 830              	.Letext0:
+ 831              		.file 2 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 832              		.file 3 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 833              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 834              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 835              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 836              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 837              		.file 8 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h"
+ 838              		.file 9 "DHTxx_Humidity_Sensor/DHTxx_Humidity_Sensor.h"
+ 839              		.file 10 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 840              		.file 11 "Delay_Timer/Delay_Timer.h"
+ARM GAS  /tmp/cc9sV368.s 			page 20
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 DHTxx_Humidity_Sensor.c
+     /tmp/cc9sV368.s:18     .text.DHT_DelayInit:0000000000000000 $t
+     /tmp/cc9sV368.s:23     .text.DHT_DelayInit:0000000000000000 DHT_DelayInit
+     /tmp/cc9sV368.s:49     .text.DHT_Set_Pin_Output:0000000000000000 $t
+     /tmp/cc9sV368.s:54     .text.DHT_Set_Pin_Output:0000000000000000 DHT_Set_Pin_Output
+     /tmp/cc9sV368.s:106    .text.DHT_Set_Pin_Input:0000000000000000 $t
+     /tmp/cc9sV368.s:111    .text.DHT_Set_Pin_Input:0000000000000000 DHT_Set_Pin_Input
+     /tmp/cc9sV368.s:160    .text.DHT_WritePin:0000000000000000 $t
+     /tmp/cc9sV368.s:165    .text.DHT_WritePin:0000000000000000 DHT_WritePin
+     /tmp/cc9sV368.s:194    .text.DHT_DelayUs:0000000000000000 $t
+     /tmp/cc9sV368.s:199    .text.DHT_DelayUs:0000000000000000 DHT_DelayUs
+     /tmp/cc9sV368.s:224    .text.DHT_ReadPin:0000000000000000 $t
+     /tmp/cc9sV368.s:229    .text.DHT_ReadPin:0000000000000000 DHT_ReadPin
+     /tmp/cc9sV368.s:258    .text.DHT22_Start:0000000000000000 $t
+     /tmp/cc9sV368.s:263    .text.DHT22_Start:0000000000000000 DHT22_Start
+     /tmp/cc9sV368.s:349    .text.DHT22_Read:0000000000000000 $t
+     /tmp/cc9sV368.s:354    .text.DHT22_Read:0000000000000000 DHT22_Read
+     /tmp/cc9sV368.s:464    .text.DHT_Init:0000000000000000 $t
+     /tmp/cc9sV368.s:470    .text.DHT_Init:0000000000000000 DHT_Init
+     /tmp/cc9sV368.s:512    .text.DHT_Read_Temperature_Humidity:0000000000000000 $t
+     /tmp/cc9sV368.s:518    .text.DHT_Read_Temperature_Humidity:0000000000000000 DHT_Read_Temperature_Humidity
+     /tmp/cc9sV368.s:632    .text.DHT_Read_Temperature_Humidity:0000000000000070 $d
+     /tmp/cc9sV368.s:638    .text.DHT_Read_Temperature_Humidity_Average:0000000000000000 $t
+     /tmp/cc9sV368.s:644    .text.DHT_Read_Temperature_Humidity_Average:0000000000000000 DHT_Read_Temperature_Humidity_Average
+
+UNDEFINED SYMBOLS
+Delay_Tim_Init
+HAL_GPIO_Init
+HAL_GPIO_WritePin
+Delay_Timer_Us
+HAL_GPIO_ReadPin
+__aeabi_i2f
+__aeabi_fdiv
+__aeabi_fadd
+HAL_Delay

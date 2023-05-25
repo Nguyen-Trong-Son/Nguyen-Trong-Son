@@ -1,0 +1,1753 @@
+ARM GAS  /tmp/cchM16BX.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"Machine_Routine.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.Task02_Status_Machine,"ax",%progbits
+  18              		.align	1
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  23              	Task02_Status_Machine:
+  24              	.LFB85:
+  25              		.file 1 "Machine_Routine/Machine_Routine.c"
+   1:Machine_Routine/Machine_Routine.c **** /**
+   2:Machine_Routine/Machine_Routine.c ****  * @file Machine_Routine.c
+   3:Machine_Routine/Machine_Routine.c ****  * @author Nguyen Trong Son (LoH Technology Company Limited)
+   4:Machine_Routine/Machine_Routine.c ****  * @brief 
+   5:Machine_Routine/Machine_Routine.c ****  * @version 0.1
+   6:Machine_Routine/Machine_Routine.c ****  * @date 2022-11-09
+   7:Machine_Routine/Machine_Routine.c ****  * 
+   8:Machine_Routine/Machine_Routine.c ****  * @copyright Copyright (c) 2022
+   9:Machine_Routine/Machine_Routine.c ****  * 
+  10:Machine_Routine/Machine_Routine.c ****  */
+  11:Machine_Routine/Machine_Routine.c **** #include "stm32f1xx_hal.h"
+  12:Machine_Routine/Machine_Routine.c **** #include "main.h"
+  13:Machine_Routine/Machine_Routine.c **** #include "Machine_Routine.h"
+  14:Machine_Routine/Machine_Routine.c **** #include "stdint.h"
+  15:Machine_Routine/Machine_Routine.c **** #include "Transmit_Data_Lora.h"
+  16:Machine_Routine/Machine_Routine.c **** #include "CLCD_I2C.h"
+  17:Machine_Routine/Machine_Routine.c **** #include "stdio.h"
+  18:Machine_Routine/Machine_Routine.c **** #include "Debug_Program.h"
+  19:Machine_Routine/Machine_Routine.c **** #include "Setup_Calibration_Sensor.h"
+  20:Machine_Routine/Machine_Routine.c **** 
+  21:Machine_Routine/Machine_Routine.c **** #define TIME_WAKE_UP_SENSOR     180000
+  22:Machine_Routine/Machine_Routine.c **** 
+  23:Machine_Routine/Machine_Routine.c **** #if USE_RTOS_MACHINE_SYSTEM
+  24:Machine_Routine/Machine_Routine.c **** #include "FreeRTOS.h"
+  25:Machine_Routine/Machine_Routine.c **** #include "task.h"
+  26:Machine_Routine/Machine_Routine.c **** #include "timers.h"
+  27:Machine_Routine/Machine_Routine.c **** #include "queue.h"
+  28:Machine_Routine/Machine_Routine.c **** #include "semphr.h"
+  29:Machine_Routine/Machine_Routine.c **** #include "event_groups.h"
+  30:Machine_Routine/Machine_Routine.c **** 
+  31:Machine_Routine/Machine_Routine.c **** #define STACK_SIZE_TASK01_ROUTINE_SYSTEM         512
+  32:Machine_Routine/Machine_Routine.c **** #define STACK_SIZE_TASK02_STATUS_MACHINE         64
+  33:Machine_Routine/Machine_Routine.c **** 
+ARM GAS  /tmp/cchM16BX.s 			page 2
+
+
+  34:Machine_Routine/Machine_Routine.c **** /**
+  35:Machine_Routine/Machine_Routine.c ****  * @brief Prority task
+  36:Machine_Routine/Machine_Routine.c ****  *
+  37:Machine_Routine/Machine_Routine.c ****  */
+  38:Machine_Routine/Machine_Routine.c **** #define PRORITY_TASK01_ROUTINE_SYSTEM     3
+  39:Machine_Routine/Machine_Routine.c **** #define PRORITY_TASK02_STATUS_MACHINE     2
+  40:Machine_Routine/Machine_Routine.c **** 
+  41:Machine_Routine/Machine_Routine.c **** /**
+  42:Machine_Routine/Machine_Routine.c ****  * @brief Name task
+  43:Machine_Routine/Machine_Routine.c ****  *
+  44:Machine_Routine/Machine_Routine.c ****  */
+  45:Machine_Routine/Machine_Routine.c **** #define NAME_TASK01_ROUTINE_SYSTEM          "task01_routine_system"
+  46:Machine_Routine/Machine_Routine.c **** #define NAME_TASK02_STATUS_MACHINE          "task02_status_machine"
+  47:Machine_Routine/Machine_Routine.c **** 
+  48:Machine_Routine/Machine_Routine.c **** /**
+  49:Machine_Routine/Machine_Routine.c ****  * @brief Status Connect to the Sensor
+  50:Machine_Routine/Machine_Routine.c ****  *
+  51:Machine_Routine/Machine_Routine.c ****  */
+  52:Machine_Routine/Machine_Routine.c **** #define CONNECTED                       "CONNECTED SUSSESFULL\r\n"
+  53:Machine_Routine/Machine_Routine.c **** #define UNCONNECTED_DUST_SENSOR         "UNCONNECTED_DUST_SENSOR\r\n"
+  54:Machine_Routine/Machine_Routine.c **** #define UNCONNECTED_CO2_SENSOR           "UNCONNECTED_CO2_SENSOR\r\n"
+  55:Machine_Routine/Machine_Routine.c **** #define NO_RESULT                       "NO_RESULT\r\n"
+  56:Machine_Routine/Machine_Routine.c **** #define RESULT                          "RESULT\r\n"
+  57:Machine_Routine/Machine_Routine.c **** #define DATA_MASTER_TRASMIT             "MASTER TRASMIT DATA OK\n"
+  58:Machine_Routine/Machine_Routine.c **** #define MCU_RESET                       "RESET MCU...\n\n"
+  59:Machine_Routine/Machine_Routine.c **** 
+  60:Machine_Routine/Machine_Routine.c **** static TaskHandle_t my_task01_routine_system;
+  61:Machine_Routine/Machine_Routine.c **** static TaskHandle_t my_task02_status_machine;
+  62:Machine_Routine/Machine_Routine.c **** static SemaphoreHandle_t countingsem = 0;
+  63:Machine_Routine/Machine_Routine.c **** 
+  64:Machine_Routine/Machine_Routine.c **** static uint8_t Routine01_Task_01_Routine_System(void);
+  65:Machine_Routine/Machine_Routine.c **** static uint8_t Routine02_Task_02_Status_Machine(void);
+  66:Machine_Routine/Machine_Routine.c **** 
+  67:Machine_Routine/Machine_Routine.c **** 
+  68:Machine_Routine/Machine_Routine.c **** static void Task01_Routine_System(void *parameter);
+  69:Machine_Routine/Machine_Routine.c **** 
+  70:Machine_Routine/Machine_Routine.c **** static void Task02_Status_Machine(void *parameter);
+  71:Machine_Routine/Machine_Routine.c **** 
+  72:Machine_Routine/Machine_Routine.c **** #endif
+  73:Machine_Routine/Machine_Routine.c **** 
+  74:Machine_Routine/Machine_Routine.c **** #define ADDRESS_SLAVE 0x1A
+  75:Machine_Routine/Machine_Routine.c **** 
+  76:Machine_Routine/Machine_Routine.c **** extern hi2c2;
+  77:Machine_Routine/Machine_Routine.c **** extern htim3;
+  78:Machine_Routine/Machine_Routine.c **** extern huart3;
+  79:Machine_Routine/Machine_Routine.c **** extern hadc1;
+  80:Machine_Routine/Machine_Routine.c **** 
+  81:Machine_Routine/Machine_Routine.c **** 
+  82:Machine_Routine/Machine_Routine.c **** Debug_Program_Name                  pgm_1;
+  83:Machine_Routine/Machine_Routine.c **** Frame_Transmit_Data                 moudle_lora_01;
+  84:Machine_Routine/Machine_Routine.c **** CLCD_I2C_Name                       lcd1;
+  85:Machine_Routine/Machine_Routine.c **** 
+  86:Machine_Routine/Machine_Routine.c **** 
+  87:Machine_Routine/Machine_Routine.c **** static void Init_Debug_Program(void);
+  88:Machine_Routine/Machine_Routine.c **** 
+  89:Machine_Routine/Machine_Routine.c **** static void Init_LCD_Display(void);
+  90:Machine_Routine/Machine_Routine.c **** static void Init_Transimir_Lora_Mode_Uart(void);
+ARM GAS  /tmp/cchM16BX.s 			page 3
+
+
+  91:Machine_Routine/Machine_Routine.c **** static void Init_HC595(void);
+  92:Machine_Routine/Machine_Routine.c **** 
+  93:Machine_Routine/Machine_Routine.c **** #if USE_RTOS_MACHINE_SYSTEM
+  94:Machine_Routine/Machine_Routine.c **** uint16_t test =0;
+  95:Machine_Routine/Machine_Routine.c **** 
+  96:Machine_Routine/Machine_Routine.c **** /**
+  97:Machine_Routine/Machine_Routine.c ****  * @brief Application StackOver Flow Hook
+  98:Machine_Routine/Machine_Routine.c ****  *
+  99:Machine_Routine/Machine_Routine.c ****  * @param xTask
+ 100:Machine_Routine/Machine_Routine.c ****  * @param pcTaskName
+ 101:Machine_Routine/Machine_Routine.c ****  */
+ 102:Machine_Routine/Machine_Routine.c **** void vApplicationStackOverflowHook(xTaskHandle xTask, signed char *pcTaskName)
+ 103:Machine_Routine/Machine_Routine.c **** {
+ 104:Machine_Routine/Machine_Routine.c ****    __disable_irq();
+ 105:Machine_Routine/Machine_Routine.c ****   while(1)
+ 106:Machine_Routine/Machine_Routine.c ****   {
+ 107:Machine_Routine/Machine_Routine.c **** 	HAL_GPIO_WritePin(Buzz_GPIO_Port, Buzz_Pin, GPIO_PIN_SET);
+ 108:Machine_Routine/Machine_Routine.c **** 	Transmit_Data_To_Computer(&pgm_1, (uint8_t*)"memory overflow applications\r\n", strlen("memory ove
+ 109:Machine_Routine/Machine_Routine.c **** 	vTaskDelay(100);
+ 110:Machine_Routine/Machine_Routine.c **** 	HAL_GPIO_WritePin(Buzz_GPIO_Port, Buzz_Pin, GPIO_PIN_RESET);
+ 111:Machine_Routine/Machine_Routine.c **** 	vTaskDelay(100);
+ 112:Machine_Routine/Machine_Routine.c ****   }
+ 113:Machine_Routine/Machine_Routine.c **** }
+ 114:Machine_Routine/Machine_Routine.c **** 
+ 115:Machine_Routine/Machine_Routine.c **** /**
+ 116:Machine_Routine/Machine_Routine.c ****  * @brief Application Malloc Failed Hook
+ 117:Machine_Routine/Machine_Routine.c ****  *
+ 118:Machine_Routine/Machine_Routine.c ****  */
+ 119:Machine_Routine/Machine_Routine.c **** void vApplicationMallocFailedHook(void)
+ 120:Machine_Routine/Machine_Routine.c **** {
+ 121:Machine_Routine/Machine_Routine.c **** 	/* Force an assert. */
+ 122:Machine_Routine/Machine_Routine.c ****   // configASSERT( ( volatile void * ) NULL );
+ 123:Machine_Routine/Machine_Routine.c ****   __disable_irq();
+ 124:Machine_Routine/Machine_Routine.c ****   while (1)
+ 125:Machine_Routine/Machine_Routine.c ****   {
+ 126:Machine_Routine/Machine_Routine.c ****     HAL_GPIO_WritePin(Buzz_GPIO_Port, Buzz_Pin, GPIO_PIN_SET);
+ 127:Machine_Routine/Machine_Routine.c ****     Transmit_Data_To_Computer(&pgm_1, (uint8_t*)("lack of memory allocation for applications\r\n"),
+ 128:Machine_Routine/Machine_Routine.c **** 	vTaskDelay(1000);
+ 129:Machine_Routine/Machine_Routine.c **** 	HAL_GPIO_WritePin(Buzz_GPIO_Port, Buzz_Pin, GPIO_PIN_RESET);
+ 130:Machine_Routine/Machine_Routine.c **** 	vTaskDelay(1000);
+ 131:Machine_Routine/Machine_Routine.c ****   }
+ 132:Machine_Routine/Machine_Routine.c **** }
+ 133:Machine_Routine/Machine_Routine.c **** 
+ 134:Machine_Routine/Machine_Routine.c **** #endif
+ 135:Machine_Routine/Machine_Routine.c **** 
+ 136:Machine_Routine/Machine_Routine.c **** 
+ 137:Machine_Routine/Machine_Routine.c **** /**
+ 138:Machine_Routine/Machine_Routine.c ****  * @brief Init_Debug_Program
+ 139:Machine_Routine/Machine_Routine.c ****  * 
+ 140:Machine_Routine/Machine_Routine.c ****  */
+ 141:Machine_Routine/Machine_Routine.c **** static void Init_Debug_Program(void)
+ 142:Machine_Routine/Machine_Routine.c **** {
+ 143:Machine_Routine/Machine_Routine.c **** 	  Debug_Program_Config(&pgm_1, &huart3, Led_MCH_GPIO_Port, Led_MCH_Pin, 1000);
+ 144:Machine_Routine/Machine_Routine.c **** }
+ 145:Machine_Routine/Machine_Routine.c **** 
+ 146:Machine_Routine/Machine_Routine.c **** 
+ 147:Machine_Routine/Machine_Routine.c **** /**
+ARM GAS  /tmp/cchM16BX.s 			page 4
+
+
+ 148:Machine_Routine/Machine_Routine.c ****  * @brief Init_LCD_Display
+ 149:Machine_Routine/Machine_Routine.c ****  * 
+ 150:Machine_Routine/Machine_Routine.c ****  */
+ 151:Machine_Routine/Machine_Routine.c **** static void Init_LCD_Display(void)
+ 152:Machine_Routine/Machine_Routine.c **** {
+ 153:Machine_Routine/Machine_Routine.c **** 	  CLCD_I2C_Init(&lcd1, &hi2c2, 0x4e, 20, 4);
+ 154:Machine_Routine/Machine_Routine.c **** 	  CLCD_I2C_SetCursor(&lcd1, 0, 1);
+ 155:Machine_Routine/Machine_Routine.c **** 	  CLCD_I2C_WriteString(&lcd1, "**WELLCOME AQI**");
+ 156:Machine_Routine/Machine_Routine.c **** 	  CLCD_I2C_SetCursor(&lcd1, 0, 2);
+ 157:Machine_Routine/Machine_Routine.c **** 	  CLCD_I2C_WriteString(&lcd1, "AQI CALIBRATION");
+ 158:Machine_Routine/Machine_Routine.c **** 	  HAL_Delay(5000);
+ 159:Machine_Routine/Machine_Routine.c **** 	  CLCD_I2C_Clear(&lcd1);
+ 160:Machine_Routine/Machine_Routine.c **** }
+ 161:Machine_Routine/Machine_Routine.c **** 
+ 162:Machine_Routine/Machine_Routine.c **** #if 0
+ 163:Machine_Routine/Machine_Routine.c **** static void Init_Transimit_Lora_Mode_I2C(void)
+ 164:Machine_Routine/Machine_Routine.c **** {
+ 165:Machine_Routine/Machine_Routine.c **** 	 I2C_Lora_Init(&moudle_lora_01, &hi2c1, ADDRESS_SLAVE, 1000);
+ 166:Machine_Routine/Machine_Routine.c **** }
+ 167:Machine_Routine/Machine_Routine.c **** #endif
+ 168:Machine_Routine/Machine_Routine.c **** 
+ 169:Machine_Routine/Machine_Routine.c **** /**
+ 170:Machine_Routine/Machine_Routine.c ****  * @brief Init_Transimir_Lora_Mode_Uart
+ 171:Machine_Routine/Machine_Routine.c ****  * 
+ 172:Machine_Routine/Machine_Routine.c ****  */
+ 173:Machine_Routine/Machine_Routine.c **** static void Init_Transimir_Lora_Mode_Uart(void)
+ 174:Machine_Routine/Machine_Routine.c **** {
+ 175:Machine_Routine/Machine_Routine.c ****     Uart_Lora_Init(&moudle_lora_01, &huart3, 1000);
+ 176:Machine_Routine/Machine_Routine.c **** }
+ 177:Machine_Routine/Machine_Routine.c **** 
+ 178:Machine_Routine/Machine_Routine.c **** /**
+ 179:Machine_Routine/Machine_Routine.c ****  * @brief Init_Cmd_Transmit_Lora
+ 180:Machine_Routine/Machine_Routine.c ****  * 
+ 181:Machine_Routine/Machine_Routine.c ****  */
+ 182:Machine_Routine/Machine_Routine.c **** void Init_Cmd_Transmit_Lora(void)
+ 183:Machine_Routine/Machine_Routine.c **** {
+ 184:Machine_Routine/Machine_Routine.c **** 	Transmit_Data_To_Computer(&pgm_1, (uint8_t*)"ATZ\r\n", (uint16_t)strlen("ATZ\r\n"));
+ 185:Machine_Routine/Machine_Routine.c **** }
+ 186:Machine_Routine/Machine_Routine.c **** 
+ 187:Machine_Routine/Machine_Routine.c **** /**
+ 188:Machine_Routine/Machine_Routine.c ****  * @brief Init_HC595
+ 189:Machine_Routine/Machine_Routine.c ****  * 
+ 190:Machine_Routine/Machine_Routine.c ****  */
+ 191:Machine_Routine/Machine_Routine.c **** static void Init_HC595(void)
+ 192:Machine_Routine/Machine_Routine.c **** {
+ 193:Machine_Routine/Machine_Routine.c **** 	Send_Data_74HC595(0xFF);
+ 194:Machine_Routine/Machine_Routine.c **** }
+ 195:Machine_Routine/Machine_Routine.c **** 
+ 196:Machine_Routine/Machine_Routine.c **** /**
+ 197:Machine_Routine/Machine_Routine.c ****  * @brief Init_RTOS_System_Project
+ 198:Machine_Routine/Machine_Routine.c ****  * 
+ 199:Machine_Routine/Machine_Routine.c ****  */
+ 200:Machine_Routine/Machine_Routine.c **** #if USE_RTOS_MACHINE_SYSTEM
+ 201:Machine_Routine/Machine_Routine.c **** void Init_RTOS_System_Project(void)
+ 202:Machine_Routine/Machine_Routine.c **** {
+ 203:Machine_Routine/Machine_Routine.c **** 	  /* USER CODE BEGIN RTOS_MUTEX */
+ 204:Machine_Routine/Machine_Routine.c **** 	  /* add mutexes, ... */
+ARM GAS  /tmp/cchM16BX.s 			page 5
+
+
+ 205:Machine_Routine/Machine_Routine.c **** 	  /* USER CODE END RTOS_MUTEX */
+ 206:Machine_Routine/Machine_Routine.c **** 
+ 207:Machine_Routine/Machine_Routine.c **** 	  /* USER CODE BEGIN RTOS_SEMAPHORES */
+ 208:Machine_Routine/Machine_Routine.c **** 	  countingsem = xSemaphoreCreateCounting(2, 0);
+ 209:Machine_Routine/Machine_Routine.c **** 	  /* USER CODE END RTOS_SEMAPHORES */
+ 210:Machine_Routine/Machine_Routine.c **** 
+ 211:Machine_Routine/Machine_Routine.c **** 	  /* USER CODE BEGIN RTOS_TIMERS */
+ 212:Machine_Routine/Machine_Routine.c **** 	  /* start timers, add new ones, ... */
+ 213:Machine_Routine/Machine_Routine.c **** 	  /* USER CODE END RTOS_TIMERS */
+ 214:Machine_Routine/Machine_Routine.c **** 
+ 215:Machine_Routine/Machine_Routine.c **** 	  /* USER CODE BEGIN RTOS_QUEUES */
+ 216:Machine_Routine/Machine_Routine.c **** 	  /* add queues, ... */
+ 217:Machine_Routine/Machine_Routine.c **** 	  /* USER CODE END RTOS_QUEUES */
+ 218:Machine_Routine/Machine_Routine.c **** 
+ 219:Machine_Routine/Machine_Routine.c **** 	  /* Create the thread(s) */
+ 220:Machine_Routine/Machine_Routine.c **** 	  /* USER CODE BEGIN RTOS_THREADS */
+ 221:Machine_Routine/Machine_Routine.c **** 		xTaskCreate(Task01_Routine_System, NAME_TASK01_ROUTINE_SYSTEM,  STACK_SIZE_TASK01_ROUTINE_SYSTEM,
+ 222:Machine_Routine/Machine_Routine.c **** 		xTaskCreate(Task02_Status_Machine, NAME_TASK02_STATUS_MACHINE,  STACK_SIZE_TASK02_STATUS_MACHINE,
+ 223:Machine_Routine/Machine_Routine.c **** 		vTaskStartScheduler();
+ 224:Machine_Routine/Machine_Routine.c **** 	  /* USER CODE END RTOS_THREADS */
+ 225:Machine_Routine/Machine_Routine.c **** 
+ 226:Machine_Routine/Machine_Routine.c **** 	  /* Start scheduler */
+ 227:Machine_Routine/Machine_Routine.c **** 
+ 228:Machine_Routine/Machine_Routine.c **** 	  /* We should never get here as control is now taken by the scheduler */
+ 229:Machine_Routine/Machine_Routine.c **** 	  /* Infinite loop */
+ 230:Machine_Routine/Machine_Routine.c **** 	  /* USER CODE BEGIN WHILE */
+ 231:Machine_Routine/Machine_Routine.c **** }
+ 232:Machine_Routine/Machine_Routine.c **** #endif
+ 233:Machine_Routine/Machine_Routine.c **** /**
+ 234:Machine_Routine/Machine_Routine.c ****  * @brief Init_System_Funtion_Project
+ 235:Machine_Routine/Machine_Routine.c ****  * 
+ 236:Machine_Routine/Machine_Routine.c ****  */
+ 237:Machine_Routine/Machine_Routine.c **** void Init_System_Funtion_Project(void)
+ 238:Machine_Routine/Machine_Routine.c **** {
+ 239:Machine_Routine/Machine_Routine.c **** 	/* Init Program Sensor*/
+ 240:Machine_Routine/Machine_Routine.c **** 	Init_Sensor();
+ 241:Machine_Routine/Machine_Routine.c **** 
+ 242:Machine_Routine/Machine_Routine.c **** 	/*Init Program Process Bebug*/
+ 243:Machine_Routine/Machine_Routine.c **** 	Init_Debug_Program();
+ 244:Machine_Routine/Machine_Routine.c **** 
+ 245:Machine_Routine/Machine_Routine.c **** 	/*Init driver hc595*/
+ 246:Machine_Routine/Machine_Routine.c **** 	Init_HC595();
+ 247:Machine_Routine/Machine_Routine.c **** 
+ 248:Machine_Routine/Machine_Routine.c **** 	/*Init Display LCD*/
+ 249:Machine_Routine/Machine_Routine.c **** 	Init_LCD_Display();
+ 250:Machine_Routine/Machine_Routine.c **** 
+ 251:Machine_Routine/Machine_Routine.c **** 	/*Init Transmit data from MCU to Module lora*/
+ 252:Machine_Routine/Machine_Routine.c **** 	Init_Transimir_Lora_Mode_Uart();
+ 253:Machine_Routine/Machine_Routine.c **** 
+ 254:Machine_Routine/Machine_Routine.c **** 	/*Init command control module lora*/
+ 255:Machine_Routine/Machine_Routine.c **** 	Init_Cmd_Transmit_Lora();
+ 256:Machine_Routine/Machine_Routine.c **** 
+ 257:Machine_Routine/Machine_Routine.c **** 	/*Init timer start*/
+ 258:Machine_Routine/Machine_Routine.c **** 	//HAL_TIM_Base_Start_IT(&htim3);
+ 259:Machine_Routine/Machine_Routine.c **** }
+ 260:Machine_Routine/Machine_Routine.c **** 
+ 261:Machine_Routine/Machine_Routine.c **** /**
+ARM GAS  /tmp/cchM16BX.s 			page 6
+
+
+ 262:Machine_Routine/Machine_Routine.c ****  * @brief Routine01_Task_01_Request_Sensor
+ 263:Machine_Routine/Machine_Routine.c ****  * 
+ 264:Machine_Routine/Machine_Routine.c ****  * @return uint8_t 
+ 265:Machine_Routine/Machine_Routine.c ****  */
+ 266:Machine_Routine/Machine_Routine.c **** static uint8_t Routine01_Task_01_Routine_System(void)
+ 267:Machine_Routine/Machine_Routine.c **** {
+ 268:Machine_Routine/Machine_Routine.c **** 	  Funtion_Routine_Hightlevel();
+ 269:Machine_Routine/Machine_Routine.c ****       return 0;
+ 270:Machine_Routine/Machine_Routine.c **** }
+ 271:Machine_Routine/Machine_Routine.c **** 
+ 272:Machine_Routine/Machine_Routine.c **** static uint8_t Routine02_Task_02_Status_Machine(void)
+ 273:Machine_Routine/Machine_Routine.c **** {
+ 274:Machine_Routine/Machine_Routine.c ****     Blink_Led01(&pgm_1);
+ 275:Machine_Routine/Machine_Routine.c ****     HAL_GPIO_TogglePin(LED_SST1_GPIO_Port, LED_SST1_Pin);
+ 276:Machine_Routine/Machine_Routine.c ****     return 0;
+ 277:Machine_Routine/Machine_Routine.c **** }
+ 278:Machine_Routine/Machine_Routine.c **** 
+ 279:Machine_Routine/Machine_Routine.c **** #if USE_RTOS_MACHINE_SYSTEM
+ 280:Machine_Routine/Machine_Routine.c **** /**
+ 281:Machine_Routine/Machine_Routine.c ****  * @brief Task01_Request_Sensor
+ 282:Machine_Routine/Machine_Routine.c ****  *
+ 283:Machine_Routine/Machine_Routine.c ****  * @param parameter
+ 284:Machine_Routine/Machine_Routine.c ****  */
+ 285:Machine_Routine/Machine_Routine.c **** static void Task01_Routine_System(void *parameter)
+ 286:Machine_Routine/Machine_Routine.c **** {
+ 287:Machine_Routine/Machine_Routine.c ****   uint32_t time_wakeup_sensor = xTaskGetTickCount();
+ 288:Machine_Routine/Machine_Routine.c ****   static __IO uint8_t check_sate_machine = 0;
+ 289:Machine_Routine/Machine_Routine.c ****   while(1)
+ 290:Machine_Routine/Machine_Routine.c ****   {
+ 291:Machine_Routine/Machine_Routine.c ****     // HAL_IWDG_Refresh(&hiwdg);
+ 292:Machine_Routine/Machine_Routine.c **** 	xSemaphoreGive(countingsem);
+ 293:Machine_Routine/Machine_Routine.c ****     switch(check_sate_machine)
+ 294:Machine_Routine/Machine_Routine.c ****     {
+ 295:Machine_Routine/Machine_Routine.c ****     	case 0:
+ 296:Machine_Routine/Machine_Routine.c ****     		Init_Cmd_Transmit_Lora();
+ 297:Machine_Routine/Machine_Routine.c ****     		while(xTaskGetTickCount() - time_wakeup_sensor <= TIME_WAKE_UP_SENSOR)
+ 298:Machine_Routine/Machine_Routine.c ****     		{
+ 299:Machine_Routine/Machine_Routine.c **** 	 			CLCD_I2C_SetCursor(&lcd1, 0, 0);
+ 300:Machine_Routine/Machine_Routine.c **** 	 			CLCD_I2C_WriteString(&lcd1, "Waiting 3m...");
+ 301:Machine_Routine/Machine_Routine.c ****     		}
+ 302:Machine_Routine/Machine_Routine.c ****     		HAL_TIM_Base_Start_IT(&htim3);
+ 303:Machine_Routine/Machine_Routine.c ****     		check_sate_machine = 1;
+ 304:Machine_Routine/Machine_Routine.c ****     		break;
+ 305:Machine_Routine/Machine_Routine.c ****     	case 1:
+ 306:Machine_Routine/Machine_Routine.c ****     		CLCD_I2C_Clear(&lcd1);
+ 307:Machine_Routine/Machine_Routine.c ****     		check_sate_machine ++;
+ 308:Machine_Routine/Machine_Routine.c ****     		break;
+ 309:Machine_Routine/Machine_Routine.c ****     	case 2:
+ 310:Machine_Routine/Machine_Routine.c ****     		Routine01_Task_01_Routine_System();;
+ 311:Machine_Routine/Machine_Routine.c ****     	    check_sate_machine ++;
+ 312:Machine_Routine/Machine_Routine.c ****     	case 3:
+ 313:Machine_Routine/Machine_Routine.c ****     		//Routine02_Task_02_Status_Machine();
+ 314:Machine_Routine/Machine_Routine.c ****     		check_sate_machine = 2;
+ 315:Machine_Routine/Machine_Routine.c ****     	default:
+ 316:Machine_Routine/Machine_Routine.c ****     		break;
+ 317:Machine_Routine/Machine_Routine.c ****     }
+ 318:Machine_Routine/Machine_Routine.c ****     vTaskDelay(1);
+ARM GAS  /tmp/cchM16BX.s 			page 7
+
+
+ 319:Machine_Routine/Machine_Routine.c ****   }
+ 320:Machine_Routine/Machine_Routine.c **** }
+ 321:Machine_Routine/Machine_Routine.c **** 
+ 322:Machine_Routine/Machine_Routine.c **** 
+ 323:Machine_Routine/Machine_Routine.c **** /**
+ 324:Machine_Routine/Machine_Routine.c ****  * @brief Task03_Status Machine
+ 325:Machine_Routine/Machine_Routine.c ****  *
+ 326:Machine_Routine/Machine_Routine.c ****  * @param parameter
+ 327:Machine_Routine/Machine_Routine.c ****  */
+ 328:Machine_Routine/Machine_Routine.c **** static void Task02_Status_Machine(void *parameter)
+ 329:Machine_Routine/Machine_Routine.c **** {
+  26              		.loc 1 329 1 view -0
+  27              		.cfi_startproc
+  28              		@ Volatile: function does not return.
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              	.LVL0:
+  32              		.loc 1 329 1 is_stmt 0 view .LVU1
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+  38              	.LVL1:
+  39              	.L2:
+ 330:Machine_Routine/Machine_Routine.c ****   while(1)
+  40              		.loc 1 330 3 is_stmt 1 discriminator 1 view .LVU2
+ 331:Machine_Routine/Machine_Routine.c ****   {
+ 332:Machine_Routine/Machine_Routine.c **** 	xSemaphoreTake(countingsem, portMAX_DELAY);
+  41              		.loc 1 332 2 discriminator 1 view .LVU3
+  42 0002 4FF0FF31 		mov	r1, #-1
+  43 0006 044B     		ldr	r3, .L4
+  44 0008 1868     		ldr	r0, [r3]
+  45 000a FFF7FEFF 		bl	xQueueSemaphoreTake
+  46              	.LVL2:
+ 333:Machine_Routine/Machine_Routine.c **** //    Routine02_Task_02_Status_Machine();
+ 334:Machine_Routine/Machine_Routine.c ****     vTaskDelay(1);
+  47              		.loc 1 334 5 discriminator 1 view .LVU4
+  48 000e 0120     		movs	r0, #1
+  49 0010 FFF7FEFF 		bl	vTaskDelay
+  50              	.LVL3:
+ 330:Machine_Routine/Machine_Routine.c ****   {
+  51              		.loc 1 330 8 discriminator 1 view .LVU5
+  52 0014 F5E7     		b	.L2
+  53              	.L5:
+  54 0016 00BF     		.align	2
+  55              	.L4:
+  56 0018 00000000 		.word	.LANCHOR0
+  57              		.cfi_endproc
+  58              	.LFE85:
+  60              		.section	.text.Routine01_Task_01_Routine_System,"ax",%progbits
+  61              		.align	1
+  62              		.syntax unified
+  63              		.thumb
+  64              		.thumb_func
+  66              	Routine01_Task_01_Routine_System:
+  67              	.LFB82:
+ARM GAS  /tmp/cchM16BX.s 			page 8
+
+
+ 267:Machine_Routine/Machine_Routine.c **** 	  Funtion_Routine_Hightlevel();
+  68              		.loc 1 267 1 view -0
+  69              		.cfi_startproc
+  70              		@ args = 0, pretend = 0, frame = 0
+  71              		@ frame_needed = 0, uses_anonymous_args = 0
+  72 0000 08B5     		push	{r3, lr}
+  73              	.LCFI1:
+  74              		.cfi_def_cfa_offset 8
+  75              		.cfi_offset 3, -8
+  76              		.cfi_offset 14, -4
+ 268:Machine_Routine/Machine_Routine.c ****       return 0;
+  77              		.loc 1 268 4 view .LVU7
+  78 0002 FFF7FEFF 		bl	Funtion_Routine_Hightlevel
+  79              	.LVL4:
+ 269:Machine_Routine/Machine_Routine.c **** }
+  80              		.loc 1 269 7 view .LVU8
+ 270:Machine_Routine/Machine_Routine.c **** 
+  81              		.loc 1 270 1 is_stmt 0 view .LVU9
+  82 0006 0020     		movs	r0, #0
+  83 0008 08BD     		pop	{r3, pc}
+  84              		.cfi_endproc
+  85              	.LFE82:
+  87              		.section	.text.Init_Debug_Program,"ax",%progbits
+  88              		.align	1
+  89              		.syntax unified
+  90              		.thumb
+  91              		.thumb_func
+  93              	Init_Debug_Program:
+  94              	.LFB75:
+ 142:Machine_Routine/Machine_Routine.c **** 	  Debug_Program_Config(&pgm_1, &huart3, Led_MCH_GPIO_Port, Led_MCH_Pin, 1000);
+  95              		.loc 1 142 1 is_stmt 1 view -0
+  96              		.cfi_startproc
+  97              		@ args = 0, pretend = 0, frame = 0
+  98              		@ frame_needed = 0, uses_anonymous_args = 0
+  99 0000 00B5     		push	{lr}
+ 100              	.LCFI2:
+ 101              		.cfi_def_cfa_offset 4
+ 102              		.cfi_offset 14, -4
+ 103 0002 83B0     		sub	sp, sp, #12
+ 104              	.LCFI3:
+ 105              		.cfi_def_cfa_offset 16
+ 143:Machine_Routine/Machine_Routine.c **** }
+ 106              		.loc 1 143 4 view .LVU11
+ 107 0004 4FF47A73 		mov	r3, #1000
+ 108 0008 0093     		str	r3, [sp]
+ 109 000a 0223     		movs	r3, #2
+ 110 000c 034A     		ldr	r2, .L10
+ 111 000e 0449     		ldr	r1, .L10+4
+ 112 0010 0448     		ldr	r0, .L10+8
+ 113 0012 FFF7FEFF 		bl	Debug_Program_Config
+ 114              	.LVL5:
+ 144:Machine_Routine/Machine_Routine.c **** 
+ 115              		.loc 1 144 1 is_stmt 0 view .LVU12
+ 116 0016 03B0     		add	sp, sp, #12
+ 117              	.LCFI4:
+ 118              		.cfi_def_cfa_offset 4
+ 119              		@ sp needed
+ARM GAS  /tmp/cchM16BX.s 			page 9
+
+
+ 120 0018 5DF804FB 		ldr	pc, [sp], #4
+ 121              	.L11:
+ 122              		.align	2
+ 123              	.L10:
+ 124 001c 00180140 		.word	1073813504
+ 125 0020 00000000 		.word	huart3
+ 126 0024 00000000 		.word	.LANCHOR1
+ 127              		.cfi_endproc
+ 128              	.LFE75:
+ 130              		.section	.text.Init_HC595,"ax",%progbits
+ 131              		.align	1
+ 132              		.syntax unified
+ 133              		.thumb
+ 134              		.thumb_func
+ 136              	Init_HC595:
+ 137              	.LFB79:
+ 192:Machine_Routine/Machine_Routine.c **** 	Send_Data_74HC595(0xFF);
+ 138              		.loc 1 192 1 is_stmt 1 view -0
+ 139              		.cfi_startproc
+ 140              		@ args = 0, pretend = 0, frame = 0
+ 141              		@ frame_needed = 0, uses_anonymous_args = 0
+ 142 0000 08B5     		push	{r3, lr}
+ 143              	.LCFI5:
+ 144              		.cfi_def_cfa_offset 8
+ 145              		.cfi_offset 3, -8
+ 146              		.cfi_offset 14, -4
+ 193:Machine_Routine/Machine_Routine.c **** }
+ 147              		.loc 1 193 2 view .LVU14
+ 148 0002 FF20     		movs	r0, #255
+ 149 0004 FFF7FEFF 		bl	Send_Data_74HC595
+ 150              	.LVL6:
+ 194:Machine_Routine/Machine_Routine.c **** 
+ 151              		.loc 1 194 1 is_stmt 0 view .LVU15
+ 152 0008 08BD     		pop	{r3, pc}
+ 153              		.cfi_endproc
+ 154              	.LFE79:
+ 156              		.section	.rodata.Init_LCD_Display.str1.4,"aMS",%progbits,1
+ 157              		.align	2
+ 158              	.LC0:
+ 159 0000 2A2A5745 		.ascii	"**WELLCOME AQI**\000"
+ 159      4C4C434F 
+ 159      4D452041 
+ 159      51492A2A 
+ 159      00
+ 160 0011 000000   		.align	2
+ 161              	.LC1:
+ 162 0014 41514920 		.ascii	"AQI CALIBRATION\000"
+ 162      43414C49 
+ 162      42524154 
+ 162      494F4E00 
+ 163              		.section	.text.Init_LCD_Display,"ax",%progbits
+ 164              		.align	1
+ 165              		.syntax unified
+ 166              		.thumb
+ 167              		.thumb_func
+ 169              	Init_LCD_Display:
+ 170              	.LFB76:
+ARM GAS  /tmp/cchM16BX.s 			page 10
+
+
+ 152:Machine_Routine/Machine_Routine.c **** 	  CLCD_I2C_Init(&lcd1, &hi2c2, 0x4e, 20, 4);
+ 171              		.loc 1 152 1 is_stmt 1 view -0
+ 172              		.cfi_startproc
+ 173              		@ args = 0, pretend = 0, frame = 0
+ 174              		@ frame_needed = 0, uses_anonymous_args = 0
+ 175 0000 10B5     		push	{r4, lr}
+ 176              	.LCFI6:
+ 177              		.cfi_def_cfa_offset 8
+ 178              		.cfi_offset 4, -8
+ 179              		.cfi_offset 14, -4
+ 180 0002 82B0     		sub	sp, sp, #8
+ 181              	.LCFI7:
+ 182              		.cfi_def_cfa_offset 16
+ 153:Machine_Routine/Machine_Routine.c **** 	  CLCD_I2C_SetCursor(&lcd1, 0, 1);
+ 183              		.loc 1 153 4 view .LVU17
+ 184 0004 114C     		ldr	r4, .L16
+ 185 0006 0423     		movs	r3, #4
+ 186 0008 0093     		str	r3, [sp]
+ 187 000a 1423     		movs	r3, #20
+ 188 000c 4E22     		movs	r2, #78
+ 189 000e 1049     		ldr	r1, .L16+4
+ 190 0010 2046     		mov	r0, r4
+ 191 0012 FFF7FEFF 		bl	CLCD_I2C_Init
+ 192              	.LVL7:
+ 154:Machine_Routine/Machine_Routine.c **** 	  CLCD_I2C_WriteString(&lcd1, "**WELLCOME AQI**");
+ 193              		.loc 1 154 4 view .LVU18
+ 194 0016 0122     		movs	r2, #1
+ 195 0018 0021     		movs	r1, #0
+ 196 001a 2046     		mov	r0, r4
+ 197 001c FFF7FEFF 		bl	CLCD_I2C_SetCursor
+ 198              	.LVL8:
+ 155:Machine_Routine/Machine_Routine.c **** 	  CLCD_I2C_SetCursor(&lcd1, 0, 2);
+ 199              		.loc 1 155 4 view .LVU19
+ 200 0020 0C49     		ldr	r1, .L16+8
+ 201 0022 2046     		mov	r0, r4
+ 202 0024 FFF7FEFF 		bl	CLCD_I2C_WriteString
+ 203              	.LVL9:
+ 156:Machine_Routine/Machine_Routine.c **** 	  CLCD_I2C_WriteString(&lcd1, "AQI CALIBRATION");
+ 204              		.loc 1 156 4 view .LVU20
+ 205 0028 0222     		movs	r2, #2
+ 206 002a 0021     		movs	r1, #0
+ 207 002c 2046     		mov	r0, r4
+ 208 002e FFF7FEFF 		bl	CLCD_I2C_SetCursor
+ 209              	.LVL10:
+ 157:Machine_Routine/Machine_Routine.c **** 	  HAL_Delay(5000);
+ 210              		.loc 1 157 4 view .LVU21
+ 211 0032 0949     		ldr	r1, .L16+12
+ 212 0034 2046     		mov	r0, r4
+ 213 0036 FFF7FEFF 		bl	CLCD_I2C_WriteString
+ 214              	.LVL11:
+ 158:Machine_Routine/Machine_Routine.c **** 	  CLCD_I2C_Clear(&lcd1);
+ 215              		.loc 1 158 4 view .LVU22
+ 216 003a 41F28830 		movw	r0, #5000
+ 217 003e FFF7FEFF 		bl	HAL_Delay
+ 218              	.LVL12:
+ 159:Machine_Routine/Machine_Routine.c **** }
+ 219              		.loc 1 159 4 view .LVU23
+ARM GAS  /tmp/cchM16BX.s 			page 11
+
+
+ 220 0042 2046     		mov	r0, r4
+ 221 0044 FFF7FEFF 		bl	CLCD_I2C_Clear
+ 222              	.LVL13:
+ 160:Machine_Routine/Machine_Routine.c **** 
+ 223              		.loc 1 160 1 is_stmt 0 view .LVU24
+ 224 0048 02B0     		add	sp, sp, #8
+ 225              	.LCFI8:
+ 226              		.cfi_def_cfa_offset 8
+ 227              		@ sp needed
+ 228 004a 10BD     		pop	{r4, pc}
+ 229              	.L17:
+ 230              		.align	2
+ 231              	.L16:
+ 232 004c 00000000 		.word	.LANCHOR2
+ 233 0050 00000000 		.word	hi2c2
+ 234 0054 00000000 		.word	.LC0
+ 235 0058 14000000 		.word	.LC1
+ 236              		.cfi_endproc
+ 237              	.LFE76:
+ 239              		.section	.text.Init_Transimir_Lora_Mode_Uart,"ax",%progbits
+ 240              		.align	1
+ 241              		.syntax unified
+ 242              		.thumb
+ 243              		.thumb_func
+ 245              	Init_Transimir_Lora_Mode_Uart:
+ 246              	.LFB77:
+ 174:Machine_Routine/Machine_Routine.c ****     Uart_Lora_Init(&moudle_lora_01, &huart3, 1000);
+ 247              		.loc 1 174 1 is_stmt 1 view -0
+ 248              		.cfi_startproc
+ 249              		@ args = 0, pretend = 0, frame = 0
+ 250              		@ frame_needed = 0, uses_anonymous_args = 0
+ 251 0000 08B5     		push	{r3, lr}
+ 252              	.LCFI9:
+ 253              		.cfi_def_cfa_offset 8
+ 254              		.cfi_offset 3, -8
+ 255              		.cfi_offset 14, -4
+ 175:Machine_Routine/Machine_Routine.c **** }
+ 256              		.loc 1 175 5 view .LVU26
+ 257 0002 4FF47A72 		mov	r2, #1000
+ 258 0006 0249     		ldr	r1, .L20
+ 259 0008 0248     		ldr	r0, .L20+4
+ 260 000a FFF7FEFF 		bl	Uart_Lora_Init
+ 261              	.LVL14:
+ 176:Machine_Routine/Machine_Routine.c **** 
+ 262              		.loc 1 176 1 is_stmt 0 view .LVU27
+ 263 000e 08BD     		pop	{r3, pc}
+ 264              	.L21:
+ 265              		.align	2
+ 266              	.L20:
+ 267 0010 00000000 		.word	huart3
+ 268 0014 00000000 		.word	.LANCHOR3
+ 269              		.cfi_endproc
+ 270              	.LFE77:
+ 272              		.section	.rodata.vApplicationStackOverflowHook.str1.4,"aMS",%progbits,1
+ 273              		.align	2
+ 274              	.LC2:
+ 275 0000 6D656D6F 		.ascii	"memory overflow applications\015\012\000"
+ARM GAS  /tmp/cchM16BX.s 			page 12
+
+
+ 275      7279206F 
+ 275      76657266 
+ 275      6C6F7720 
+ 275      6170706C 
+ 276              		.section	.text.vApplicationStackOverflowHook,"ax",%progbits
+ 277              		.align	1
+ 278              		.global	vApplicationStackOverflowHook
+ 279              		.syntax unified
+ 280              		.thumb
+ 281              		.thumb_func
+ 283              	vApplicationStackOverflowHook:
+ 284              	.LVL15:
+ 285              	.LFB73:
+ 103:Machine_Routine/Machine_Routine.c ****    __disable_irq();
+ 286              		.loc 1 103 1 is_stmt 1 view -0
+ 287              		.cfi_startproc
+ 288              		@ Volatile: function does not return.
+ 289              		@ args = 0, pretend = 0, frame = 0
+ 290              		@ frame_needed = 0, uses_anonymous_args = 0
+ 103:Machine_Routine/Machine_Routine.c ****    __disable_irq();
+ 291              		.loc 1 103 1 is_stmt 0 view .LVU29
+ 292 0000 08B5     		push	{r3, lr}
+ 293              	.LCFI10:
+ 294              		.cfi_def_cfa_offset 8
+ 295              		.cfi_offset 3, -8
+ 296              		.cfi_offset 14, -4
+ 104:Machine_Routine/Machine_Routine.c ****   while(1)
+ 297              		.loc 1 104 4 is_stmt 1 view .LVU30
+ 298              	.LBB8:
+ 299              	.LBI8:
+ 300              		.file 2 "Drivers/CMSIS/Include/cmsis_gcc.h"
+   1:Drivers/CMSIS/Include/cmsis_gcc.h **** /**************************************************************************//**
+   2:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @file     cmsis_gcc.h
+   3:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @brief    CMSIS compiler GCC header file
+   4:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @version  V5.0.4
+   5:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @date     09. April 2018
+   6:Drivers/CMSIS/Include/cmsis_gcc.h ****  ******************************************************************************/
+   7:Drivers/CMSIS/Include/cmsis_gcc.h **** /*
+   8:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Copyright (c) 2009-2018 Arm Limited. All rights reserved.
+   9:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  10:Drivers/CMSIS/Include/cmsis_gcc.h ****  * SPDX-License-Identifier: Apache-2.0
+  11:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  12:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  13:Drivers/CMSIS/Include/cmsis_gcc.h ****  * not use this file except in compliance with the License.
+  14:Drivers/CMSIS/Include/cmsis_gcc.h ****  * You may obtain a copy of the License at
+  15:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  16:Drivers/CMSIS/Include/cmsis_gcc.h ****  * www.apache.org/licenses/LICENSE-2.0
+  17:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  18:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Unless required by applicable law or agreed to in writing, software
+  19:Drivers/CMSIS/Include/cmsis_gcc.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  20:Drivers/CMSIS/Include/cmsis_gcc.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  21:Drivers/CMSIS/Include/cmsis_gcc.h ****  * See the License for the specific language governing permissions and
+  22:Drivers/CMSIS/Include/cmsis_gcc.h ****  * limitations under the License.
+  23:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+  24:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  25:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __CMSIS_GCC_H
+  26:Drivers/CMSIS/Include/cmsis_gcc.h **** #define __CMSIS_GCC_H
+ARM GAS  /tmp/cchM16BX.s 			page 13
+
+
+  27:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  28:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ignore some GCC warnings */
+  29:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic push
+  30:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wsign-conversion"
+  31:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wconversion"
+  32:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wunused-parameter"
+  33:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  34:Drivers/CMSIS/Include/cmsis_gcc.h **** /* Fallback for __has_builtin */
+  35:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __has_builtin
+  36:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __has_builtin(x) (0)
+  37:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  38:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  39:Drivers/CMSIS/Include/cmsis_gcc.h **** /* CMSIS compiler specific defines */
+  40:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ASM
+  41:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ASM                                  __asm
+  42:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  43:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __INLINE
+  44:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __INLINE                               inline
+  45:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  46:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_INLINE
+  47:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_INLINE                        static inline
+  48:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  49:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_FORCEINLINE                 
+  50:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_FORCEINLINE                   __attribute__((always_inline)) static inline
+  51:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif                                           
+  52:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __NO_RETURN
+  53:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __NO_RETURN                            __attribute__((__noreturn__))
+  54:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  55:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __USED
+  56:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __USED                                 __attribute__((used))
+  57:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  58:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __WEAK
+  59:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __WEAK                                 __attribute__((weak))
+  60:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  61:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED
+  62:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED                               __attribute__((packed, aligned(1)))
+  63:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  64:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_STRUCT
+  65:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_STRUCT                        struct __attribute__((packed, aligned(1)))
+  66:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  67:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_UNION
+  68:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_UNION                         union __attribute__((packed, aligned(1)))
+  69:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  70:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32        /* deprecated */
+  71:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  72:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  73:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  74:Drivers/CMSIS/Include/cmsis_gcc.h ****   struct __attribute__((packed)) T_UINT32 { uint32_t v; };
+  75:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  76:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32(x)                  (((struct T_UINT32 *)(x))->v)
+  77:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  78:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_WRITE
+  79:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  80:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  81:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  82:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_WRITE { uint16_t v; };
+  83:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ARM GAS  /tmp/cchM16BX.s 			page 14
+
+
+  84:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_WRITE(addr, val)    (void)((((struct T_UINT16_WRITE *)(void *)(addr))-
+  85:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  86:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_READ
+  87:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  88:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  89:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  90:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_READ { uint16_t v; };
+  91:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  92:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_READ(addr)          (((const struct T_UINT16_READ *)(const void *)(add
+  93:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  94:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_WRITE
+  95:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  96:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  97:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  98:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_WRITE { uint32_t v; };
+  99:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 100:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_WRITE(addr, val)    (void)((((struct T_UINT32_WRITE *)(void *)(addr))-
+ 101:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 102:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_READ
+ 103:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+ 104:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+ 105:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+ 106:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_READ { uint32_t v; };
+ 107:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 108:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_READ(addr)          (((const struct T_UINT32_READ *)(const void *)(add
+ 109:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 110:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ALIGNED
+ 111:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ALIGNED(x)                           __attribute__((aligned(x)))
+ 112:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 113:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __RESTRICT
+ 114:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __RESTRICT                             __restrict
+ 115:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 116:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 117:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 118:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ###########################  Core Function Access  ########################### */
+ 119:Drivers/CMSIS/Include/cmsis_gcc.h **** /** \ingroup  CMSIS_Core_FunctionInterface
+ 120:Drivers/CMSIS/Include/cmsis_gcc.h ****     \defgroup CMSIS_Core_RegAccFunctions CMSIS Core Register Access Functions
+ 121:Drivers/CMSIS/Include/cmsis_gcc.h ****   @{
+ 122:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 123:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 124:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 125:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Enable IRQ Interrupts
+ 126:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Enables IRQ interrupts by clearing the I-bit in the CPSR.
+ 127:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 128:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 129:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __enable_irq(void)
+ 130:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 131:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsie i" : : : "memory");
+ 132:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 133:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 134:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 135:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 136:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Disable IRQ Interrupts
+ 137:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Disables IRQ interrupts by setting the I-bit in the CPSR.
+ 138:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 139:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 140:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __disable_irq(void)
+ARM GAS  /tmp/cchM16BX.s 			page 15
+
+
+ 301              		.loc 2 140 27 view .LVU31
+ 302              	.LBB9:
+ 141:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 142:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsid i" : : : "memory");
+ 303              		.loc 2 142 3 view .LVU32
+ 304              		.syntax unified
+ 305              	@ 142 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 306 0002 72B6     		cpsid i
+ 307              	@ 0 "" 2
+ 308              	.LVL16:
+ 309              		.thumb
+ 310              		.syntax unified
+ 311              	.L23:
+ 312              		.loc 2 142 3 is_stmt 0 view .LVU33
+ 313              	.LBE9:
+ 314              	.LBE8:
+ 105:Machine_Routine/Machine_Routine.c ****   {
+ 315              		.loc 1 105 3 is_stmt 1 discriminator 1 view .LVU34
+ 316              	.LBB10:
+ 107:Machine_Routine/Machine_Routine.c **** 	Transmit_Data_To_Computer(&pgm_1, (uint8_t*)"memory overflow applications\r\n", strlen("memory ove
+ 317              		.loc 1 107 2 discriminator 1 view .LVU35
+ 318 0004 0B4C     		ldr	r4, .L25
+ 319 0006 0122     		movs	r2, #1
+ 320 0008 1146     		mov	r1, r2
+ 321 000a 2046     		mov	r0, r4
+ 322 000c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 323              	.LVL17:
+ 108:Machine_Routine/Machine_Routine.c **** 	vTaskDelay(100);
+ 324              		.loc 1 108 2 discriminator 1 view .LVU36
+ 325 0010 1E22     		movs	r2, #30
+ 326 0012 0949     		ldr	r1, .L25+4
+ 327 0014 0948     		ldr	r0, .L25+8
+ 328 0016 FFF7FEFF 		bl	Transmit_Data_To_Computer
+ 329              	.LVL18:
+ 109:Machine_Routine/Machine_Routine.c **** 	HAL_GPIO_WritePin(Buzz_GPIO_Port, Buzz_Pin, GPIO_PIN_RESET);
+ 330              		.loc 1 109 2 discriminator 1 view .LVU37
+ 331 001a 6420     		movs	r0, #100
+ 332 001c FFF7FEFF 		bl	vTaskDelay
+ 333              	.LVL19:
+ 110:Machine_Routine/Machine_Routine.c **** 	vTaskDelay(100);
+ 334              		.loc 1 110 2 discriminator 1 view .LVU38
+ 335 0020 0022     		movs	r2, #0
+ 336 0022 0121     		movs	r1, #1
+ 337 0024 2046     		mov	r0, r4
+ 338 0026 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 339              	.LVL20:
+ 111:Machine_Routine/Machine_Routine.c ****   }
+ 340              		.loc 1 111 2 discriminator 1 view .LVU39
+ 341 002a 6420     		movs	r0, #100
+ 342 002c FFF7FEFF 		bl	vTaskDelay
+ 343              	.LVL21:
+ 344              	.LBE10:
+ 105:Machine_Routine/Machine_Routine.c ****   {
+ 345              		.loc 1 105 8 discriminator 1 view .LVU40
+ 346 0030 E8E7     		b	.L23
+ 347              	.L26:
+ 348 0032 00BF     		.align	2
+ARM GAS  /tmp/cchM16BX.s 			page 16
+
+
+ 349              	.L25:
+ 350 0034 00180140 		.word	1073813504
+ 351 0038 00000000 		.word	.LC2
+ 352 003c 00000000 		.word	.LANCHOR1
+ 353              		.cfi_endproc
+ 354              	.LFE73:
+ 356              		.section	.rodata.vApplicationMallocFailedHook.str1.4,"aMS",%progbits,1
+ 357              		.align	2
+ 358              	.LC3:
+ 359 0000 6C61636B 		.ascii	"lack of memory allocation for applications\015\012\000"
+ 359      206F6620 
+ 359      6D656D6F 
+ 359      72792061 
+ 359      6C6C6F63 
+ 360              		.section	.text.vApplicationMallocFailedHook,"ax",%progbits
+ 361              		.align	1
+ 362              		.global	vApplicationMallocFailedHook
+ 363              		.syntax unified
+ 364              		.thumb
+ 365              		.thumb_func
+ 367              	vApplicationMallocFailedHook:
+ 368              	.LFB74:
+ 120:Machine_Routine/Machine_Routine.c **** 	/* Force an assert. */
+ 369              		.loc 1 120 1 view -0
+ 370              		.cfi_startproc
+ 371              		@ Volatile: function does not return.
+ 372              		@ args = 0, pretend = 0, frame = 0
+ 373              		@ frame_needed = 0, uses_anonymous_args = 0
+ 374 0000 08B5     		push	{r3, lr}
+ 375              	.LCFI11:
+ 376              		.cfi_def_cfa_offset 8
+ 377              		.cfi_offset 3, -8
+ 378              		.cfi_offset 14, -4
+ 123:Machine_Routine/Machine_Routine.c ****   while (1)
+ 379              		.loc 1 123 3 view .LVU42
+ 380              	.LBB11:
+ 381              	.LBI11:
+ 140:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 382              		.loc 2 140 27 view .LVU43
+ 383              	.LBB12:
+ 384              		.loc 2 142 3 view .LVU44
+ 385              		.syntax unified
+ 386              	@ 142 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 387 0002 72B6     		cpsid i
+ 388              	@ 0 "" 2
+ 389              		.thumb
+ 390              		.syntax unified
+ 391              	.L28:
+ 392              	.LBE12:
+ 393              	.LBE11:
+ 124:Machine_Routine/Machine_Routine.c ****   {
+ 394              		.loc 1 124 3 discriminator 1 view .LVU45
+ 395              	.LBB13:
+ 126:Machine_Routine/Machine_Routine.c ****     Transmit_Data_To_Computer(&pgm_1, (uint8_t*)("lack of memory allocation for applications\r\n"),
+ 396              		.loc 1 126 5 discriminator 1 view .LVU46
+ 397 0004 0C4C     		ldr	r4, .L30
+ 398 0006 0122     		movs	r2, #1
+ARM GAS  /tmp/cchM16BX.s 			page 17
+
+
+ 399 0008 1146     		mov	r1, r2
+ 400 000a 2046     		mov	r0, r4
+ 401 000c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 402              	.LVL22:
+ 127:Machine_Routine/Machine_Routine.c **** 	vTaskDelay(1000);
+ 403              		.loc 1 127 5 discriminator 1 view .LVU47
+ 404 0010 2C22     		movs	r2, #44
+ 405 0012 0A49     		ldr	r1, .L30+4
+ 406 0014 0A48     		ldr	r0, .L30+8
+ 407 0016 FFF7FEFF 		bl	Transmit_Data_To_Computer
+ 408              	.LVL23:
+ 128:Machine_Routine/Machine_Routine.c **** 	HAL_GPIO_WritePin(Buzz_GPIO_Port, Buzz_Pin, GPIO_PIN_RESET);
+ 409              		.loc 1 128 2 discriminator 1 view .LVU48
+ 410 001a 4FF47A70 		mov	r0, #1000
+ 411 001e FFF7FEFF 		bl	vTaskDelay
+ 412              	.LVL24:
+ 129:Machine_Routine/Machine_Routine.c **** 	vTaskDelay(1000);
+ 413              		.loc 1 129 2 discriminator 1 view .LVU49
+ 414 0022 0022     		movs	r2, #0
+ 415 0024 0121     		movs	r1, #1
+ 416 0026 2046     		mov	r0, r4
+ 417 0028 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 418              	.LVL25:
+ 130:Machine_Routine/Machine_Routine.c ****   }
+ 419              		.loc 1 130 2 discriminator 1 view .LVU50
+ 420 002c 4FF47A70 		mov	r0, #1000
+ 421 0030 FFF7FEFF 		bl	vTaskDelay
+ 422              	.LVL26:
+ 423              	.LBE13:
+ 124:Machine_Routine/Machine_Routine.c ****   {
+ 424              		.loc 1 124 9 discriminator 1 view .LVU51
+ 425 0034 E6E7     		b	.L28
+ 426              	.L31:
+ 427 0036 00BF     		.align	2
+ 428              	.L30:
+ 429 0038 00180140 		.word	1073813504
+ 430 003c 00000000 		.word	.LC3
+ 431 0040 00000000 		.word	.LANCHOR1
+ 432              		.cfi_endproc
+ 433              	.LFE74:
+ 435              		.section	.rodata.Init_Cmd_Transmit_Lora.str1.4,"aMS",%progbits,1
+ 436              		.align	2
+ 437              	.LC4:
+ 438 0000 41545A0D 		.ascii	"ATZ\015\012\000"
+ 438      0A00
+ 439              		.section	.text.Init_Cmd_Transmit_Lora,"ax",%progbits
+ 440              		.align	1
+ 441              		.global	Init_Cmd_Transmit_Lora
+ 442              		.syntax unified
+ 443              		.thumb
+ 444              		.thumb_func
+ 446              	Init_Cmd_Transmit_Lora:
+ 447              	.LFB78:
+ 183:Machine_Routine/Machine_Routine.c **** 	Transmit_Data_To_Computer(&pgm_1, (uint8_t*)"ATZ\r\n", (uint16_t)strlen("ATZ\r\n"));
+ 448              		.loc 1 183 1 view -0
+ 449              		.cfi_startproc
+ 450              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  /tmp/cchM16BX.s 			page 18
+
+
+ 451              		@ frame_needed = 0, uses_anonymous_args = 0
+ 452 0000 08B5     		push	{r3, lr}
+ 453              	.LCFI12:
+ 454              		.cfi_def_cfa_offset 8
+ 455              		.cfi_offset 3, -8
+ 456              		.cfi_offset 14, -4
+ 184:Machine_Routine/Machine_Routine.c **** }
+ 457              		.loc 1 184 2 view .LVU53
+ 458 0002 0522     		movs	r2, #5
+ 459 0004 0249     		ldr	r1, .L34
+ 460 0006 0348     		ldr	r0, .L34+4
+ 461 0008 FFF7FEFF 		bl	Transmit_Data_To_Computer
+ 462              	.LVL27:
+ 185:Machine_Routine/Machine_Routine.c **** 
+ 463              		.loc 1 185 1 is_stmt 0 view .LVU54
+ 464 000c 08BD     		pop	{r3, pc}
+ 465              	.L35:
+ 466 000e 00BF     		.align	2
+ 467              	.L34:
+ 468 0010 00000000 		.word	.LC4
+ 469 0014 00000000 		.word	.LANCHOR1
+ 470              		.cfi_endproc
+ 471              	.LFE78:
+ 473              		.section	.rodata.Task01_Routine_System.str1.4,"aMS",%progbits,1
+ 474              		.align	2
+ 475              	.LC5:
+ 476 0000 57616974 		.ascii	"Waiting 3m...\000"
+ 476      696E6720 
+ 476      336D2E2E 
+ 476      2E00
+ 477              		.section	.text.Task01_Routine_System,"ax",%progbits
+ 478              		.align	1
+ 479              		.syntax unified
+ 480              		.thumb
+ 481              		.thumb_func
+ 483              	Task01_Routine_System:
+ 484              	.LVL28:
+ 485              	.LFB84:
+ 286:Machine_Routine/Machine_Routine.c ****   uint32_t time_wakeup_sensor = xTaskGetTickCount();
+ 486              		.loc 1 286 1 is_stmt 1 view -0
+ 487              		.cfi_startproc
+ 488              		@ args = 0, pretend = 0, frame = 0
+ 489              		@ frame_needed = 0, uses_anonymous_args = 0
+ 286:Machine_Routine/Machine_Routine.c ****   uint32_t time_wakeup_sensor = xTaskGetTickCount();
+ 490              		.loc 1 286 1 is_stmt 0 view .LVU56
+ 491 0000 38B5     		push	{r3, r4, r5, lr}
+ 492              	.LCFI13:
+ 493              		.cfi_def_cfa_offset 16
+ 494              		.cfi_offset 3, -16
+ 495              		.cfi_offset 4, -12
+ 496              		.cfi_offset 5, -8
+ 497              		.cfi_offset 14, -4
+ 287:Machine_Routine/Machine_Routine.c ****   static __IO uint8_t check_sate_machine = 0;
+ 498              		.loc 1 287 3 is_stmt 1 view .LVU57
+ 287:Machine_Routine/Machine_Routine.c ****   static __IO uint8_t check_sate_machine = 0;
+ 499              		.loc 1 287 33 is_stmt 0 view .LVU58
+ 500 0002 FFF7FEFF 		bl	xTaskGetTickCount
+ARM GAS  /tmp/cchM16BX.s 			page 19
+
+
+ 501              	.LVL29:
+ 287:Machine_Routine/Machine_Routine.c ****   static __IO uint8_t check_sate_machine = 0;
+ 502              		.loc 1 287 33 view .LVU59
+ 503 0006 0546     		mov	r5, r0
+ 504              	.LVL30:
+ 287:Machine_Routine/Machine_Routine.c ****   static __IO uint8_t check_sate_machine = 0;
+ 505              		.loc 1 287 33 view .LVU60
+ 506 0008 2FE0     		b	.L45
+ 507              	.LVL31:
+ 508              	.L42:
+ 296:Machine_Routine/Machine_Routine.c ****     		while(xTaskGetTickCount() - time_wakeup_sensor <= TIME_WAKE_UP_SENSOR)
+ 509              		.loc 1 296 7 is_stmt 1 view .LVU61
+ 510 000a FFF7FEFF 		bl	Init_Cmd_Transmit_Lora
+ 511              	.LVL32:
+ 297:Machine_Routine/Machine_Routine.c ****     		{
+ 512              		.loc 1 297 7 view .LVU62
+ 297:Machine_Routine/Machine_Routine.c ****     		{
+ 513              		.loc 1 297 12 is_stmt 0 view .LVU63
+ 514 000e 09E0     		b	.L43
+ 515              	.L44:
+ 299:Machine_Routine/Machine_Routine.c **** 	 			CLCD_I2C_WriteString(&lcd1, "Waiting 3m...");
+ 516              		.loc 1 299 6 is_stmt 1 view .LVU64
+ 517 0010 214C     		ldr	r4, .L49
+ 518 0012 0022     		movs	r2, #0
+ 519 0014 1146     		mov	r1, r2
+ 520 0016 2046     		mov	r0, r4
+ 521 0018 FFF7FEFF 		bl	CLCD_I2C_SetCursor
+ 522              	.LVL33:
+ 300:Machine_Routine/Machine_Routine.c ****     		}
+ 523              		.loc 1 300 6 view .LVU65
+ 524 001c 1F49     		ldr	r1, .L49+4
+ 525 001e 2046     		mov	r0, r4
+ 526 0020 FFF7FEFF 		bl	CLCD_I2C_WriteString
+ 527              	.LVL34:
+ 528              	.L43:
+ 297:Machine_Routine/Machine_Routine.c ****     		{
+ 529              		.loc 1 297 54 view .LVU66
+ 297:Machine_Routine/Machine_Routine.c ****     		{
+ 530              		.loc 1 297 13 is_stmt 0 view .LVU67
+ 531 0024 FFF7FEFF 		bl	xTaskGetTickCount
+ 532              	.LVL35:
+ 297:Machine_Routine/Machine_Routine.c ****     		{
+ 533              		.loc 1 297 33 view .LVU68
+ 534 0028 401B     		subs	r0, r0, r5
+ 297:Machine_Routine/Machine_Routine.c ****     		{
+ 535              		.loc 1 297 54 view .LVU69
+ 536 002a 1D4B     		ldr	r3, .L49+8
+ 537 002c 9842     		cmp	r0, r3
+ 538 002e EFD9     		bls	.L44
+ 302:Machine_Routine/Machine_Routine.c ****     		check_sate_machine = 1;
+ 539              		.loc 1 302 7 is_stmt 1 view .LVU70
+ 540 0030 1C48     		ldr	r0, .L49+12
+ 541 0032 FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
+ 542              	.LVL36:
+ 303:Machine_Routine/Machine_Routine.c ****     		break;
+ 543              		.loc 1 303 7 view .LVU71
+ 303:Machine_Routine/Machine_Routine.c ****     		break;
+ARM GAS  /tmp/cchM16BX.s 			page 20
+
+
+ 544              		.loc 1 303 26 is_stmt 0 view .LVU72
+ 545 0036 1C4B     		ldr	r3, .L49+16
+ 546 0038 0122     		movs	r2, #1
+ 547 003a 1A70     		strb	r2, [r3]
+ 304:Machine_Routine/Machine_Routine.c ****     	case 1:
+ 548              		.loc 1 304 7 is_stmt 1 view .LVU73
+ 549 003c 12E0     		b	.L37
+ 550              	.L41:
+ 306:Machine_Routine/Machine_Routine.c ****     		check_sate_machine ++;
+ 551              		.loc 1 306 7 view .LVU74
+ 552 003e 1648     		ldr	r0, .L49
+ 553 0040 FFF7FEFF 		bl	CLCD_I2C_Clear
+ 554              	.LVL37:
+ 307:Machine_Routine/Machine_Routine.c ****     		break;
+ 555              		.loc 1 307 7 view .LVU75
+ 307:Machine_Routine/Machine_Routine.c ****     		break;
+ 556              		.loc 1 307 26 is_stmt 0 view .LVU76
+ 557 0044 184A     		ldr	r2, .L49+16
+ 558 0046 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 559 0048 0133     		adds	r3, r3, #1
+ 560 004a DBB2     		uxtb	r3, r3
+ 561 004c 1370     		strb	r3, [r2]
+ 308:Machine_Routine/Machine_Routine.c ****     	case 2:
+ 562              		.loc 1 308 7 is_stmt 1 view .LVU77
+ 563 004e 09E0     		b	.L37
+ 564              	.L40:
+ 310:Machine_Routine/Machine_Routine.c ****     	    check_sate_machine ++;
+ 565              		.loc 1 310 7 view .LVU78
+ 566 0050 FFF7FEFF 		bl	Routine01_Task_01_Routine_System
+ 567              	.LVL38:
+ 310:Machine_Routine/Machine_Routine.c ****     	    check_sate_machine ++;
+ 568              		.loc 1 310 42 view .LVU79
+ 311:Machine_Routine/Machine_Routine.c ****     	case 3:
+ 569              		.loc 1 311 10 view .LVU80
+ 311:Machine_Routine/Machine_Routine.c ****     	case 3:
+ 570              		.loc 1 311 29 is_stmt 0 view .LVU81
+ 571 0054 144A     		ldr	r2, .L49+16
+ 572 0056 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 573 0058 0133     		adds	r3, r3, #1
+ 574 005a DBB2     		uxtb	r3, r3
+ 575 005c 1370     		strb	r3, [r2]
+ 576              	.L38:
+ 314:Machine_Routine/Machine_Routine.c ****     	default:
+ 577              		.loc 1 314 7 is_stmt 1 view .LVU82
+ 314:Machine_Routine/Machine_Routine.c ****     	default:
+ 578              		.loc 1 314 26 is_stmt 0 view .LVU83
+ 579 005e 124B     		ldr	r3, .L49+16
+ 580 0060 0222     		movs	r2, #2
+ 581 0062 1A70     		strb	r2, [r3]
+ 582              	.L37:
+ 318:Machine_Routine/Machine_Routine.c ****   }
+ 583              		.loc 1 318 5 is_stmt 1 view .LVU84
+ 584 0064 0120     		movs	r0, #1
+ 585 0066 FFF7FEFF 		bl	vTaskDelay
+ 586              	.LVL39:
+ 289:Machine_Routine/Machine_Routine.c ****   {
+ 587              		.loc 1 289 8 view .LVU85
+ARM GAS  /tmp/cchM16BX.s 			page 21
+
+
+ 588              	.L45:
+ 288:Machine_Routine/Machine_Routine.c ****   while(1)
+ 589              		.loc 1 288 3 view .LVU86
+ 289:Machine_Routine/Machine_Routine.c ****   {
+ 590              		.loc 1 289 3 view .LVU87
+ 292:Machine_Routine/Machine_Routine.c ****     switch(check_sate_machine)
+ 591              		.loc 1 292 2 view .LVU88
+ 592 006a 0023     		movs	r3, #0
+ 593 006c 1A46     		mov	r2, r3
+ 594 006e 1946     		mov	r1, r3
+ 595 0070 0E48     		ldr	r0, .L49+20
+ 596 0072 0068     		ldr	r0, [r0]
+ 597 0074 FFF7FEFF 		bl	xQueueGenericSend
+ 598              	.LVL40:
+ 293:Machine_Routine/Machine_Routine.c ****     {
+ 599              		.loc 1 293 5 view .LVU89
+ 600 0078 0B4B     		ldr	r3, .L49+16
+ 601 007a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 602 007c DBB2     		uxtb	r3, r3
+ 603 007e 032B     		cmp	r3, #3
+ 604 0080 F0D8     		bhi	.L37
+ 605 0082 01A2     		adr	r2, .L39
+ 606 0084 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+ 607              		.p2align 2
+ 608              	.L39:
+ 609 0088 0B000000 		.word	.L42+1
+ 610 008c 3F000000 		.word	.L41+1
+ 611 0090 51000000 		.word	.L40+1
+ 612 0094 5F000000 		.word	.L38+1
+ 613              		.p2align 1
+ 614              	.L50:
+ 615              		.align	2
+ 616              	.L49:
+ 617 0098 00000000 		.word	.LANCHOR2
+ 618 009c 00000000 		.word	.LC5
+ 619 00a0 20BF0200 		.word	180000
+ 620 00a4 00000000 		.word	htim3
+ 621 00a8 00000000 		.word	.LANCHOR4
+ 622 00ac 00000000 		.word	.LANCHOR0
+ 623              		.cfi_endproc
+ 624              	.LFE84:
+ 626              		.section	.rodata.Init_RTOS_System_Project.str1.4,"aMS",%progbits,1
+ 627              		.align	2
+ 628              	.LC6:
+ 629 0000 7461736B 		.ascii	"task01_routine_system\000"
+ 629      30315F72 
+ 629      6F757469 
+ 629      6E655F73 
+ 629      79737465 
+ 630 0016 0000     		.align	2
+ 631              	.LC7:
+ 632 0018 7461736B 		.ascii	"task02_status_machine\000"
+ 632      30325F73 
+ 632      74617475 
+ 632      735F6D61 
+ 632      6368696E 
+ 633              		.section	.text.Init_RTOS_System_Project,"ax",%progbits
+ARM GAS  /tmp/cchM16BX.s 			page 22
+
+
+ 634              		.align	1
+ 635              		.global	Init_RTOS_System_Project
+ 636              		.syntax unified
+ 637              		.thumb
+ 638              		.thumb_func
+ 640              	Init_RTOS_System_Project:
+ 641              	.LFB80:
+ 202:Machine_Routine/Machine_Routine.c **** 	  /* USER CODE BEGIN RTOS_MUTEX */
+ 642              		.loc 1 202 1 view -0
+ 643              		.cfi_startproc
+ 644              		@ args = 0, pretend = 0, frame = 0
+ 645              		@ frame_needed = 0, uses_anonymous_args = 0
+ 646 0000 00B5     		push	{lr}
+ 647              	.LCFI14:
+ 648              		.cfi_def_cfa_offset 4
+ 649              		.cfi_offset 14, -4
+ 650 0002 83B0     		sub	sp, sp, #12
+ 651              	.LCFI15:
+ 652              		.cfi_def_cfa_offset 16
+ 208:Machine_Routine/Machine_Routine.c **** 	  /* USER CODE END RTOS_SEMAPHORES */
+ 653              		.loc 1 208 4 view .LVU91
+ 208:Machine_Routine/Machine_Routine.c **** 	  /* USER CODE END RTOS_SEMAPHORES */
+ 654              		.loc 1 208 18 is_stmt 0 view .LVU92
+ 655 0004 0021     		movs	r1, #0
+ 656 0006 0220     		movs	r0, #2
+ 657 0008 FFF7FEFF 		bl	xQueueCreateCountingSemaphore
+ 658              	.LVL41:
+ 208:Machine_Routine/Machine_Routine.c **** 	  /* USER CODE END RTOS_SEMAPHORES */
+ 659              		.loc 1 208 16 view .LVU93
+ 660 000c 0D4B     		ldr	r3, .L53
+ 661 000e 1860     		str	r0, [r3]
+ 221:Machine_Routine/Machine_Routine.c **** 		xTaskCreate(Task02_Status_Machine, NAME_TASK02_STATUS_MACHINE,  STACK_SIZE_TASK02_STATUS_MACHINE,
+ 662              		.loc 1 221 3 is_stmt 1 view .LVU94
+ 663 0010 0D4B     		ldr	r3, .L53+4
+ 664 0012 0193     		str	r3, [sp, #4]
+ 665 0014 0323     		movs	r3, #3
+ 666 0016 0093     		str	r3, [sp]
+ 667 0018 0023     		movs	r3, #0
+ 668 001a 4FF40072 		mov	r2, #512
+ 669 001e 0B49     		ldr	r1, .L53+8
+ 670 0020 0B48     		ldr	r0, .L53+12
+ 671 0022 FFF7FEFF 		bl	xTaskCreate
+ 672              	.LVL42:
+ 222:Machine_Routine/Machine_Routine.c **** 		vTaskStartScheduler();
+ 673              		.loc 1 222 3 view .LVU95
+ 674 0026 0B4B     		ldr	r3, .L53+16
+ 675 0028 0193     		str	r3, [sp, #4]
+ 676 002a 0223     		movs	r3, #2
+ 677 002c 0093     		str	r3, [sp]
+ 678 002e 0023     		movs	r3, #0
+ 679 0030 4022     		movs	r2, #64
+ 680 0032 0949     		ldr	r1, .L53+20
+ 681 0034 0948     		ldr	r0, .L53+24
+ 682 0036 FFF7FEFF 		bl	xTaskCreate
+ 683              	.LVL43:
+ 223:Machine_Routine/Machine_Routine.c **** 	  /* USER CODE END RTOS_THREADS */
+ 684              		.loc 1 223 3 view .LVU96
+ARM GAS  /tmp/cchM16BX.s 			page 23
+
+
+ 685 003a FFF7FEFF 		bl	vTaskStartScheduler
+ 686              	.LVL44:
+ 231:Machine_Routine/Machine_Routine.c **** #endif
+ 687              		.loc 1 231 1 is_stmt 0 view .LVU97
+ 688 003e 03B0     		add	sp, sp, #12
+ 689              	.LCFI16:
+ 690              		.cfi_def_cfa_offset 4
+ 691              		@ sp needed
+ 692 0040 5DF804FB 		ldr	pc, [sp], #4
+ 693              	.L54:
+ 694              		.align	2
+ 695              	.L53:
+ 696 0044 00000000 		.word	.LANCHOR0
+ 697 0048 00000000 		.word	.LANCHOR5
+ 698 004c 00000000 		.word	.LC6
+ 699 0050 00000000 		.word	Task01_Routine_System
+ 700 0054 00000000 		.word	.LANCHOR6
+ 701 0058 18000000 		.word	.LC7
+ 702 005c 00000000 		.word	Task02_Status_Machine
+ 703              		.cfi_endproc
+ 704              	.LFE80:
+ 706              		.section	.text.Init_System_Funtion_Project,"ax",%progbits
+ 707              		.align	1
+ 708              		.global	Init_System_Funtion_Project
+ 709              		.syntax unified
+ 710              		.thumb
+ 711              		.thumb_func
+ 713              	Init_System_Funtion_Project:
+ 714              	.LFB81:
+ 238:Machine_Routine/Machine_Routine.c **** 	/* Init Program Sensor*/
+ 715              		.loc 1 238 1 is_stmt 1 view -0
+ 716              		.cfi_startproc
+ 717              		@ args = 0, pretend = 0, frame = 0
+ 718              		@ frame_needed = 0, uses_anonymous_args = 0
+ 719 0000 08B5     		push	{r3, lr}
+ 720              	.LCFI17:
+ 721              		.cfi_def_cfa_offset 8
+ 722              		.cfi_offset 3, -8
+ 723              		.cfi_offset 14, -4
+ 240:Machine_Routine/Machine_Routine.c **** 
+ 724              		.loc 1 240 2 view .LVU99
+ 725 0002 FFF7FEFF 		bl	Init_Sensor
+ 726              	.LVL45:
+ 243:Machine_Routine/Machine_Routine.c **** 
+ 727              		.loc 1 243 2 view .LVU100
+ 728 0006 FFF7FEFF 		bl	Init_Debug_Program
+ 729              	.LVL46:
+ 246:Machine_Routine/Machine_Routine.c **** 
+ 730              		.loc 1 246 2 view .LVU101
+ 731 000a FFF7FEFF 		bl	Init_HC595
+ 732              	.LVL47:
+ 249:Machine_Routine/Machine_Routine.c **** 
+ 733              		.loc 1 249 2 view .LVU102
+ 734 000e FFF7FEFF 		bl	Init_LCD_Display
+ 735              	.LVL48:
+ 252:Machine_Routine/Machine_Routine.c **** 
+ 736              		.loc 1 252 2 view .LVU103
+ARM GAS  /tmp/cchM16BX.s 			page 24
+
+
+ 737 0012 FFF7FEFF 		bl	Init_Transimir_Lora_Mode_Uart
+ 738              	.LVL49:
+ 255:Machine_Routine/Machine_Routine.c **** 
+ 739              		.loc 1 255 2 view .LVU104
+ 740 0016 FFF7FEFF 		bl	Init_Cmd_Transmit_Lora
+ 741              	.LVL50:
+ 259:Machine_Routine/Machine_Routine.c **** 
+ 742              		.loc 1 259 1 is_stmt 0 view .LVU105
+ 743 001a 08BD     		pop	{r3, pc}
+ 744              		.cfi_endproc
+ 745              	.LFE81:
+ 747              		.section	.rodata.Routine_Machine_NotUseRTOS.str1.4,"aMS",%progbits,1
+ 748              		.align	2
+ 749              	.LC8:
+ 750 0000 57616974 		.ascii	"Waitting 4m...\000"
+ 750      74696E67 
+ 750      20346D2E 
+ 750      2E2E00
+ 751              		.section	.text.Routine_Machine_NotUseRTOS,"ax",%progbits
+ 752              		.align	1
+ 753              		.global	Routine_Machine_NotUseRTOS
+ 754              		.syntax unified
+ 755              		.thumb
+ 756              		.thumb_func
+ 758              	Routine_Machine_NotUseRTOS:
+ 759              	.LFB86:
+ 335:Machine_Routine/Machine_Routine.c ****   }
+ 336:Machine_Routine/Machine_Routine.c **** }
+ 337:Machine_Routine/Machine_Routine.c **** #endif
+ 338:Machine_Routine/Machine_Routine.c **** 
+ 339:Machine_Routine/Machine_Routine.c **** /**
+ 340:Machine_Routine/Machine_Routine.c ****  * @brief Routine_Machine_NotUseRTOS
+ 341:Machine_Routine/Machine_Routine.c ****  * 
+ 342:Machine_Routine/Machine_Routine.c ****  * @return uint8_t 
+ 343:Machine_Routine/Machine_Routine.c ****  */
+ 344:Machine_Routine/Machine_Routine.c **** uint8_t Routine_Machine_NotUseRTOS(void)
+ 345:Machine_Routine/Machine_Routine.c **** {
+ 760              		.loc 1 345 1 is_stmt 1 view -0
+ 761              		.cfi_startproc
+ 762              		@ args = 0, pretend = 0, frame = 0
+ 763              		@ frame_needed = 0, uses_anonymous_args = 0
+ 764 0000 38B5     		push	{r3, r4, r5, lr}
+ 765              	.LCFI18:
+ 766              		.cfi_def_cfa_offset 16
+ 767              		.cfi_offset 3, -16
+ 768              		.cfi_offset 4, -12
+ 769              		.cfi_offset 5, -8
+ 770              		.cfi_offset 14, -4
+ 346:Machine_Routine/Machine_Routine.c ****     uint32_t tick_wake_up_sensor = HAL_GetTick();
+ 771              		.loc 1 346 5 view .LVU107
+ 772              		.loc 1 346 36 is_stmt 0 view .LVU108
+ 773 0002 FFF7FEFF 		bl	HAL_GetTick
+ 774              	.LVL51:
+ 347:Machine_Routine/Machine_Routine.c ****     static __IO uint8_t check_sate_machine = 0;
+ 775              		.loc 1 347 5 is_stmt 1 view .LVU109
+ 348:Machine_Routine/Machine_Routine.c ****     switch(check_sate_machine)
+ 776              		.loc 1 348 5 view .LVU110
+ARM GAS  /tmp/cchM16BX.s 			page 25
+
+
+ 777 0006 194B     		ldr	r3, .L69
+ 778 0008 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 779 000a DBB2     		uxtb	r3, r3
+ 780 000c 032B     		cmp	r3, #3
+ 781 000e 2AD8     		bhi	.L58
+ 782 0010 DFE803F0 		tbb	[pc, r3]
+ 783              	.L60:
+ 784 0014 02       		.byte	(.L63-.L60)/2
+ 785 0015 1D       		.byte	(.L62-.L60)/2
+ 786 0016 24       		.byte	(.L61-.L60)/2
+ 787 0017 26       		.byte	(.L59-.L60)/2
+ 788              		.p2align 1
+ 789              	.L63:
+ 790 0018 0546     		mov	r5, r0
+ 349:Machine_Routine/Machine_Routine.c **** 	{
+ 350:Machine_Routine/Machine_Routine.c **** 		case 0:
+ 351:Machine_Routine/Machine_Routine.c **** 			Init_Cmd_Transmit_Lora();
+ 791              		.loc 1 351 4 view .LVU111
+ 792 001a FFF7FEFF 		bl	Init_Cmd_Transmit_Lora
+ 793              	.LVL52:
+ 352:Machine_Routine/Machine_Routine.c **** 			while(HAL_GetTick() - tick_wake_up_sensor <= TIME_WAKE_UP_SENSOR)
+ 794              		.loc 1 352 4 view .LVU112
+ 795              		.loc 1 352 9 is_stmt 0 view .LVU113
+ 796 001e 09E0     		b	.L64
+ 797              	.L65:
+ 353:Machine_Routine/Machine_Routine.c **** 			{
+ 354:Machine_Routine/Machine_Routine.c **** 				CLCD_I2C_SetCursor(&lcd1, 0, 0);
+ 798              		.loc 1 354 5 is_stmt 1 view .LVU114
+ 799 0020 134C     		ldr	r4, .L69+4
+ 800 0022 0022     		movs	r2, #0
+ 801 0024 1146     		mov	r1, r2
+ 802 0026 2046     		mov	r0, r4
+ 803 0028 FFF7FEFF 		bl	CLCD_I2C_SetCursor
+ 804              	.LVL53:
+ 355:Machine_Routine/Machine_Routine.c **** 				CLCD_I2C_WriteString(&lcd1, "Waitting 4m...");
+ 805              		.loc 1 355 5 view .LVU115
+ 806 002c 1149     		ldr	r1, .L69+8
+ 807 002e 2046     		mov	r0, r4
+ 808 0030 FFF7FEFF 		bl	CLCD_I2C_WriteString
+ 809              	.LVL54:
+ 810              	.L64:
+ 352:Machine_Routine/Machine_Routine.c **** 			while(HAL_GetTick() - tick_wake_up_sensor <= TIME_WAKE_UP_SENSOR)
+ 811              		.loc 1 352 46 view .LVU116
+ 352:Machine_Routine/Machine_Routine.c **** 			while(HAL_GetTick() - tick_wake_up_sensor <= TIME_WAKE_UP_SENSOR)
+ 812              		.loc 1 352 10 is_stmt 0 view .LVU117
+ 813 0034 FFF7FEFF 		bl	HAL_GetTick
+ 814              	.LVL55:
+ 352:Machine_Routine/Machine_Routine.c **** 			while(HAL_GetTick() - tick_wake_up_sensor <= TIME_WAKE_UP_SENSOR)
+ 815              		.loc 1 352 24 view .LVU118
+ 816 0038 431B     		subs	r3, r0, r5
+ 352:Machine_Routine/Machine_Routine.c **** 			while(HAL_GetTick() - tick_wake_up_sensor <= TIME_WAKE_UP_SENSOR)
+ 817              		.loc 1 352 46 view .LVU119
+ 818 003a 0F4A     		ldr	r2, .L69+12
+ 819 003c 9342     		cmp	r3, r2
+ 820 003e EFD9     		bls	.L65
+ 356:Machine_Routine/Machine_Routine.c **** 			}
+ 357:Machine_Routine/Machine_Routine.c **** 			HAL_TIM_Base_Start_IT(&htim3);
+ARM GAS  /tmp/cchM16BX.s 			page 26
+
+
+ 821              		.loc 1 357 4 is_stmt 1 view .LVU120
+ 822 0040 0E48     		ldr	r0, .L69+16
+ 823 0042 FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
+ 824              	.LVL56:
+ 358:Machine_Routine/Machine_Routine.c **** 			check_sate_machine = 1;
+ 825              		.loc 1 358 4 view .LVU121
+ 826              		.loc 1 358 23 is_stmt 0 view .LVU122
+ 827 0046 094B     		ldr	r3, .L69
+ 828 0048 0122     		movs	r2, #1
+ 829 004a 1A70     		strb	r2, [r3]
+ 359:Machine_Routine/Machine_Routine.c **** 			break;
+ 830              		.loc 1 359 4 is_stmt 1 view .LVU123
+ 831 004c 0BE0     		b	.L58
+ 832              	.LVL57:
+ 833              	.L62:
+ 360:Machine_Routine/Machine_Routine.c **** 		case 1:
+ 361:Machine_Routine/Machine_Routine.c **** 			CLCD_I2C_Clear(&lcd1);
+ 834              		.loc 1 361 4 view .LVU124
+ 835 004e 0848     		ldr	r0, .L69+4
+ 836              	.LVL58:
+ 837              		.loc 1 361 4 is_stmt 0 view .LVU125
+ 838 0050 FFF7FEFF 		bl	CLCD_I2C_Clear
+ 839              	.LVL59:
+ 362:Machine_Routine/Machine_Routine.c **** 			check_sate_machine = 2;
+ 840              		.loc 1 362 4 is_stmt 1 view .LVU126
+ 841              		.loc 1 362 23 is_stmt 0 view .LVU127
+ 842 0054 054B     		ldr	r3, .L69
+ 843 0056 0222     		movs	r2, #2
+ 844 0058 1A70     		strb	r2, [r3]
+ 363:Machine_Routine/Machine_Routine.c **** 			break;
+ 845              		.loc 1 363 4 is_stmt 1 view .LVU128
+ 846 005a 04E0     		b	.L58
+ 847              	.LVL60:
+ 848              	.L61:
+ 364:Machine_Routine/Machine_Routine.c **** 		case 2:
+ 365:Machine_Routine/Machine_Routine.c **** 			Routine01_Task_01_Routine_System();
+ 849              		.loc 1 365 4 view .LVU129
+ 850 005c FFF7FEFF 		bl	Routine01_Task_01_Routine_System
+ 851              	.LVL61:
+ 852              	.L59:
+ 366:Machine_Routine/Machine_Routine.c **** 		case 3:
+ 367:Machine_Routine/Machine_Routine.c **** 			//Routine02_Task_02_Status_Machine();
+ 368:Machine_Routine/Machine_Routine.c **** 			check_sate_machine = 2;
+ 853              		.loc 1 368 4 view .LVU130
+ 854              		.loc 1 368 23 is_stmt 0 view .LVU131
+ 855 0060 024B     		ldr	r3, .L69
+ 856 0062 0222     		movs	r2, #2
+ 857 0064 1A70     		strb	r2, [r3]
+ 858              	.L58:
+ 369:Machine_Routine/Machine_Routine.c **** 		default:
+ 370:Machine_Routine/Machine_Routine.c **** 			break;
+ 371:Machine_Routine/Machine_Routine.c **** 	}
+ 372:Machine_Routine/Machine_Routine.c ****     return 0;
+ 859              		.loc 1 372 5 is_stmt 1 view .LVU132
+ 373:Machine_Routine/Machine_Routine.c **** }
+ 860              		.loc 1 373 1 is_stmt 0 view .LVU133
+ 861 0066 0020     		movs	r0, #0
+ARM GAS  /tmp/cchM16BX.s 			page 27
+
+
+ 862 0068 38BD     		pop	{r3, r4, r5, pc}
+ 863              	.L70:
+ 864 006a 00BF     		.align	2
+ 865              	.L69:
+ 866 006c 00000000 		.word	.LANCHOR7
+ 867 0070 00000000 		.word	.LANCHOR2
+ 868 0074 00000000 		.word	.LC8
+ 869 0078 20BF0200 		.word	180000
+ 870 007c 00000000 		.word	htim3
+ 871              		.cfi_endproc
+ 872              	.LFE86:
+ 874              		.global	test
+ 875              		.global	lcd1
+ 876              		.global	moudle_lora_01
+ 877              		.global	pgm_1
+ 878              		.section	.bss.check_sate_machine.0,"aw",%nobits
+ 879              		.set	.LANCHOR7,. + 0
+ 882              	check_sate_machine.0:
+ 883 0000 00       		.space	1
+ 884              		.section	.bss.check_sate_machine.1,"aw",%nobits
+ 885              		.set	.LANCHOR4,. + 0
+ 888              	check_sate_machine.1:
+ 889 0000 00       		.space	1
+ 890              		.section	.bss.countingsem,"aw",%nobits
+ 891              		.align	2
+ 892              		.set	.LANCHOR0,. + 0
+ 895              	countingsem:
+ 896 0000 00000000 		.space	4
+ 897              		.section	.bss.lcd1,"aw",%nobits
+ 898              		.align	2
+ 899              		.set	.LANCHOR2,. + 0
+ 902              	lcd1:
+ 903 0000 00000000 		.space	12
+ 903      00000000 
+ 903      00000000 
+ 904              		.section	.bss.moudle_lora_01,"aw",%nobits
+ 905              		.align	2
+ 906              		.set	.LANCHOR3,. + 0
+ 909              	moudle_lora_01:
+ 910 0000 00000000 		.space	32
+ 910      00000000 
+ 910      00000000 
+ 910      00000000 
+ 910      00000000 
+ 911              		.section	.bss.my_task01_routine_system,"aw",%nobits
+ 912              		.align	2
+ 913              		.set	.LANCHOR5,. + 0
+ 916              	my_task01_routine_system:
+ 917 0000 00000000 		.space	4
+ 918              		.section	.bss.my_task02_status_machine,"aw",%nobits
+ 919              		.align	2
+ 920              		.set	.LANCHOR6,. + 0
+ 923              	my_task02_status_machine:
+ 924 0000 00000000 		.space	4
+ 925              		.section	.bss.pgm_1,"aw",%nobits
+ 926              		.align	2
+ 927              		.set	.LANCHOR1,. + 0
+ARM GAS  /tmp/cchM16BX.s 			page 28
+
+
+ 930              	pgm_1:
+ 931 0000 00000000 		.space	16
+ 931      00000000 
+ 931      00000000 
+ 931      00000000 
+ 932              		.section	.bss.test,"aw",%nobits
+ 933              		.align	1
+ 936              	test:
+ 937 0000 0000     		.space	2
+ 938              		.text
+ 939              	.Letext0:
+ 940              		.file 3 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 941              		.file 4 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 942              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 943              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 944              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 945              		.file 8 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 946              		.file 9 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h"
+ 947              		.file 10 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h"
+ 948              		.file 11 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h"
+ 949              		.file 12 "Protocol_Lora/Transmit_Data_Lora.h"
+ 950              		.file 13 "I2C_LCD/CLCD_I2C.h"
+ 951              		.file 14 "Debug_Program/Debug_Program.h"
+ 952              		.file 15 "Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h"
+ 953              		.file 16 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3/portmacro.h"
+ 954              		.file 17 "Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ 955              		.file 18 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
+ 956              		.file 19 "Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h"
+ 957              		.file 20 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 958              		.file 21 "Driver_HC595/Driver_74HC595.h"
+ 959              		.file 22 "Setup_Calibration_Sensor/Setup_Calibration_Sensor.h"
+ 960              		.file 23 "<built-in>"
+ARM GAS  /tmp/cchM16BX.s 			page 29
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Machine_Routine.c
+     /tmp/cchM16BX.s:18     .text.Task02_Status_Machine:0000000000000000 $t
+     /tmp/cchM16BX.s:23     .text.Task02_Status_Machine:0000000000000000 Task02_Status_Machine
+     /tmp/cchM16BX.s:56     .text.Task02_Status_Machine:0000000000000018 $d
+     /tmp/cchM16BX.s:61     .text.Routine01_Task_01_Routine_System:0000000000000000 $t
+     /tmp/cchM16BX.s:66     .text.Routine01_Task_01_Routine_System:0000000000000000 Routine01_Task_01_Routine_System
+     /tmp/cchM16BX.s:88     .text.Init_Debug_Program:0000000000000000 $t
+     /tmp/cchM16BX.s:93     .text.Init_Debug_Program:0000000000000000 Init_Debug_Program
+     /tmp/cchM16BX.s:124    .text.Init_Debug_Program:000000000000001c $d
+     /tmp/cchM16BX.s:131    .text.Init_HC595:0000000000000000 $t
+     /tmp/cchM16BX.s:136    .text.Init_HC595:0000000000000000 Init_HC595
+     /tmp/cchM16BX.s:157    .rodata.Init_LCD_Display.str1.4:0000000000000000 $d
+     /tmp/cchM16BX.s:164    .text.Init_LCD_Display:0000000000000000 $t
+     /tmp/cchM16BX.s:169    .text.Init_LCD_Display:0000000000000000 Init_LCD_Display
+     /tmp/cchM16BX.s:232    .text.Init_LCD_Display:000000000000004c $d
+     /tmp/cchM16BX.s:240    .text.Init_Transimir_Lora_Mode_Uart:0000000000000000 $t
+     /tmp/cchM16BX.s:245    .text.Init_Transimir_Lora_Mode_Uart:0000000000000000 Init_Transimir_Lora_Mode_Uart
+     /tmp/cchM16BX.s:267    .text.Init_Transimir_Lora_Mode_Uart:0000000000000010 $d
+     /tmp/cchM16BX.s:273    .rodata.vApplicationStackOverflowHook.str1.4:0000000000000000 $d
+     /tmp/cchM16BX.s:277    .text.vApplicationStackOverflowHook:0000000000000000 $t
+     /tmp/cchM16BX.s:283    .text.vApplicationStackOverflowHook:0000000000000000 vApplicationStackOverflowHook
+     /tmp/cchM16BX.s:350    .text.vApplicationStackOverflowHook:0000000000000034 $d
+     /tmp/cchM16BX.s:357    .rodata.vApplicationMallocFailedHook.str1.4:0000000000000000 $d
+     /tmp/cchM16BX.s:361    .text.vApplicationMallocFailedHook:0000000000000000 $t
+     /tmp/cchM16BX.s:367    .text.vApplicationMallocFailedHook:0000000000000000 vApplicationMallocFailedHook
+     /tmp/cchM16BX.s:429    .text.vApplicationMallocFailedHook:0000000000000038 $d
+     /tmp/cchM16BX.s:436    .rodata.Init_Cmd_Transmit_Lora.str1.4:0000000000000000 $d
+     /tmp/cchM16BX.s:440    .text.Init_Cmd_Transmit_Lora:0000000000000000 $t
+     /tmp/cchM16BX.s:446    .text.Init_Cmd_Transmit_Lora:0000000000000000 Init_Cmd_Transmit_Lora
+     /tmp/cchM16BX.s:468    .text.Init_Cmd_Transmit_Lora:0000000000000010 $d
+     /tmp/cchM16BX.s:474    .rodata.Task01_Routine_System.str1.4:0000000000000000 $d
+     /tmp/cchM16BX.s:478    .text.Task01_Routine_System:0000000000000000 $t
+     /tmp/cchM16BX.s:483    .text.Task01_Routine_System:0000000000000000 Task01_Routine_System
+     /tmp/cchM16BX.s:609    .text.Task01_Routine_System:0000000000000088 $d
+     /tmp/cchM16BX.s:617    .text.Task01_Routine_System:0000000000000098 $d
+     /tmp/cchM16BX.s:627    .rodata.Init_RTOS_System_Project.str1.4:0000000000000000 $d
+     /tmp/cchM16BX.s:634    .text.Init_RTOS_System_Project:0000000000000000 $t
+     /tmp/cchM16BX.s:640    .text.Init_RTOS_System_Project:0000000000000000 Init_RTOS_System_Project
+     /tmp/cchM16BX.s:696    .text.Init_RTOS_System_Project:0000000000000044 $d
+     /tmp/cchM16BX.s:707    .text.Init_System_Funtion_Project:0000000000000000 $t
+     /tmp/cchM16BX.s:713    .text.Init_System_Funtion_Project:0000000000000000 Init_System_Funtion_Project
+     /tmp/cchM16BX.s:748    .rodata.Routine_Machine_NotUseRTOS.str1.4:0000000000000000 $d
+     /tmp/cchM16BX.s:752    .text.Routine_Machine_NotUseRTOS:0000000000000000 $t
+     /tmp/cchM16BX.s:758    .text.Routine_Machine_NotUseRTOS:0000000000000000 Routine_Machine_NotUseRTOS
+     /tmp/cchM16BX.s:784    .text.Routine_Machine_NotUseRTOS:0000000000000014 $d
+     /tmp/cchM16BX.s:788    .text.Routine_Machine_NotUseRTOS:0000000000000018 $t
+     /tmp/cchM16BX.s:866    .text.Routine_Machine_NotUseRTOS:000000000000006c $d
+     /tmp/cchM16BX.s:936    .bss.test:0000000000000000 test
+     /tmp/cchM16BX.s:902    .bss.lcd1:0000000000000000 lcd1
+     /tmp/cchM16BX.s:909    .bss.moudle_lora_01:0000000000000000 moudle_lora_01
+     /tmp/cchM16BX.s:930    .bss.pgm_1:0000000000000000 pgm_1
+     /tmp/cchM16BX.s:882    .bss.check_sate_machine.0:0000000000000000 check_sate_machine.0
+     /tmp/cchM16BX.s:883    .bss.check_sate_machine.0:0000000000000000 $d
+     /tmp/cchM16BX.s:888    .bss.check_sate_machine.1:0000000000000000 check_sate_machine.1
+     /tmp/cchM16BX.s:889    .bss.check_sate_machine.1:0000000000000000 $d
+     /tmp/cchM16BX.s:891    .bss.countingsem:0000000000000000 $d
+ARM GAS  /tmp/cchM16BX.s 			page 30
+
+
+     /tmp/cchM16BX.s:895    .bss.countingsem:0000000000000000 countingsem
+     /tmp/cchM16BX.s:898    .bss.lcd1:0000000000000000 $d
+     /tmp/cchM16BX.s:905    .bss.moudle_lora_01:0000000000000000 $d
+     /tmp/cchM16BX.s:912    .bss.my_task01_routine_system:0000000000000000 $d
+     /tmp/cchM16BX.s:916    .bss.my_task01_routine_system:0000000000000000 my_task01_routine_system
+     /tmp/cchM16BX.s:919    .bss.my_task02_status_machine:0000000000000000 $d
+     /tmp/cchM16BX.s:923    .bss.my_task02_status_machine:0000000000000000 my_task02_status_machine
+     /tmp/cchM16BX.s:926    .bss.pgm_1:0000000000000000 $d
+     /tmp/cchM16BX.s:933    .bss.test:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+xQueueSemaphoreTake
+vTaskDelay
+Funtion_Routine_Hightlevel
+Debug_Program_Config
+huart3
+Send_Data_74HC595
+CLCD_I2C_Init
+CLCD_I2C_SetCursor
+CLCD_I2C_WriteString
+HAL_Delay
+CLCD_I2C_Clear
+hi2c2
+Uart_Lora_Init
+HAL_GPIO_WritePin
+Transmit_Data_To_Computer
+xTaskGetTickCount
+HAL_TIM_Base_Start_IT
+xQueueGenericSend
+htim3
+xQueueCreateCountingSemaphore
+xTaskCreate
+vTaskStartScheduler
+Init_Sensor
+HAL_GetTick

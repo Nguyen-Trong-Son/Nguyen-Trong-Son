@@ -1,0 +1,293 @@
+ARM GAS  /tmp/ccKXzmVE.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"Driver_74HC595.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.shiftOut,"ax",%progbits
+  18              		.align	1
+  19              		.global	shiftOut
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	shiftOut:
+  25              	.LVL0:
+  26              	.LFB65:
+  27              		.file 1 "Driver_HC595/Driver_74HC595.c"
+   1:Driver_HC595/Driver_74HC595.c **** /**
+   2:Driver_HC595/Driver_74HC595.c ****  * @file Driver_74HC595.c
+   3:Driver_HC595/Driver_74HC595.c ****  * @author  Nguyen Trong Son (LoH Technology Company Limited)
+   4:Driver_HC595/Driver_74HC595.c ****  * @brief 
+   5:Driver_HC595/Driver_74HC595.c ****  * @version 0.1
+   6:Driver_HC595/Driver_74HC595.c ****  * @date 2022-08-30
+   7:Driver_HC595/Driver_74HC595.c ****  * 
+   8:Driver_HC595/Driver_74HC595.c ****  * @copyright Copyright (c) 2022
+   9:Driver_HC595/Driver_74HC595.c ****  * 
+  10:Driver_HC595/Driver_74HC595.c ****  */
+  11:Driver_HC595/Driver_74HC595.c **** #include "Driver_74HC595.h"
+  12:Driver_HC595/Driver_74HC595.c **** // #include "Delay_Timer.h"
+  13:Driver_HC595/Driver_74HC595.c **** 
+  14:Driver_HC595/Driver_74HC595.c **** #define SR_Data_Pin GPIO_PIN_13
+  15:Driver_HC595/Driver_74HC595.c **** #define SR_Data_GPIO_Port GPIOC
+  16:Driver_HC595/Driver_74HC595.c **** #define SR_CLK_Pin GPIO_PIN_14
+  17:Driver_HC595/Driver_74HC595.c **** #define SR_CLK_GPIO_Port GPIOC
+  18:Driver_HC595/Driver_74HC595.c **** #define SR_LAT_Pin GPIO_PIN_15
+  19:Driver_HC595/Driver_74HC595.c **** #define SR_LAT_GPIO_Port GPIOC
+  20:Driver_HC595/Driver_74HC595.c **** #define SR_RST_Pin GPIO_PIN_9
+  21:Driver_HC595/Driver_74HC595.c **** #define SR_RST_GPIO_Port GPIOB
+  22:Driver_HC595/Driver_74HC595.c **** 
+  23:Driver_HC595/Driver_74HC595.c **** 
+  24:Driver_HC595/Driver_74HC595.c **** void shiftOut(uint8_t myDataOut) 
+  25:Driver_HC595/Driver_74HC595.c **** {
+  28              		.loc 1 25 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		.loc 1 25 1 is_stmt 0 view .LVU1
+  33 0000 70B5     		push	{r4, r5, r6, lr}
+ARM GAS  /tmp/ccKXzmVE.s 			page 2
+
+
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 16
+  36              		.cfi_offset 4, -16
+  37              		.cfi_offset 5, -12
+  38              		.cfi_offset 6, -8
+  39              		.cfi_offset 14, -4
+  40 0002 0646     		mov	r6, r0
+  26:Driver_HC595/Driver_74HC595.c **** 	uint8_t pinState = 0;
+  41              		.loc 1 26 2 is_stmt 1 view .LVU2
+  42              	.LVL1:
+  27:Driver_HC595/Driver_74HC595.c **** 	for (int i=7; i>=0; i--) 
+  43              		.loc 1 27 2 view .LVU3
+  44              	.LBB2:
+  45              		.loc 1 27 7 view .LVU4
+  46              		.loc 1 27 11 is_stmt 0 view .LVU5
+  47 0004 0724     		movs	r4, #7
+  48              		.loc 1 27 2 view .LVU6
+  49 0006 13E0     		b	.L2
+  50              	.LVL2:
+  51              	.L5:
+  28:Driver_HC595/Driver_74HC595.c ****     { 
+  29:Driver_HC595/Driver_74HC595.c **** 		HAL_GPIO_WritePin(SR_CLK_GPIO_Port, SR_CLK_Pin,GPIO_PIN_RESET);
+  30:Driver_HC595/Driver_74HC595.c **** 		if ( myDataOut & (1<<i) ) 
+  31:Driver_HC595/Driver_74HC595.c ****         {
+  32:Driver_HC595/Driver_74HC595.c **** 			pinState= 1;
+  33:Driver_HC595/Driver_74HC595.c **** 		} 
+  34:Driver_HC595/Driver_74HC595.c ****         else
+  35:Driver_HC595/Driver_74HC595.c ****         {
+  36:Driver_HC595/Driver_74HC595.c **** 			pinState= 0;
+  52              		.loc 1 36 12 view .LVU7
+  53 0008 0022     		movs	r2, #0
+  54              	.L3:
+  55              	.LVL3:
+  37:Driver_HC595/Driver_74HC595.c **** 		} 
+  38:Driver_HC595/Driver_74HC595.c **** 
+  39:Driver_HC595/Driver_74HC595.c **** 		HAL_GPIO_WritePin(SR_Data_GPIO_Port,SR_Data_Pin, pinState);
+  56              		.loc 1 39 3 is_stmt 1 discriminator 2 view .LVU8
+  57 000a 144D     		ldr	r5, .L8
+  58 000c 4FF40051 		mov	r1, #8192
+  59 0010 2846     		mov	r0, r5
+  60 0012 FFF7FEFF 		bl	HAL_GPIO_WritePin
+  61              	.LVL4:
+  40:Driver_HC595/Driver_74HC595.c **** 		HAL_GPIO_WritePin(SR_CLK_GPIO_Port, SR_CLK_Pin , GPIO_PIN_SET);
+  62              		.loc 1 40 3 discriminator 2 view .LVU9
+  63 0016 0122     		movs	r2, #1
+  64 0018 4FF48041 		mov	r1, #16384
+  65 001c 2846     		mov	r0, r5
+  66 001e FFF7FEFF 		bl	HAL_GPIO_WritePin
+  67              	.LVL5:
+  41:Driver_HC595/Driver_74HC595.c **** 		HAL_GPIO_WritePin(SR_Data_GPIO_Port, SR_Data_Pin, GPIO_PIN_RESET);
+  68              		.loc 1 41 3 discriminator 2 view .LVU10
+  69 0022 0022     		movs	r2, #0
+  70 0024 4FF40051 		mov	r1, #8192
+  71 0028 2846     		mov	r0, r5
+  72 002a FFF7FEFF 		bl	HAL_GPIO_WritePin
+  73              	.LVL6:
+  27:Driver_HC595/Driver_74HC595.c ****     { 
+ARM GAS  /tmp/ccKXzmVE.s 			page 3
+
+
+  74              		.loc 1 27 23 discriminator 2 view .LVU11
+  75 002e 013C     		subs	r4, r4, #1
+  76              	.LVL7:
+  77              	.L2:
+  27:Driver_HC595/Driver_74HC595.c ****     { 
+  78              		.loc 1 27 17 discriminator 1 view .LVU12
+  79 0030 002C     		cmp	r4, #0
+  80 0032 0CDB     		blt	.L7
+  29:Driver_HC595/Driver_74HC595.c **** 		if ( myDataOut & (1<<i) ) 
+  81              		.loc 1 29 3 view .LVU13
+  82 0034 0022     		movs	r2, #0
+  83 0036 4FF48041 		mov	r1, #16384
+  84 003a 0848     		ldr	r0, .L8
+  85 003c FFF7FEFF 		bl	HAL_GPIO_WritePin
+  86              	.LVL8:
+  30:Driver_HC595/Driver_74HC595.c ****         {
+  87              		.loc 1 30 3 view .LVU14
+  30:Driver_HC595/Driver_74HC595.c ****         {
+  88              		.loc 1 30 8 is_stmt 0 view .LVU15
+  89 0040 46FA04F3 		asr	r3, r6, r4
+  30:Driver_HC595/Driver_74HC595.c ****         {
+  90              		.loc 1 30 6 view .LVU16
+  91 0044 13F0010F 		tst	r3, #1
+  92 0048 DED0     		beq	.L5
+  32:Driver_HC595/Driver_74HC595.c **** 		} 
+  93              		.loc 1 32 12 view .LVU17
+  94 004a 0122     		movs	r2, #1
+  95 004c DDE7     		b	.L3
+  96              	.L7:
+  97              	.LBE2:
+  42:Driver_HC595/Driver_74HC595.c **** 
+  43:Driver_HC595/Driver_74HC595.c **** 	} 
+  44:Driver_HC595/Driver_74HC595.c **** 	//stop shifting
+  45:Driver_HC595/Driver_74HC595.c **** 	HAL_GPIO_WritePin(SR_CLK_GPIO_Port, SR_CLK_Pin,GPIO_PIN_SET);
+  98              		.loc 1 45 2 is_stmt 1 view .LVU18
+  99 004e 0122     		movs	r2, #1
+ 100 0050 4FF48041 		mov	r1, #16384
+ 101 0054 0148     		ldr	r0, .L8
+ 102 0056 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 103              	.LVL9:
+  46:Driver_HC595/Driver_74HC595.c **** }
+ 104              		.loc 1 46 1 is_stmt 0 view .LVU19
+ 105 005a 70BD     		pop	{r4, r5, r6, pc}
+ 106              	.LVL10:
+ 107              	.L9:
+ 108              		.loc 1 46 1 view .LVU20
+ 109              		.align	2
+ 110              	.L8:
+ 111 005c 00100140 		.word	1073811456
+ 112              		.cfi_endproc
+ 113              	.LFE65:
+ 115              		.section	.text.Send_Data_74HC595,"ax",%progbits
+ 116              		.align	1
+ 117              		.global	Send_Data_74HC595
+ 118              		.syntax unified
+ 119              		.thumb
+ 120              		.thumb_func
+ARM GAS  /tmp/ccKXzmVE.s 			page 4
+
+
+ 122              	Send_Data_74HC595:
+ 123              	.LVL11:
+ 124              	.LFB66:
+  47:Driver_HC595/Driver_74HC595.c **** 
+  48:Driver_HC595/Driver_74HC595.c **** /**
+  49:Driver_HC595/Driver_74HC595.c ****  * @brief Send_Data_74HC595
+  50:Driver_HC595/Driver_74HC595.c ****  * 
+  51:Driver_HC595/Driver_74HC595.c ****  * @param data 
+  52:Driver_HC595/Driver_74HC595.c ****  */
+  53:Driver_HC595/Driver_74HC595.c **** void Send_Data_74HC595(uint8_t data)
+  54:Driver_HC595/Driver_74HC595.c **** {
+ 125              		.loc 1 54 1 is_stmt 1 view -0
+ 126              		.cfi_startproc
+ 127              		@ args = 0, pretend = 0, frame = 0
+ 128              		@ frame_needed = 0, uses_anonymous_args = 0
+ 129              		.loc 1 54 1 is_stmt 0 view .LVU22
+ 130 0000 38B5     		push	{r3, r4, r5, lr}
+ 131              	.LCFI1:
+ 132              		.cfi_def_cfa_offset 16
+ 133              		.cfi_offset 3, -16
+ 134              		.cfi_offset 4, -12
+ 135              		.cfi_offset 5, -8
+ 136              		.cfi_offset 14, -4
+ 137 0002 0546     		mov	r5, r0
+  55:Driver_HC595/Driver_74HC595.c ****     HAL_GPIO_WritePin(SR_RST_GPIO_Port,SR_RST_Pin,GPIO_PIN_RESET);
+ 138              		.loc 1 55 5 is_stmt 1 view .LVU23
+ 139 0004 154C     		ldr	r4, .L12
+ 140 0006 0022     		movs	r2, #0
+ 141 0008 4FF40071 		mov	r1, #512
+ 142 000c 2046     		mov	r0, r4
+ 143              	.LVL12:
+ 144              		.loc 1 55 5 is_stmt 0 view .LVU24
+ 145 000e FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 146              	.LVL13:
+  56:Driver_HC595/Driver_74HC595.c ****     //releas reset HC595;
+  57:Driver_HC595/Driver_74HC595.c ****     HAL_GPIO_WritePin(SR_RST_GPIO_Port,SR_RST_Pin,GPIO_PIN_SET);
+ 147              		.loc 1 57 5 is_stmt 1 view .LVU25
+ 148 0012 0122     		movs	r2, #1
+ 149 0014 4FF40071 		mov	r1, #512
+ 150 0018 2046     		mov	r0, r4
+ 151 001a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 152              	.LVL14:
+  58:Driver_HC595/Driver_74HC595.c ****     
+  59:Driver_HC595/Driver_74HC595.c ****     HAL_GPIO_WritePin(SR_LAT_GPIO_Port,SR_LAT_Pin,GPIO_PIN_RESET);
+ 153              		.loc 1 59 5 view .LVU26
+ 154 001e 04F58064 		add	r4, r4, #1024
+ 155 0022 0022     		movs	r2, #0
+ 156 0024 4FF40041 		mov	r1, #32768
+ 157 0028 2046     		mov	r0, r4
+ 158 002a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 159              	.LVL15:
+  60:Driver_HC595/Driver_74HC595.c ****     HAL_GPIO_WritePin(SR_LAT_GPIO_Port,SR_LAT_Pin,GPIO_PIN_SET);
+ 160              		.loc 1 60 5 view .LVU27
+ 161 002e 0122     		movs	r2, #1
+ 162 0030 4FF40041 		mov	r1, #32768
+ 163 0034 2046     		mov	r0, r4
+ 164 0036 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ARM GAS  /tmp/ccKXzmVE.s 			page 5
+
+
+ 165              	.LVL16:
+  61:Driver_HC595/Driver_74HC595.c ****     //turn latch mcu on
+  62:Driver_HC595/Driver_74HC595.c ****     HAL_GPIO_WritePin(SR_LAT_GPIO_Port,SR_LAT_Pin,GPIO_PIN_RESET);
+ 166              		.loc 1 62 5 view .LVU28
+ 167 003a 0022     		movs	r2, #0
+ 168 003c 4FF40041 		mov	r1, #32768
+ 169 0040 2046     		mov	r0, r4
+ 170 0042 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 171              	.LVL17:
+  63:Driver_HC595/Driver_74HC595.c ****     shiftOut(data);
+ 172              		.loc 1 63 5 view .LVU29
+ 173 0046 2846     		mov	r0, r5
+ 174 0048 FFF7FEFF 		bl	shiftOut
+ 175              	.LVL18:
+  64:Driver_HC595/Driver_74HC595.c ****     HAL_GPIO_WritePin(SR_LAT_GPIO_Port,SR_LAT_Pin,GPIO_PIN_SET);
+ 176              		.loc 1 64 5 view .LVU30
+ 177 004c 0122     		movs	r2, #1
+ 178 004e 4FF40041 		mov	r1, #32768
+ 179 0052 2046     		mov	r0, r4
+ 180 0054 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 181              	.LVL19:
+  65:Driver_HC595/Driver_74HC595.c **** }...
+ 182              		.loc 1 65 1 is_stmt 0 view .LVU31
+ 183 0058 38BD     		pop	{r3, r4, r5, pc}
+ 184              	.L13:
+ 185 005a 00BF     		.align	2
+ 186              	.L12:
+ 187 005c 000C0140 		.word	1073810432
+ 188              		.cfi_endproc
+ 189              	.LFE66:
+ 191              		.text
+ 192              	.Letext0:
+ 193              		.file 2 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 194              		.file 3 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 195              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 196              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ARM GAS  /tmp/ccKXzmVE.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Driver_74HC595.c
+     /tmp/ccKXzmVE.s:18     .text.shiftOut:0000000000000000 $t
+     /tmp/ccKXzmVE.s:24     .text.shiftOut:0000000000000000 shiftOut
+     /tmp/ccKXzmVE.s:111    .text.shiftOut:000000000000005c $d
+     /tmp/ccKXzmVE.s:116    .text.Send_Data_74HC595:0000000000000000 $t
+     /tmp/ccKXzmVE.s:122    .text.Send_Data_74HC595:0000000000000000 Send_Data_74HC595
+     /tmp/ccKXzmVE.s:187    .text.Send_Data_74HC595:000000000000005c $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin

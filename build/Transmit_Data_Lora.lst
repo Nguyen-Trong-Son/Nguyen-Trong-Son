@@ -1,0 +1,843 @@
+ARM GAS  /tmp/ccgEbvTz.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"Transmit_Data_Lora.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.Uart_Lora_Init,"ax",%progbits
+  18              		.align	1
+  19              		.global	Uart_Lora_Init
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	Uart_Lora_Init:
+  25              	.LVL0:
+  26              	.LFB68:
+  27              		.file 1 "Protocol_Lora/Transmit_Data_Lora.c"
+   1:Protocol_Lora/Transmit_Data_Lora.c **** #include "Transmit_Data_Lora.h"
+   2:Protocol_Lora/Transmit_Data_Lora.c **** #include "string.h"
+   3:Protocol_Lora/Transmit_Data_Lora.c **** #include "stdio.h"
+   4:Protocol_Lora/Transmit_Data_Lora.c **** 
+   5:Protocol_Lora/Transmit_Data_Lora.c **** 
+   6:Protocol_Lora/Transmit_Data_Lora.c **** /**
+   7:Protocol_Lora/Transmit_Data_Lora.c ****  * @brief Slect mode data transmit from master to the salve
+   8:Protocol_Lora/Transmit_Data_Lora.c ****  * Mode I2C: I2C1                   #define  PROTOCOL_BYTE  
+   9:Protocol_Lora/Transmit_Data_Lora.c ****  * Mode USART: USART3               #define  PROTOCOL_TEXT  
+  10:Protocol_Lora/Transmit_Data_Lora.c ****  * 
+  11:Protocol_Lora/Transmit_Data_Lora.c ****  */
+  12:Protocol_Lora/Transmit_Data_Lora.c **** 
+  13:Protocol_Lora/Transmit_Data_Lora.c **** 
+  14:Protocol_Lora/Transmit_Data_Lora.c **** #if LORA_TRANSMIT_MODE_UART
+  15:Protocol_Lora/Transmit_Data_Lora.c **** 
+  16:Protocol_Lora/Transmit_Data_Lora.c **** #define  LORA_AT_SEND      "AT+SEND=2:"
+  17:Protocol_Lora/Transmit_Data_Lora.c **** // #define  PROTOCOL_BYTE          
+  18:Protocol_Lora/Transmit_Data_Lora.c **** #define  PROTOCOL_TEXT          
+  19:Protocol_Lora/Transmit_Data_Lora.c **** 
+  20:Protocol_Lora/Transmit_Data_Lora.c **** 
+  21:Protocol_Lora/Transmit_Data_Lora.c **** static char Buffer_Size_Frame[15];
+  22:Protocol_Lora/Transmit_Data_Lora.c **** static char Buffer_Nun_Error[10];
+  23:Protocol_Lora/Transmit_Data_Lora.c **** static char Buffer_Number_Sensor[10];
+  24:Protocol_Lora/Transmit_Data_Lora.c **** static char Buffer_Data[128];
+  25:Protocol_Lora/Transmit_Data_Lora.c **** static char Buffer_Temp[15];
+  26:Protocol_Lora/Transmit_Data_Lora.c **** static char Buffer_Hum[15];
+  27:Protocol_Lora/Transmit_Data_Lora.c **** static char Buffer_Co2[15];
+  28:Protocol_Lora/Transmit_Data_Lora.c **** static char Buffer_So2[20];
+  29:Protocol_Lora/Transmit_Data_Lora.c **** static char Buffer_Sum_Pm[15];
+  30:Protocol_Lora/Transmit_Data_Lora.c **** static char Buffer_Pm2_5[15];
+  31:Protocol_Lora/Transmit_Data_Lora.c **** static char Buffer_Bat_Vol[15];
+ARM GAS  /tmp/ccgEbvTz.s 			page 2
+
+
+  32:Protocol_Lora/Transmit_Data_Lora.c **** static char Buffer_Vdc_Input[15];
+  33:Protocol_Lora/Transmit_Data_Lora.c **** static char Buffer_Solar_Vol[15];
+  34:Protocol_Lora/Transmit_Data_Lora.c **** static char Buffer_Check_Sum[15];
+  35:Protocol_Lora/Transmit_Data_Lora.c **** 
+  36:Protocol_Lora/Transmit_Data_Lora.c **** 
+  37:Protocol_Lora/Transmit_Data_Lora.c **** 
+  38:Protocol_Lora/Transmit_Data_Lora.c **** #endif
+  39:Protocol_Lora/Transmit_Data_Lora.c **** 
+  40:Protocol_Lora/Transmit_Data_Lora.c **** 
+  41:Protocol_Lora/Transmit_Data_Lora.c **** #if LORA_TRANSMIT_MODE_I2C
+  42:Protocol_Lora/Transmit_Data_Lora.c **** 
+  43:Protocol_Lora/Transmit_Data_Lora.c **** void I2C_Lora_Init(Frame_Transmit_Data *frame_data_x, I2C_HandleTypeDef *I2C, uint16_t address_slav
+  44:Protocol_Lora/Transmit_Data_Lora.c **** {
+  45:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->I2C_Lora = I2C;
+  46:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->index = 0;
+  47:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Time_Out_I2C = time_out;
+  48:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Address_Slave = address_slave;
+  49:Protocol_Lora/Transmit_Data_Lora.c ****     memset(frame_data_x->Fame_Transimt_Data, 0, ARRAY_MAX);
+  50:Protocol_Lora/Transmit_Data_Lora.c **** }
+  51:Protocol_Lora/Transmit_Data_Lora.c **** 
+  52:Protocol_Lora/Transmit_Data_Lora.c **** uint8_t Lora_Uart_Master_Send_Data_To_Salve(Frame_Transmit_Data *frame_data_x, float *Temperature, 
+  53:Protocol_Lora/Transmit_Data_Lora.c ****                                                      float *Average_Sum_PM, uint16_t *Average_PM2_5
+  54:Protocol_Lora/Transmit_Data_Lora.c **** {
+  55:Protocol_Lora/Transmit_Data_Lora.c ****     uint16_t checksum = 0;
+  56:Protocol_Lora/Transmit_Data_Lora.c **** 
+  57:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[0] = ARRAY_MAX;
+  58:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[1] = ERRORR_STATUS_FRAME;
+  59:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[2] = NUMBER_SENSOR;
+  60:Protocol_Lora/Transmit_Data_Lora.c **** 
+  61:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[3] = (uint16_t)(Temperature * 10) >> 8;
+  62:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[4] = (uint16_t)(Temperature * 10) & 0xFF;
+  63:Protocol_Lora/Transmit_Data_Lora.c **** 
+  64:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[5] = (uint16_t)(Humidity * 10) >> 8;
+  65:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[6] = (uint16_t)(Humidity * 10) & 0xFF;
+  66:Protocol_Lora/Transmit_Data_Lora.c **** 
+  67:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[7] = (uint16_t)(Average_PPM_Co2) >> 8;
+  68:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[8] = (uint16_t)(Average_PPM_Co2) & 0xFF; 
+  69:Protocol_Lora/Transmit_Data_Lora.c **** 
+  70:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[9] = (uint16_t)(Average_PPM_So2 * 10) >> 8;
+  71:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[10] =(uint16_t)(Average_PPM_So2 * 10) & 0xFF;
+  72:Protocol_Lora/Transmit_Data_Lora.c **** 
+  73:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[11] = (uint16_t)(Average_Sum_PM * 10) >> 8;
+  74:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[12] = (uint16_t)(Average_Sum_PM * 10) & 0xFF;
+  75:Protocol_Lora/Transmit_Data_Lora.c **** 
+  76:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[13] = (uint16_t)(Average_PM2_5) >> 8;
+  77:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[14] = (uint16_t)(Average_PM2_5) & 0xFF;
+  78:Protocol_Lora/Transmit_Data_Lora.c **** 
+  79:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[15] = (uint16_t)(Battery_Voltage) >> 8;
+  80:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[16] = (uint16_t)(Battery_Voltage) & 0xFF;
+  81:Protocol_Lora/Transmit_Data_Lora.c **** 
+  82:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[17] = (uint16_t)(VDC_Input_Voltage) >> 8;
+  83:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[18] = (uint16_t)(VDC_Input_Voltage) & 0xFF;
+  84:Protocol_Lora/Transmit_Data_Lora.c **** 
+  85:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[19] = (uint16_t)(Solar_Panel_Voltage) >> 8;
+  86:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[20] = (uint16_t)(Solar_Panel_Voltage) & 0xFF;
+  87:Protocol_Lora/Transmit_Data_Lora.c **** 
+  88:Protocol_Lora/Transmit_Data_Lora.c ****     for(uint8_t i = 0; i < ARRAY_MAX ; i++)
+ARM GAS  /tmp/ccgEbvTz.s 			page 3
+
+
+  89:Protocol_Lora/Transmit_Data_Lora.c ****     {
+  90:Protocol_Lora/Transmit_Data_Lora.c ****         checksum += frame_data_x->Fame_Transimt_Data[i];
+  91:Protocol_Lora/Transmit_Data_Lora.c ****     }
+  92:Protocol_Lora/Transmit_Data_Lora.c **** 
+  93:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[21] = (0xFFFF - checksum) >> 8;
+  94:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[22] = (0xFFFF - checksum) & 0xFF;
+  95:Protocol_Lora/Transmit_Data_Lora.c **** 
+  96:Protocol_Lora/Transmit_Data_Lora.c ****     HAL_I2C_Master_Transmit(frame_data_x->I2C_Lora, frame_data_x->Address_Slave, (uint8_t*)&frame_d
+  97:Protocol_Lora/Transmit_Data_Lora.c ****                                 sizeof(frame_data_x->Fame_Transimt_Data)/sizeof(uint8_t), frame_dat
+  98:Protocol_Lora/Transmit_Data_Lora.c **** 
+  99:Protocol_Lora/Transmit_Data_Lora.c ****     return 0;
+ 100:Protocol_Lora/Transmit_Data_Lora.c **** }
+ 101:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 102:Protocol_Lora/Transmit_Data_Lora.c **** #endif
+ 103:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 104:Protocol_Lora/Transmit_Data_Lora.c **** #if LORA_TRANSMIT_MODE_UART
+ 105:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 106:Protocol_Lora/Transmit_Data_Lora.c **** void Uart_Lora_Init(Frame_Transmit_Data *frame_data_x, UART_HandleTypeDef *UART, uint16_t time_out)
+ 107:Protocol_Lora/Transmit_Data_Lora.c **** {
+  28              		.loc 1 107 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+ 108:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->UART_LORA = UART;
+  33              		.loc 1 108 5 view .LVU1
+  34              		.loc 1 108 29 is_stmt 0 view .LVU2
+  35 0000 0160     		str	r1, [r0]
+ 109:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->index = 0;
+  36              		.loc 1 109 5 is_stmt 1 view .LVU3
+  37              		.loc 1 109 25 is_stmt 0 view .LVU4
+  38 0002 0023     		movs	r3, #0
+  39 0004 C376     		strb	r3, [r0, #27]
+ 110:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->time_out_uart = time_out;
+  40              		.loc 1 110 5 is_stmt 1 view .LVU5
+  41              		.loc 1 110 33 is_stmt 0 view .LVU6
+  42 0006 8283     		strh	r2, [r0, #28]	@ movhi
+ 111:Protocol_Lora/Transmit_Data_Lora.c ****     memset(frame_data_x->Fame_Transimt_Data, 0, ARRAY_MAX);
+  43              		.loc 1 111 5 is_stmt 1 view .LVU7
+  44 0008 4360     		str	r3, [r0, #4]	@ unaligned
+  45 000a 8360     		str	r3, [r0, #8]	@ unaligned
+  46 000c C360     		str	r3, [r0, #12]	@ unaligned
+  47 000e 0361     		str	r3, [r0, #16]	@ unaligned
+  48 0010 4361     		str	r3, [r0, #20]	@ unaligned
+  49 0012 C0F81730 		str	r3, [r0, #23]	@ unaligned
+ 112:Protocol_Lora/Transmit_Data_Lora.c **** }
+  50              		.loc 1 112 1 is_stmt 0 view .LVU8
+  51 0016 7047     		bx	lr
+  52              		.cfi_endproc
+  53              	.LFE68:
+  55              		.section	.rodata.Lora_Uart_Master_Send_Data_To_Salve.str1.4,"aMS",%progbits,1
+  56              		.align	2
+  57              	.LC0:
+  58 0000 256400   		.ascii	"%d\000"
+  59              		.global	__aeabi_f2d
+  60 0003 00       		.align	2
+  61              	.LC1:
+ARM GAS  /tmp/ccgEbvTz.s 			page 4
+
+
+  62 0004 252E3166 		.ascii	"%.1f\000"
+  62      00
+  63 0009 000000   		.align	2
+  64              	.LC2:
+  65 000c 2C00     		.ascii	",\000"
+  66 000e 0000     		.align	2
+  67              	.LC3:
+  68 0010 25640D00 		.ascii	"%d\015\000"
+  69              		.align	2
+  70              	.LC4:
+  71 0014 41542B53 		.ascii	"AT+SEND=2:\000"
+  71      454E443D 
+  71      323A00
+  72              		.section	.text.Lora_Uart_Master_Send_Data_To_Salve,"ax",%progbits
+  73              		.align	1
+  74              		.global	Lora_Uart_Master_Send_Data_To_Salve
+  75              		.syntax unified
+  76              		.thumb
+  77              		.thumb_func
+  79              	Lora_Uart_Master_Send_Data_To_Salve:
+  80              	.LVL1:
+  81              	.LFB69:
+ 113:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 114:Protocol_Lora/Transmit_Data_Lora.c **** uint8_t Lora_Uart_Master_Send_Data_To_Salve(Frame_Transmit_Data *frame_data_x, float Temperature, u
+ 115:Protocol_Lora/Transmit_Data_Lora.c ****                                                      uint16_t Average_Sum_PM, uint16_t Average_PM2_
+ 116:Protocol_Lora/Transmit_Data_Lora.c **** {
+  82              		.loc 1 116 1 is_stmt 1 view -0
+  83              		.cfi_startproc
+  84              		@ args = 24, pretend = 0, frame = 0
+  85              		@ frame_needed = 0, uses_anonymous_args = 0
+  86              		.loc 1 116 1 is_stmt 0 view .LVU10
+  87 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  88              	.LCFI0:
+  89              		.cfi_def_cfa_offset 40
+  90              		.cfi_offset 3, -40
+  91              		.cfi_offset 4, -36
+  92              		.cfi_offset 5, -32
+  93              		.cfi_offset 6, -28
+  94              		.cfi_offset 7, -24
+  95              		.cfi_offset 8, -20
+  96              		.cfi_offset 9, -16
+  97              		.cfi_offset 10, -12
+  98              		.cfi_offset 11, -8
+  99              		.cfi_offset 14, -4
+ 100 0004 0746     		mov	r7, r0
+ 101 0006 8946     		mov	r9, r1
+ 102 0008 9046     		mov	r8, r2
+ 103 000a 1C46     		mov	r4, r3
+ 117:Protocol_Lora/Transmit_Data_Lora.c ****     uint16_t lengh_string = 0;
+ 104              		.loc 1 117 5 is_stmt 1 view .LVU11
+ 105              	.LVL2:
+ 118:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 119:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 120:Protocol_Lora/Transmit_Data_Lora.c ****     #if !defined(PROTOCOL_BYTE)
+ 121:Protocol_Lora/Transmit_Data_Lora.c ****         // #error Not Define USE
+ 122:Protocol_Lora/Transmit_Data_Lora.c ****     #else
+ 123:Protocol_Lora/Transmit_Data_Lora.c ****     uint16_t checksum = 0;
+ARM GAS  /tmp/ccgEbvTz.s 			page 5
+
+
+ 124:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 125:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[0] = ARRAY_MAX;
+ 126:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[1] = ERRORR_STATUS_FRAME;
+ 127:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[2] = NUMBER_SENSOR;
+ 128:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 129:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[3] = (uint16_t)(Temperature * 10) >> 8;
+ 130:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[4] = (uint16_t)(Temperature * 10) & 0xFF;
+ 131:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 132:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[5] = (uint16_t)(Humidity * 10) >> 8;
+ 133:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[6] = (uint16_t)(Humidity * 10) & 0xFF;
+ 134:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 135:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[7] = (uint16_t)(Average_PPM_Co2) >> 8;
+ 136:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[8] = (uint16_t)(Average_PPM_Co2) & 0xFF; 
+ 137:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 138:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[9] = (uint16_t)(Average_PPM_So2 * 10) >> 8;
+ 139:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[10] =(uint16_t)(Average_PPM_So2 * 10) & 0xFF;
+ 140:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 141:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[11] = (uint16_t)(Average_Sum_PM * 10) >> 8;
+ 142:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[12] = (uint16_t)(Average_Sum_PM * 10) & 0xFF;
+ 143:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 144:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[13] = (uint16_t)(Average_PM2_5) >> 8;
+ 145:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[14] = (uint16_t)(Average_PM2_5) & 0xFF;
+ 146:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 147:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[15] = (uint16_t)(Battery_Voltage) >> 8;
+ 148:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[16] = (uint16_t)(Battery_Voltage) & 0xFF;
+ 149:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 150:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[17] = (uint16_t)(VDC_Input_Voltage) >> 8;
+ 151:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[18] = (uint16_t)(VDC_Input_Voltage) & 0xFF;
+ 152:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 153:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[19] = (uint16_t)(Solar_Panel_Voltage) >> 8;
+ 154:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[20] = (uint16_t)(Solar_Panel_Voltage) & 0xFF;
+ 155:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 156:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 157:Protocol_Lora/Transmit_Data_Lora.c ****     for(uint8_t i = 0; i < ARRAY_MAX ; i++)
+ 158:Protocol_Lora/Transmit_Data_Lora.c ****     {
+ 159:Protocol_Lora/Transmit_Data_Lora.c ****         checksum += frame_data_x->Fame_Transimt_Data[i];
+ 160:Protocol_Lora/Transmit_Data_Lora.c ****     }
+ 161:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 162:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[21] = (0xFFFF - checksum) >> 8;
+ 163:Protocol_Lora/Transmit_Data_Lora.c ****     frame_data_x->Fame_Transimt_Data[22] = (0xFFFF - checksum) & 0xFF;
+ 164:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 165:Protocol_Lora/Transmit_Data_Lora.c ****     #endif
+ 166:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 167:Protocol_Lora/Transmit_Data_Lora.c ****     #if !defined(PROTOCOL_TEXT)
+ 168:Protocol_Lora/Transmit_Data_Lora.c ****         // #error Not Define USE
+ 169:Protocol_Lora/Transmit_Data_Lora.c ****     #else
+ 170:Protocol_Lora/Transmit_Data_Lora.c ****     sprintf(Buffer_Nun_Error, "%d", ERRORR_STATUS_FRAME);
+ 106              		.loc 1 170 5 view .LVU12
+ 107 000c 714D     		ldr	r5, .L4
+ 108 000e 724E     		ldr	r6, .L4+4
+ 109 0010 AA22     		movs	r2, #170
+ 110              	.LVL3:
+ 111              		.loc 1 170 5 is_stmt 0 view .LVU13
+ 112 0012 2946     		mov	r1, r5
+ 113              	.LVL4:
+ 114              		.loc 1 170 5 view .LVU14
+ 115 0014 3046     		mov	r0, r6
+ARM GAS  /tmp/ccgEbvTz.s 			page 6
+
+
+ 116              	.LVL5:
+ 117              		.loc 1 170 5 view .LVU15
+ 118 0016 FFF7FEFF 		bl	sprintf
+ 119              	.LVL6:
+ 171:Protocol_Lora/Transmit_Data_Lora.c ****     sprintf(Buffer_Number_Sensor, "%d", NUMBER_SENSOR);
+ 120              		.loc 1 171 5 is_stmt 1 view .LVU16
+ 121 001a DFF8C0B1 		ldr	fp, .L4+8
+ 122 001e 0622     		movs	r2, #6
+ 123 0020 2946     		mov	r1, r5
+ 124 0022 5846     		mov	r0, fp
+ 125 0024 FFF7FEFF 		bl	sprintf
+ 126              	.LVL7:
+ 172:Protocol_Lora/Transmit_Data_Lora.c ****     sprintf(Buffer_Temp, "%.1f", Temperature);
+ 127              		.loc 1 172 5 view .LVU17
+ 128 0028 4846     		mov	r0, r9
+ 129 002a FFF7FEFF 		bl	__aeabi_f2d
+ 130              	.LVL8:
+ 131 002e 0246     		mov	r2, r0
+ 132 0030 0B46     		mov	r3, r1
+ 133 0032 DFF8ACA1 		ldr	r10, .L4+12
+ 134 0036 6B49     		ldr	r1, .L4+16
+ 135 0038 5046     		mov	r0, r10
+ 136 003a FFF7FEFF 		bl	sprintf
+ 137              	.LVL9:
+ 173:Protocol_Lora/Transmit_Data_Lora.c ****     sprintf(Buffer_Hum, "%d", Humidity);
+ 138              		.loc 1 173 5 view .LVU18
+ 139 003e 4246     		mov	r2, r8
+ 140 0040 2946     		mov	r1, r5
+ 141 0042 6948     		ldr	r0, .L4+20
+ 142 0044 FFF7FEFF 		bl	sprintf
+ 143              	.LVL10:
+ 174:Protocol_Lora/Transmit_Data_Lora.c ****     sprintf(Buffer_Co2, "%d", Average_PPM_Co2);
+ 144              		.loc 1 174 5 view .LVU19
+ 145 0048 2246     		mov	r2, r4
+ 146 004a 2946     		mov	r1, r5
+ 147 004c 6748     		ldr	r0, .L4+24
+ 148 004e FFF7FEFF 		bl	sprintf
+ 149              	.LVL11:
+ 175:Protocol_Lora/Transmit_Data_Lora.c ****     sprintf(Buffer_So2, "%d", Average_PPM_So2);
+ 150              		.loc 1 175 5 view .LVU20
+ 151 0052 BDF82820 		ldrh	r2, [sp, #40]
+ 152 0056 2946     		mov	r1, r5
+ 153 0058 6548     		ldr	r0, .L4+28
+ 154 005a FFF7FEFF 		bl	sprintf
+ 155              	.LVL12:
+ 176:Protocol_Lora/Transmit_Data_Lora.c ****     sprintf(Buffer_Sum_Pm, "%d", Average_Sum_PM);
+ 156              		.loc 1 176 5 view .LVU21
+ 157 005e BDF82C20 		ldrh	r2, [sp, #44]
+ 158 0062 2946     		mov	r1, r5
+ 159 0064 6348     		ldr	r0, .L4+32
+ 160 0066 FFF7FEFF 		bl	sprintf
+ 161              	.LVL13:
+ 177:Protocol_Lora/Transmit_Data_Lora.c ****     sprintf(Buffer_Pm2_5, "%d", Average_PM2_5);
+ 162              		.loc 1 177 5 view .LVU22
+ 163 006a BDF83020 		ldrh	r2, [sp, #48]
+ 164 006e 2946     		mov	r1, r5
+ 165 0070 6148     		ldr	r0, .L4+36
+ARM GAS  /tmp/ccgEbvTz.s 			page 7
+
+
+ 166 0072 FFF7FEFF 		bl	sprintf
+ 167              	.LVL14:
+ 178:Protocol_Lora/Transmit_Data_Lora.c ****     sprintf(Buffer_Bat_Vol, "%d", Battery_Voltage);
+ 168              		.loc 1 178 5 view .LVU23
+ 169 0076 BDF83420 		ldrh	r2, [sp, #52]
+ 170 007a 2946     		mov	r1, r5
+ 171 007c 5F48     		ldr	r0, .L4+40
+ 172 007e FFF7FEFF 		bl	sprintf
+ 173              	.LVL15:
+ 179:Protocol_Lora/Transmit_Data_Lora.c ****     sprintf(Buffer_Vdc_Input, "%d", VDC_Input_Voltage);
+ 174              		.loc 1 179 5 view .LVU24
+ 175 0082 DFF87C91 		ldr	r9, .L4+44
+ 176              	.LVL16:
+ 177              		.loc 1 179 5 is_stmt 0 view .LVU25
+ 178 0086 BDF83820 		ldrh	r2, [sp, #56]
+ 179 008a 2946     		mov	r1, r5
+ 180 008c 4846     		mov	r0, r9
+ 181 008e FFF7FEFF 		bl	sprintf
+ 182              	.LVL17:
+ 180:Protocol_Lora/Transmit_Data_Lora.c ****     sprintf(Buffer_Solar_Vol, "%d", Solar_Panel_Voltage);
+ 183              		.loc 1 180 5 is_stmt 1 view .LVU26
+ 184 0092 DFF87081 		ldr	r8, .L4+48
+ 185 0096 BDF83C20 		ldrh	r2, [sp, #60]
+ 186 009a 2946     		mov	r1, r5
+ 187 009c 4046     		mov	r0, r8
+ 188 009e FFF7FEFF 		bl	sprintf
+ 189              	.LVL18:
+ 181:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 182:Protocol_Lora/Transmit_Data_Lora.c ****     memset(Buffer_Data, '\0', sizeof(Buffer_Data));
+ 190              		.loc 1 182 5 view .LVU27
+ 191 00a2 594C     		ldr	r4, .L4+52
+ 192 00a4 8022     		movs	r2, #128
+ 193 00a6 0021     		movs	r1, #0
+ 194 00a8 2046     		mov	r0, r4
+ 195 00aa FFF7FEFF 		bl	memset
+ 196              	.LVL19:
+ 183:Protocol_Lora/Transmit_Data_Lora.c ****     strcpy(Buffer_Data, ",");
+ 197              		.loc 1 183 5 view .LVU28
+ 198 00ae 2C23     		movs	r3, #44
+ 199 00b0 2380     		strh	r3, [r4]	@ movhi
+ 184:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, Buffer_Nun_Error);
+ 200              		.loc 1 184 5 view .LVU29
+ 201 00b2 3146     		mov	r1, r6
+ 202 00b4 2046     		mov	r0, r4
+ 203 00b6 FFF7FEFF 		bl	strcat
+ 204              	.LVL20:
+ 185:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, ",");
+ 205              		.loc 1 185 5 view .LVU30
+ 206 00ba 2046     		mov	r0, r4
+ 207 00bc FFF7FEFF 		bl	strlen
+ 208              	.LVL21:
+ 209 00c0 524B     		ldr	r3, .L4+56
+ 210 00c2 1E88     		ldrh	r6, [r3]	@ unaligned
+ 211 00c4 2652     		strh	r6, [r4, r0]	@ unaligned
+ 186:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, Buffer_Number_Sensor);
+ 212              		.loc 1 186 5 view .LVU31
+ 213 00c6 5946     		mov	r1, fp
+ARM GAS  /tmp/ccgEbvTz.s 			page 8
+
+
+ 214 00c8 2046     		mov	r0, r4
+ 215 00ca FFF7FEFF 		bl	strcat
+ 216              	.LVL22:
+ 187:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, ",");
+ 217              		.loc 1 187 5 view .LVU32
+ 218 00ce 2046     		mov	r0, r4
+ 219 00d0 FFF7FEFF 		bl	strlen
+ 220              	.LVL23:
+ 221 00d4 2652     		strh	r6, [r4, r0]	@ unaligned
+ 188:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, Buffer_Temp);
+ 222              		.loc 1 188 5 view .LVU33
+ 223 00d6 5146     		mov	r1, r10
+ 224 00d8 2046     		mov	r0, r4
+ 225 00da FFF7FEFF 		bl	strcat
+ 226              	.LVL24:
+ 189:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, ",");
+ 227              		.loc 1 189 5 view .LVU34
+ 228 00de 2046     		mov	r0, r4
+ 229 00e0 FFF7FEFF 		bl	strlen
+ 230              	.LVL25:
+ 231 00e4 2652     		strh	r6, [r4, r0]	@ unaligned
+ 190:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, Buffer_Hum);
+ 232              		.loc 1 190 5 view .LVU35
+ 233 00e6 4049     		ldr	r1, .L4+20
+ 234 00e8 2046     		mov	r0, r4
+ 235 00ea FFF7FEFF 		bl	strcat
+ 236              	.LVL26:
+ 191:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, ",");
+ 237              		.loc 1 191 5 view .LVU36
+ 238 00ee 2046     		mov	r0, r4
+ 239 00f0 FFF7FEFF 		bl	strlen
+ 240              	.LVL27:
+ 241 00f4 2652     		strh	r6, [r4, r0]	@ unaligned
+ 192:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, Buffer_Co2);
+ 242              		.loc 1 192 5 view .LVU37
+ 243 00f6 3D49     		ldr	r1, .L4+24
+ 244 00f8 2046     		mov	r0, r4
+ 245 00fa FFF7FEFF 		bl	strcat
+ 246              	.LVL28:
+ 193:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, ",");
+ 247              		.loc 1 193 5 view .LVU38
+ 248 00fe 2046     		mov	r0, r4
+ 249 0100 FFF7FEFF 		bl	strlen
+ 250              	.LVL29:
+ 251 0104 2652     		strh	r6, [r4, r0]	@ unaligned
+ 194:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, Buffer_So2);
+ 252              		.loc 1 194 5 view .LVU39
+ 253 0106 3A49     		ldr	r1, .L4+28
+ 254 0108 2046     		mov	r0, r4
+ 255 010a FFF7FEFF 		bl	strcat
+ 256              	.LVL30:
+ 195:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, ",");
+ 257              		.loc 1 195 5 view .LVU40
+ 258 010e 2046     		mov	r0, r4
+ 259 0110 FFF7FEFF 		bl	strlen
+ 260              	.LVL31:
+ 261 0114 2652     		strh	r6, [r4, r0]	@ unaligned
+ARM GAS  /tmp/ccgEbvTz.s 			page 9
+
+
+ 196:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, Buffer_Sum_Pm);
+ 262              		.loc 1 196 5 view .LVU41
+ 263 0116 3749     		ldr	r1, .L4+32
+ 264 0118 2046     		mov	r0, r4
+ 265 011a FFF7FEFF 		bl	strcat
+ 266              	.LVL32:
+ 197:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, ",");
+ 267              		.loc 1 197 5 view .LVU42
+ 268 011e 2046     		mov	r0, r4
+ 269 0120 FFF7FEFF 		bl	strlen
+ 270              	.LVL33:
+ 271 0124 2652     		strh	r6, [r4, r0]	@ unaligned
+ 198:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, Buffer_Pm2_5);
+ 272              		.loc 1 198 5 view .LVU43
+ 273 0126 3449     		ldr	r1, .L4+36
+ 274 0128 2046     		mov	r0, r4
+ 275 012a FFF7FEFF 		bl	strcat
+ 276              	.LVL34:
+ 199:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, ",");
+ 277              		.loc 1 199 5 view .LVU44
+ 278 012e 2046     		mov	r0, r4
+ 279 0130 FFF7FEFF 		bl	strlen
+ 280              	.LVL35:
+ 281 0134 2652     		strh	r6, [r4, r0]	@ unaligned
+ 200:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, Buffer_Bat_Vol);
+ 282              		.loc 1 200 5 view .LVU45
+ 283 0136 3149     		ldr	r1, .L4+40
+ 284 0138 2046     		mov	r0, r4
+ 285 013a FFF7FEFF 		bl	strcat
+ 286              	.LVL36:
+ 201:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, ",");
+ 287              		.loc 1 201 5 view .LVU46
+ 288 013e 2046     		mov	r0, r4
+ 289 0140 FFF7FEFF 		bl	strlen
+ 290              	.LVL37:
+ 291 0144 2652     		strh	r6, [r4, r0]	@ unaligned
+ 202:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, Buffer_Vdc_Input);
+ 292              		.loc 1 202 5 view .LVU47
+ 293 0146 4946     		mov	r1, r9
+ 294 0148 2046     		mov	r0, r4
+ 295 014a FFF7FEFF 		bl	strcat
+ 296              	.LVL38:
+ 203:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, ",");
+ 297              		.loc 1 203 5 view .LVU48
+ 298 014e 2046     		mov	r0, r4
+ 299 0150 FFF7FEFF 		bl	strlen
+ 300              	.LVL39:
+ 301 0154 2652     		strh	r6, [r4, r0]	@ unaligned
+ 204:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, Buffer_Solar_Vol);
+ 302              		.loc 1 204 5 view .LVU49
+ 303 0156 4146     		mov	r1, r8
+ 304 0158 2046     		mov	r0, r4
+ 305 015a FFF7FEFF 		bl	strcat
+ 306              	.LVL40:
+ 205:Protocol_Lora/Transmit_Data_Lora.c ****     strcat(Buffer_Data, ",");
+ 307              		.loc 1 205 5 view .LVU50
+ 308 015e 2046     		mov	r0, r4
+ARM GAS  /tmp/ccgEbvTz.s 			page 10
+
+
+ 309 0160 FFF7FEFF 		bl	strlen
+ 310              	.LVL41:
+ 311 0164 2652     		strh	r6, [r4, r0]	@ unaligned
+ 206:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 207:Protocol_Lora/Transmit_Data_Lora.c ****     lengh_string = strlen(Buffer_Data);
+ 312              		.loc 1 207 5 view .LVU51
+ 313              		.loc 1 207 20 is_stmt 0 view .LVU52
+ 314 0166 2046     		mov	r0, r4
+ 315 0168 FFF7FEFF 		bl	strlen
+ 316              	.LVL42:
+ 317 016c 0646     		mov	r6, r0
+ 318              	.LVL43:
+ 208:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 209:Protocol_Lora/Transmit_Data_Lora.c ****     sprintf(Buffer_Size_Frame, "%d", lengh_string);
+ 319              		.loc 1 209 5 is_stmt 1 view .LVU53
+ 320 016e DFF8A080 		ldr	r8, .L4+60
+ 321 0172 0246     		mov	r2, r0
+ 322 0174 2946     		mov	r1, r5
+ 323 0176 4046     		mov	r0, r8
+ 324              	.LVL44:
+ 325              		.loc 1 209 5 is_stmt 0 view .LVU54
+ 326 0178 FFF7FEFF 		bl	sprintf
+ 327              	.LVL45:
+ 210:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 211:Protocol_Lora/Transmit_Data_Lora.c ****     sprintf(Buffer_Check_Sum, "%d\r", 0XFFFF-lengh_string);
+ 328              		.loc 1 211 5 is_stmt 1 view .LVU55
+ 329 017c 254D     		ldr	r5, .L4+64
+ 330 017e C6F57F42 		rsb	r2, r6, #65280
+ 331 0182 FF32     		adds	r2, r2, #255
+ 332 0184 2449     		ldr	r1, .L4+68
+ 333 0186 2846     		mov	r0, r5
+ 334 0188 FFF7FEFF 		bl	sprintf
+ 335              	.LVL46:
+ 212:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 213:Protocol_Lora/Transmit_Data_Lora.c ****     HAL_UART_Transmit(frame_data_x->UART_LORA, (uint8_t*)LORA_AT_SEND, strlen(LORA_AT_SEND), frame_
+ 336              		.loc 1 213 5 view .LVU56
+ 337 018c BB8B     		ldrh	r3, [r7, #28]
+ 338 018e 0A22     		movs	r2, #10
+ 339 0190 2249     		ldr	r1, .L4+72
+ 340 0192 3868     		ldr	r0, [r7]
+ 341 0194 FFF7FEFF 		bl	HAL_UART_Transmit
+ 342              	.LVL47:
+ 214:Protocol_Lora/Transmit_Data_Lora.c ****     HAL_UART_Transmit(frame_data_x->UART_LORA, (uint8_t*)Buffer_Size_Frame, strlen(Buffer_Size_Fram
+ 343              		.loc 1 214 5 view .LVU57
+ 344              		.loc 1 214 77 is_stmt 0 view .LVU58
+ 345 0198 4046     		mov	r0, r8
+ 346 019a FFF7FEFF 		bl	strlen
+ 347              	.LVL48:
+ 348              		.loc 1 214 5 view .LVU59
+ 349 019e BB8B     		ldrh	r3, [r7, #28]
+ 350 01a0 82B2     		uxth	r2, r0
+ 351 01a2 4146     		mov	r1, r8
+ 352 01a4 3868     		ldr	r0, [r7]
+ 353 01a6 FFF7FEFF 		bl	HAL_UART_Transmit
+ 354              	.LVL49:
+ 215:Protocol_Lora/Transmit_Data_Lora.c ****     HAL_UART_Transmit(frame_data_x->UART_LORA, (uint8_t*)Buffer_Data, strlen(Buffer_Data), frame_da
+ 355              		.loc 1 215 5 is_stmt 1 view .LVU60
+ARM GAS  /tmp/ccgEbvTz.s 			page 11
+
+
+ 356              		.loc 1 215 71 is_stmt 0 view .LVU61
+ 357 01aa 2046     		mov	r0, r4
+ 358 01ac FFF7FEFF 		bl	strlen
+ 359              	.LVL50:
+ 360              		.loc 1 215 5 view .LVU62
+ 361 01b0 BB8B     		ldrh	r3, [r7, #28]
+ 362 01b2 82B2     		uxth	r2, r0
+ 363 01b4 2146     		mov	r1, r4
+ 364 01b6 3868     		ldr	r0, [r7]
+ 365 01b8 FFF7FEFF 		bl	HAL_UART_Transmit
+ 366              	.LVL51:
+ 216:Protocol_Lora/Transmit_Data_Lora.c ****     HAL_UART_Transmit(frame_data_x->UART_LORA, (uint8_t*)Buffer_Check_Sum, strlen(Buffer_Check_Sum)
+ 367              		.loc 1 216 5 is_stmt 1 view .LVU63
+ 368              		.loc 1 216 76 is_stmt 0 view .LVU64
+ 369 01bc 2846     		mov	r0, r5
+ 370 01be FFF7FEFF 		bl	strlen
+ 371              	.LVL52:
+ 372              		.loc 1 216 5 view .LVU65
+ 373 01c2 BB8B     		ldrh	r3, [r7, #28]
+ 374 01c4 82B2     		uxth	r2, r0
+ 375 01c6 2946     		mov	r1, r5
+ 376 01c8 3868     		ldr	r0, [r7]
+ 377 01ca FFF7FEFF 		bl	HAL_UART_Transmit
+ 378              	.LVL53:
+ 217:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 218:Protocol_Lora/Transmit_Data_Lora.c ****     return 0;
+ 379              		.loc 1 218 5 is_stmt 1 view .LVU66
+ 219:Protocol_Lora/Transmit_Data_Lora.c **** 
+ 220:Protocol_Lora/Transmit_Data_Lora.c ****     #endif
+ 221:Protocol_Lora/Transmit_Data_Lora.c **** }
+ 380              		.loc 1 221 1 is_stmt 0 view .LVU67
+ 381 01ce 0020     		movs	r0, #0
+ 382 01d0 BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 383              	.LVL54:
+ 384              	.L5:
+ 385              		.loc 1 221 1 view .LVU68
+ 386              		.align	2
+ 387              	.L4:
+ 388 01d4 00000000 		.word	.LC0
+ 389 01d8 00000000 		.word	.LANCHOR0
+ 390 01dc 00000000 		.word	.LANCHOR1
+ 391 01e0 00000000 		.word	.LANCHOR2
+ 392 01e4 04000000 		.word	.LC1
+ 393 01e8 00000000 		.word	.LANCHOR3
+ 394 01ec 00000000 		.word	.LANCHOR4
+ 395 01f0 00000000 		.word	.LANCHOR5
+ 396 01f4 00000000 		.word	.LANCHOR6
+ 397 01f8 00000000 		.word	.LANCHOR7
+ 398 01fc 00000000 		.word	.LANCHOR8
+ 399 0200 00000000 		.word	.LANCHOR9
+ 400 0204 00000000 		.word	.LANCHOR10
+ 401 0208 00000000 		.word	.LANCHOR11
+ 402 020c 0C000000 		.word	.LC2
+ 403 0210 00000000 		.word	.LANCHOR12
+ 404 0214 00000000 		.word	.LANCHOR13
+ 405 0218 10000000 		.word	.LC3
+ 406 021c 14000000 		.word	.LC4
+ARM GAS  /tmp/ccgEbvTz.s 			page 12
+
+
+ 407              		.cfi_endproc
+ 408              	.LFE69:
+ 410              		.section	.bss.Buffer_Bat_Vol,"aw",%nobits
+ 411              		.align	2
+ 412              		.set	.LANCHOR8,. + 0
+ 415              	Buffer_Bat_Vol:
+ 416 0000 00000000 		.space	15
+ 416      00000000 
+ 416      00000000 
+ 416      000000
+ 417              		.section	.bss.Buffer_Check_Sum,"aw",%nobits
+ 418              		.align	2
+ 419              		.set	.LANCHOR13,. + 0
+ 422              	Buffer_Check_Sum:
+ 423 0000 00000000 		.space	15
+ 423      00000000 
+ 423      00000000 
+ 423      000000
+ 424              		.section	.bss.Buffer_Co2,"aw",%nobits
+ 425              		.align	2
+ 426              		.set	.LANCHOR4,. + 0
+ 429              	Buffer_Co2:
+ 430 0000 00000000 		.space	15
+ 430      00000000 
+ 430      00000000 
+ 430      000000
+ 431              		.section	.bss.Buffer_Data,"aw",%nobits
+ 432              		.align	2
+ 433              		.set	.LANCHOR11,. + 0
+ 436              	Buffer_Data:
+ 437 0000 00000000 		.space	128
+ 437      00000000 
+ 437      00000000 
+ 437      00000000 
+ 437      00000000 
+ 438              		.section	.bss.Buffer_Hum,"aw",%nobits
+ 439              		.align	2
+ 440              		.set	.LANCHOR3,. + 0
+ 443              	Buffer_Hum:
+ 444 0000 00000000 		.space	15
+ 444      00000000 
+ 444      00000000 
+ 444      000000
+ 445              		.section	.bss.Buffer_Number_Sensor,"aw",%nobits
+ 446              		.align	2
+ 447              		.set	.LANCHOR1,. + 0
+ 450              	Buffer_Number_Sensor:
+ 451 0000 00000000 		.space	10
+ 451      00000000 
+ 451      0000
+ 452              		.section	.bss.Buffer_Nun_Error,"aw",%nobits
+ 453              		.align	2
+ 454              		.set	.LANCHOR0,. + 0
+ 457              	Buffer_Nun_Error:
+ 458 0000 00000000 		.space	10
+ 458      00000000 
+ 458      0000
+ARM GAS  /tmp/ccgEbvTz.s 			page 13
+
+
+ 459              		.section	.bss.Buffer_Pm2_5,"aw",%nobits
+ 460              		.align	2
+ 461              		.set	.LANCHOR7,. + 0
+ 464              	Buffer_Pm2_5:
+ 465 0000 00000000 		.space	15
+ 465      00000000 
+ 465      00000000 
+ 465      000000
+ 466              		.section	.bss.Buffer_Size_Frame,"aw",%nobits
+ 467              		.align	2
+ 468              		.set	.LANCHOR12,. + 0
+ 471              	Buffer_Size_Frame:
+ 472 0000 00000000 		.space	15
+ 472      00000000 
+ 472      00000000 
+ 472      000000
+ 473              		.section	.bss.Buffer_So2,"aw",%nobits
+ 474              		.align	2
+ 475              		.set	.LANCHOR5,. + 0
+ 478              	Buffer_So2:
+ 479 0000 00000000 		.space	20
+ 479      00000000 
+ 479      00000000 
+ 479      00000000 
+ 479      00000000 
+ 480              		.section	.bss.Buffer_Solar_Vol,"aw",%nobits
+ 481              		.align	2
+ 482              		.set	.LANCHOR10,. + 0
+ 485              	Buffer_Solar_Vol:
+ 486 0000 00000000 		.space	15
+ 486      00000000 
+ 486      00000000 
+ 486      000000
+ 487              		.section	.bss.Buffer_Sum_Pm,"aw",%nobits
+ 488              		.align	2
+ 489              		.set	.LANCHOR6,. + 0
+ 492              	Buffer_Sum_Pm:
+ 493 0000 00000000 		.space	15
+ 493      00000000 
+ 493      00000000 
+ 493      000000
+ 494              		.section	.bss.Buffer_Temp,"aw",%nobits
+ 495              		.align	2
+ 496              		.set	.LANCHOR2,. + 0
+ 499              	Buffer_Temp:
+ 500 0000 00000000 		.space	15
+ 500      00000000 
+ 500      00000000 
+ 500      000000
+ 501              		.section	.bss.Buffer_Vdc_Input,"aw",%nobits
+ 502              		.align	2
+ 503              		.set	.LANCHOR9,. + 0
+ 506              	Buffer_Vdc_Input:
+ 507 0000 00000000 		.space	15
+ 507      00000000 
+ 507      00000000 
+ 507      000000
+ARM GAS  /tmp/ccgEbvTz.s 			page 14
+
+
+ 508              		.text
+ 509              	.Letext0:
+ 510              		.file 2 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 511              		.file 3 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 512              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 513              		.file 5 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 514              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 515              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 516              		.file 8 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h"
+ 517              		.file 9 "Protocol_Lora/Transmit_Data_Lora.h"
+ 518              		.file 10 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x8
+ 519              		.file 11 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x8
+ 520              		.file 12 "<built-in>"
+ARM GAS  /tmp/ccgEbvTz.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Transmit_Data_Lora.c
+     /tmp/ccgEbvTz.s:18     .text.Uart_Lora_Init:0000000000000000 $t
+     /tmp/ccgEbvTz.s:24     .text.Uart_Lora_Init:0000000000000000 Uart_Lora_Init
+     /tmp/ccgEbvTz.s:56     .rodata.Lora_Uart_Master_Send_Data_To_Salve.str1.4:0000000000000000 $d
+     /tmp/ccgEbvTz.s:73     .text.Lora_Uart_Master_Send_Data_To_Salve:0000000000000000 $t
+     /tmp/ccgEbvTz.s:79     .text.Lora_Uart_Master_Send_Data_To_Salve:0000000000000000 Lora_Uart_Master_Send_Data_To_Salve
+     /tmp/ccgEbvTz.s:388    .text.Lora_Uart_Master_Send_Data_To_Salve:00000000000001d4 $d
+     /tmp/ccgEbvTz.s:411    .bss.Buffer_Bat_Vol:0000000000000000 $d
+     /tmp/ccgEbvTz.s:415    .bss.Buffer_Bat_Vol:0000000000000000 Buffer_Bat_Vol
+     /tmp/ccgEbvTz.s:418    .bss.Buffer_Check_Sum:0000000000000000 $d
+     /tmp/ccgEbvTz.s:422    .bss.Buffer_Check_Sum:0000000000000000 Buffer_Check_Sum
+     /tmp/ccgEbvTz.s:425    .bss.Buffer_Co2:0000000000000000 $d
+     /tmp/ccgEbvTz.s:429    .bss.Buffer_Co2:0000000000000000 Buffer_Co2
+     /tmp/ccgEbvTz.s:432    .bss.Buffer_Data:0000000000000000 $d
+     /tmp/ccgEbvTz.s:436    .bss.Buffer_Data:0000000000000000 Buffer_Data
+     /tmp/ccgEbvTz.s:439    .bss.Buffer_Hum:0000000000000000 $d
+     /tmp/ccgEbvTz.s:443    .bss.Buffer_Hum:0000000000000000 Buffer_Hum
+     /tmp/ccgEbvTz.s:446    .bss.Buffer_Number_Sensor:0000000000000000 $d
+     /tmp/ccgEbvTz.s:450    .bss.Buffer_Number_Sensor:0000000000000000 Buffer_Number_Sensor
+     /tmp/ccgEbvTz.s:453    .bss.Buffer_Nun_Error:0000000000000000 $d
+     /tmp/ccgEbvTz.s:457    .bss.Buffer_Nun_Error:0000000000000000 Buffer_Nun_Error
+     /tmp/ccgEbvTz.s:460    .bss.Buffer_Pm2_5:0000000000000000 $d
+     /tmp/ccgEbvTz.s:464    .bss.Buffer_Pm2_5:0000000000000000 Buffer_Pm2_5
+     /tmp/ccgEbvTz.s:467    .bss.Buffer_Size_Frame:0000000000000000 $d
+     /tmp/ccgEbvTz.s:471    .bss.Buffer_Size_Frame:0000000000000000 Buffer_Size_Frame
+     /tmp/ccgEbvTz.s:474    .bss.Buffer_So2:0000000000000000 $d
+     /tmp/ccgEbvTz.s:478    .bss.Buffer_So2:0000000000000000 Buffer_So2
+     /tmp/ccgEbvTz.s:481    .bss.Buffer_Solar_Vol:0000000000000000 $d
+     /tmp/ccgEbvTz.s:485    .bss.Buffer_Solar_Vol:0000000000000000 Buffer_Solar_Vol
+     /tmp/ccgEbvTz.s:488    .bss.Buffer_Sum_Pm:0000000000000000 $d
+     /tmp/ccgEbvTz.s:492    .bss.Buffer_Sum_Pm:0000000000000000 Buffer_Sum_Pm
+     /tmp/ccgEbvTz.s:495    .bss.Buffer_Temp:0000000000000000 $d
+     /tmp/ccgEbvTz.s:499    .bss.Buffer_Temp:0000000000000000 Buffer_Temp
+     /tmp/ccgEbvTz.s:502    .bss.Buffer_Vdc_Input:0000000000000000 $d
+     /tmp/ccgEbvTz.s:506    .bss.Buffer_Vdc_Input:0000000000000000 Buffer_Vdc_Input
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+sprintf
+memset
+strcat
+strlen
+HAL_UART_Transmit

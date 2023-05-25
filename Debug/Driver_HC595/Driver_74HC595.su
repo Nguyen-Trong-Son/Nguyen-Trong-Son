@@ -1,0 +1,2 @@
+../Driver_HC595/Driver_74HC595.c:24:6:shiftOut	24	static
+../Driver_HC595/Driver_74HC595.c:53:6:Send_Data_74HC595	16	static

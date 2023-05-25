@@ -1,0 +1,1225 @@
+ARM GAS  /tmp/cccA4g5K.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"Hpma115S0_Dust_Sensor.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.Hpma115S0_Dust_Sensor_Init,"ax",%progbits
+  18              		.align	1
+  19              		.global	Hpma115S0_Dust_Sensor_Init
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	Hpma115S0_Dust_Sensor_Init:
+  25              	.LVL0:
+  26              	.LFB65:
+  27              		.file 1 "HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c"
+   1:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** /**
+   2:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @file Hpma115S0_Dust_Sensor.c
+   3:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @author Nguyen Trong Son (LoH Technology Company Limited)
+   4:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @brief 
+   5:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @version 0.1
+   6:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @date 2022-08-26
+   7:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * 
+   8:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @copyright Copyright (c) 2022
+   9:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * 
+  10:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  */
+  11:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** #include "Hpma115S0_Dust_Sensor.h"
+  12:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** #include "stdlib.h"
+  13:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+  14:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+  15:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** uint8_t fame_data_start_particle_peasure[]     =          {0x68,0x01,0x01,0x96};
+  16:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** uint8_t fame_data_stop_particle_peasure[]      =          {0x68,0x01,0x02,0x95};
+  17:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** uint8_t fame_data_enable_auto_send[]           =          {0x68,0x01,0x40,0x57};
+  18:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** uint8_t fame_datat_stop_auto_send[]            =          {0x68,0x01,0x20,0x77};
+  19:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** uint8_t fame_data_read_particle_measure[]      =          {0x68,0x01,0x04,0x93};
+  20:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** uint8_t fame_data_set_particle_adjustment_coefficient[] = {0x68,0x02,0x08,64,0x2A};  //default
+  21:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** uint8_t fame_data_read_customer_adjustment_coffcicient[] = {0x68,0x01,0x10,0x87};    //default
+  22:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** uint8_t ackn[2];
+  23:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** uint8_t particle_measure_data_hpma115s0_sensor[32];
+  24:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+  25:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** /**
+  26:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @brief 
+  27:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * 
+  28:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param sensor_x 
+  29:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param uart 
+  30:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param time_out 
+  31:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  */
+ARM GAS  /tmp/cccA4g5K.s 			page 2
+
+
+  32:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** void Hpma115S0_Dust_Sensor_Init(Hpma115S0_Dust_Sensor_Name *sensor_x, UART_HandleTypeDef *uart)
+  33:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** {
+  28              		.loc 1 33 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  34:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     sensor_x->uart_dust_sensor = uart;
+  33              		.loc 1 34 5 view .LVU1
+  34              		.loc 1 34 32 is_stmt 0 view .LVU2
+  35 0000 0160     		str	r1, [r0]
+  35:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     sensor_x->offset = 0;
+  36              		.loc 1 35 5 is_stmt 1 view .LVU3
+  37              		.loc 1 35 22 is_stmt 0 view .LVU4
+  38 0002 0023     		movs	r3, #0
+  39 0004 8380     		strh	r3, [r0, #4]	@ movhi
+  36:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** }
+  40              		.loc 1 36 1 view .LVU5
+  41 0006 7047     		bx	lr
+  42              		.cfi_endproc
+  43              	.LFE65:
+  45              		.section	.text.Hpma115S0_Start_Particle_Measure,"ax",%progbits
+  46              		.align	1
+  47              		.global	Hpma115S0_Start_Particle_Measure
+  48              		.syntax unified
+  49              		.thumb
+  50              		.thumb_func
+  52              	Hpma115S0_Start_Particle_Measure:
+  53              	.LVL1:
+  54              	.LFB66:
+  37:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+  38:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** /**
+  39:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @brief Start_Particle_Measure
+  40:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * 
+  41:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param huart_Dust_Sensor 
+  42:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param huart_Display 
+  43:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param time_out 
+  44:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @return uint8_t 
+  45:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  */
+  46:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** uint8_t Hpma115S0_Start_Particle_Measure(Hpma115S0_Dust_Sensor_Name *sensor_x)
+  47:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** {
+  55              		.loc 1 47 1 is_stmt 1 view -0
+  56              		.cfi_startproc
+  57              		@ args = 0, pretend = 0, frame = 0
+  58              		@ frame_needed = 0, uses_anonymous_args = 0
+  59              		.loc 1 47 1 is_stmt 0 view .LVU7
+  60 0000 10B5     		push	{r4, lr}
+  61              	.LCFI0:
+  62              		.cfi_def_cfa_offset 8
+  63              		.cfi_offset 4, -8
+  64              		.cfi_offset 14, -4
+  65 0002 0446     		mov	r4, r0
+  48:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     HAL_UART_Transmit(sensor_x->uart_dust_sensor, (uint8_t*)fame_data_start_particle_peasure, sizeo
+  66              		.loc 1 48 5 is_stmt 1 view .LVU8
+  67 0004 4FF47A73 		mov	r3, #1000
+  68 0008 0422     		movs	r2, #4
+  69 000a 0849     		ldr	r1, .L6
+ARM GAS  /tmp/cccA4g5K.s 			page 3
+
+
+  70 000c 0068     		ldr	r0, [r0]
+  71              	.LVL2:
+  72              		.loc 1 48 5 is_stmt 0 view .LVU9
+  73 000e FFF7FEFF 		bl	HAL_UART_Transmit
+  74              	.LVL3:
+  49:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     if(HAL_UART_Receive(sensor_x->uart_dust_sensor, (uint8_t*)ackn, sizeof(ackn)/sizeof(uint8_t), 5
+  75              		.loc 1 49 5 is_stmt 1 view .LVU10
+  76              		.loc 1 49 8 is_stmt 0 view .LVU11
+  77 0012 41F28833 		movw	r3, #5000
+  78 0016 0222     		movs	r2, #2
+  79 0018 0549     		ldr	r1, .L6+4
+  80 001a 2068     		ldr	r0, [r4]
+  81 001c FFF7FEFF 		bl	HAL_UART_Receive
+  82              	.LVL4:
+  83              		.loc 1 49 7 view .LVU12
+  84 0020 08B1     		cbz	r0, .L4
+  50:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+  51:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         return 1;
+  52:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+  53:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     return 0;
+  85              		.loc 1 53 12 view .LVU13
+  86 0022 0020     		movs	r0, #0
+  87              	.L3:
+  54:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** }
+  88              		.loc 1 54 1 view .LVU14
+  89 0024 10BD     		pop	{r4, pc}
+  90              	.LVL5:
+  91              	.L4:
+  51:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+  92              		.loc 1 51 16 view .LVU15
+  93 0026 0120     		movs	r0, #1
+  94 0028 FCE7     		b	.L3
+  95              	.L7:
+  96 002a 00BF     		.align	2
+  97              	.L6:
+  98 002c 00000000 		.word	.LANCHOR0
+  99 0030 00000000 		.word	.LANCHOR1
+ 100              		.cfi_endproc
+ 101              	.LFE66:
+ 103              		.section	.text.Hpma115S0_Stop_Particle_Measurement,"ax",%progbits
+ 104              		.align	1
+ 105              		.global	Hpma115S0_Stop_Particle_Measurement
+ 106              		.syntax unified
+ 107              		.thumb
+ 108              		.thumb_func
+ 110              	Hpma115S0_Stop_Particle_Measurement:
+ 111              	.LVL6:
+ 112              	.LFB67:
+  55:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+  56:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** /**
+  57:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @brief Stop_Particle_Measurement
+  58:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * 
+  59:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param huart2_Dust_Sensor 
+  60:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param huart1_Display 
+  61:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param time_out 
+  62:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @return uint8_t 
+  63:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  */
+ARM GAS  /tmp/cccA4g5K.s 			page 4
+
+
+  64:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** uint8_t Hpma115S0_Stop_Particle_Measurement(Hpma115S0_Dust_Sensor_Name *sensor_x)
+  65:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** {
+ 113              		.loc 1 65 1 is_stmt 1 view -0
+ 114              		.cfi_startproc
+ 115              		@ args = 0, pretend = 0, frame = 0
+ 116              		@ frame_needed = 0, uses_anonymous_args = 0
+ 117              		.loc 1 65 1 is_stmt 0 view .LVU17
+ 118 0000 10B5     		push	{r4, lr}
+ 119              	.LCFI1:
+ 120              		.cfi_def_cfa_offset 8
+ 121              		.cfi_offset 4, -8
+ 122              		.cfi_offset 14, -4
+ 123 0002 0446     		mov	r4, r0
+  66:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     HAL_UART_Transmit(sensor_x->uart_dust_sensor, (uint8_t*)fame_data_stop_particle_peasure, sizeof
+ 124              		.loc 1 66 5 is_stmt 1 view .LVU18
+ 125 0004 4FF47A73 		mov	r3, #1000
+ 126 0008 0422     		movs	r2, #4
+ 127 000a 0849     		ldr	r1, .L12
+ 128 000c 0068     		ldr	r0, [r0]
+ 129              	.LVL7:
+ 130              		.loc 1 66 5 is_stmt 0 view .LVU19
+ 131 000e FFF7FEFF 		bl	HAL_UART_Transmit
+ 132              	.LVL8:
+  67:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     if(HAL_UART_Receive(sensor_x->uart_dust_sensor, (uint8_t*)ackn, sizeof(ackn)/sizeof(uint8_t), 5
+ 133              		.loc 1 67 5 is_stmt 1 view .LVU20
+ 134              		.loc 1 67 8 is_stmt 0 view .LVU21
+ 135 0012 41F28833 		movw	r3, #5000
+ 136 0016 0222     		movs	r2, #2
+ 137 0018 0549     		ldr	r1, .L12+4
+ 138 001a 2068     		ldr	r0, [r4]
+ 139 001c FFF7FEFF 		bl	HAL_UART_Receive
+ 140              	.LVL9:
+ 141              		.loc 1 67 7 view .LVU22
+ 142 0020 08B1     		cbz	r0, .L10
+  68:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+  69:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         return 1;
+  70:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+  71:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     return 0;
+ 143              		.loc 1 71 12 view .LVU23
+ 144 0022 0020     		movs	r0, #0
+ 145              	.L9:
+  72:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** }
+ 146              		.loc 1 72 1 view .LVU24
+ 147 0024 10BD     		pop	{r4, pc}
+ 148              	.LVL10:
+ 149              	.L10:
+  69:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+ 150              		.loc 1 69 16 view .LVU25
+ 151 0026 0120     		movs	r0, #1
+ 152 0028 FCE7     		b	.L9
+ 153              	.L13:
+ 154 002a 00BF     		.align	2
+ 155              	.L12:
+ 156 002c 00000000 		.word	.LANCHOR2
+ 157 0030 00000000 		.word	.LANCHOR1
+ 158              		.cfi_endproc
+ 159              	.LFE67:
+ARM GAS  /tmp/cccA4g5K.s 			page 5
+
+
+ 161              		.section	.text.Hpma115S0_Enable_Auto_Send,"ax",%progbits
+ 162              		.align	1
+ 163              		.global	Hpma115S0_Enable_Auto_Send
+ 164              		.syntax unified
+ 165              		.thumb
+ 166              		.thumb_func
+ 168              	Hpma115S0_Enable_Auto_Send:
+ 169              	.LVL11:
+ 170              	.LFB68:
+  73:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** /**
+  74:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @brief Enable_Auto_Send
+  75:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * 
+  76:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param huart_Dust_Sensor 
+  77:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param huart_Display 
+  78:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param time_out 
+  79:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @return uint8_t 
+  80:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  */
+  81:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** uint8_t Hpma115S0_Enable_Auto_Send(Hpma115S0_Dust_Sensor_Name *sensor_x)
+  82:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** {
+ 171              		.loc 1 82 1 is_stmt 1 view -0
+ 172              		.cfi_startproc
+ 173              		@ args = 0, pretend = 0, frame = 0
+ 174              		@ frame_needed = 0, uses_anonymous_args = 0
+ 175              		.loc 1 82 1 is_stmt 0 view .LVU27
+ 176 0000 10B5     		push	{r4, lr}
+ 177              	.LCFI2:
+ 178              		.cfi_def_cfa_offset 8
+ 179              		.cfi_offset 4, -8
+ 180              		.cfi_offset 14, -4
+ 181 0002 0446     		mov	r4, r0
+  83:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     HAL_UART_Transmit(sensor_x->uart_dust_sensor, (uint8_t*)fame_data_enable_auto_send, sizeof(fame
+ 182              		.loc 1 83 5 is_stmt 1 view .LVU28
+ 183 0004 4FF47A73 		mov	r3, #1000
+ 184 0008 0422     		movs	r2, #4
+ 185 000a 0849     		ldr	r1, .L18
+ 186 000c 0068     		ldr	r0, [r0]
+ 187              	.LVL12:
+ 188              		.loc 1 83 5 is_stmt 0 view .LVU29
+ 189 000e FFF7FEFF 		bl	HAL_UART_Transmit
+ 190              	.LVL13:
+  84:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     if(HAL_UART_Receive(sensor_x->uart_dust_sensor, (uint8_t*)ackn, sizeof(ackn)/sizeof(uint8_t),  
+ 191              		.loc 1 84 5 is_stmt 1 view .LVU30
+ 192              		.loc 1 84 8 is_stmt 0 view .LVU31
+ 193 0012 41F28833 		movw	r3, #5000
+ 194 0016 0222     		movs	r2, #2
+ 195 0018 0549     		ldr	r1, .L18+4
+ 196 001a 2068     		ldr	r0, [r4]
+ 197 001c FFF7FEFF 		bl	HAL_UART_Receive
+ 198              	.LVL14:
+ 199              		.loc 1 84 7 view .LVU32
+ 200 0020 08B1     		cbz	r0, .L16
+  85:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+  86:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         return 1;
+  87:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+  88:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     return 0;
+ 201              		.loc 1 88 12 view .LVU33
+ 202 0022 0020     		movs	r0, #0
+ARM GAS  /tmp/cccA4g5K.s 			page 6
+
+
+ 203              	.L15:
+  89:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** }
+ 204              		.loc 1 89 1 view .LVU34
+ 205 0024 10BD     		pop	{r4, pc}
+ 206              	.LVL15:
+ 207              	.L16:
+  86:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+ 208              		.loc 1 86 16 view .LVU35
+ 209 0026 0120     		movs	r0, #1
+ 210 0028 FCE7     		b	.L15
+ 211              	.L19:
+ 212 002a 00BF     		.align	2
+ 213              	.L18:
+ 214 002c 00000000 		.word	.LANCHOR3
+ 215 0030 00000000 		.word	.LANCHOR1
+ 216              		.cfi_endproc
+ 217              	.LFE68:
+ 219              		.section	.text.Hpma115S0_Stop_Auto_Send,"ax",%progbits
+ 220              		.align	1
+ 221              		.global	Hpma115S0_Stop_Auto_Send
+ 222              		.syntax unified
+ 223              		.thumb
+ 224              		.thumb_func
+ 226              	Hpma115S0_Stop_Auto_Send:
+ 227              	.LVL16:
+ 228              	.LFB69:
+  90:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+  91:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** /**
+  92:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @brief Stop_Auto_Send
+  93:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * 
+  94:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param huart2_Dust_Sensor 
+  95:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param huart1_Display 
+  96:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param time_out 
+  97:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @return uint8_t 
+  98:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  */
+  99:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** uint8_t Hpma115S0_Stop_Auto_Send(Hpma115S0_Dust_Sensor_Name *sensor_x)
+ 100:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** {
+ 229              		.loc 1 100 1 is_stmt 1 view -0
+ 230              		.cfi_startproc
+ 231              		@ args = 0, pretend = 0, frame = 0
+ 232              		@ frame_needed = 0, uses_anonymous_args = 0
+ 233              		.loc 1 100 1 is_stmt 0 view .LVU37
+ 234 0000 10B5     		push	{r4, lr}
+ 235              	.LCFI3:
+ 236              		.cfi_def_cfa_offset 8
+ 237              		.cfi_offset 4, -8
+ 238              		.cfi_offset 14, -4
+ 239 0002 0446     		mov	r4, r0
+ 101:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     HAL_UART_Transmit(sensor_x->uart_dust_sensor, (uint8_t*)fame_datat_stop_auto_send, sizeof(fame_
+ 240              		.loc 1 101 5 is_stmt 1 view .LVU38
+ 241 0004 4FF47A73 		mov	r3, #1000
+ 242 0008 0422     		movs	r2, #4
+ 243 000a 0849     		ldr	r1, .L24
+ 244 000c 0068     		ldr	r0, [r0]
+ 245              	.LVL17:
+ 246              		.loc 1 101 5 is_stmt 0 view .LVU39
+ 247 000e FFF7FEFF 		bl	HAL_UART_Transmit
+ARM GAS  /tmp/cccA4g5K.s 			page 7
+
+
+ 248              	.LVL18:
+ 102:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     if(HAL_UART_Receive(sensor_x->uart_dust_sensor, (uint8_t*)ackn, sizeof(ackn)/sizeof(uint8_t), 5
+ 249              		.loc 1 102 5 is_stmt 1 view .LVU40
+ 250              		.loc 1 102 8 is_stmt 0 view .LVU41
+ 251 0012 41F28833 		movw	r3, #5000
+ 252 0016 0222     		movs	r2, #2
+ 253 0018 0549     		ldr	r1, .L24+4
+ 254 001a 2068     		ldr	r0, [r4]
+ 255 001c FFF7FEFF 		bl	HAL_UART_Receive
+ 256              	.LVL19:
+ 257              		.loc 1 102 7 view .LVU42
+ 258 0020 08B1     		cbz	r0, .L22
+ 103:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 104:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         return 1;
+ 105:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+ 106:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     return 0;
+ 259              		.loc 1 106 12 view .LVU43
+ 260 0022 0020     		movs	r0, #0
+ 261              	.L21:
+ 107:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** }
+ 262              		.loc 1 107 1 view .LVU44
+ 263 0024 10BD     		pop	{r4, pc}
+ 264              	.LVL20:
+ 265              	.L22:
+ 104:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+ 266              		.loc 1 104 16 view .LVU45
+ 267 0026 0120     		movs	r0, #1
+ 268 0028 FCE7     		b	.L21
+ 269              	.L25:
+ 270 002a 00BF     		.align	2
+ 271              	.L24:
+ 272 002c 00000000 		.word	.LANCHOR4
+ 273 0030 00000000 		.word	.LANCHOR1
+ 274              		.cfi_endproc
+ 275              	.LFE69:
+ 277              		.section	.text.Hpma115S0_Set_Adjustment_Cofficient,"ax",%progbits
+ 278              		.align	1
+ 279              		.global	Hpma115S0_Set_Adjustment_Cofficient
+ 280              		.syntax unified
+ 281              		.thumb
+ 282              		.thumb_func
+ 284              	Hpma115S0_Set_Adjustment_Cofficient:
+ 285              	.LVL21:
+ 286              	.LFB70:
+ 108:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+ 109:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** /**
+ 110:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @brief Hpma115S0_Set_Adjustment_Cofficient
+ 111:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * 
+ 112:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param sensor_x 
+ 113:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param coef 
+ 114:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  */
+ 115:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** void Hpma115S0_Set_Adjustment_Cofficient(Hpma115S0_Dust_Sensor_Name *sensor_x, uint8_t coffcicient)
+ 116:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** {
+ 287              		.loc 1 116 1 is_stmt 1 view -0
+ 288              		.cfi_startproc
+ 289              		@ args = 0, pretend = 0, frame = 0
+ 290              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /tmp/cccA4g5K.s 			page 8
+
+
+ 291              		@ link register save eliminated.
+ 117:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     if(coffcicient < 30 ) 
+ 292              		.loc 1 117 5 view .LVU47
+ 293              		.loc 1 117 7 is_stmt 0 view .LVU48
+ 294 0000 1D29     		cmp	r1, #29
+ 295 0002 03D9     		bls	.L28
+ 118:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 119:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         coffcicient = 30;
+ 120:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+ 121:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     if(coffcicient > 200)
+ 296              		.loc 1 121 5 is_stmt 1 view .LVU49
+ 297              		.loc 1 121 7 is_stmt 0 view .LVU50
+ 298 0004 C829     		cmp	r1, #200
+ 299 0006 02D9     		bls	.L27
+ 122:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 123:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         coffcicient = 200;
+ 300              		.loc 1 123 21 view .LVU51
+ 301 0008 C821     		movs	r1, #200
+ 302              	.LVL22:
+ 303              		.loc 1 123 21 view .LVU52
+ 304 000a 00E0     		b	.L27
+ 305              	.LVL23:
+ 306              	.L28:
+ 119:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+ 307              		.loc 1 119 21 view .LVU53
+ 308 000c 1E21     		movs	r1, #30
+ 309              	.LVL24:
+ 310              	.L27:
+ 124:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+ 125:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     fame_data_set_particle_adjustment_coefficient[3] = coffcicient;
+ 311              		.loc 1 125 5 is_stmt 1 view .LVU54
+ 312              		.loc 1 125 54 is_stmt 0 view .LVU55
+ 313 000e 094A     		ldr	r2, .L30
+ 314 0010 D170     		strb	r1, [r2, #3]
+ 126:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     fame_data_set_particle_adjustment_coefficient[4] = ((0xFFFF-(fame_data_set_particle_adjustment_
+ 315              		.loc 1 126 5 is_stmt 1 view .LVU56
+ 316              		.loc 1 126 111 is_stmt 0 view .LVU57
+ 317 0012 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 127:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****                                                                 fame_data_set_particle_adjustment_c
+ 318              		.loc 1 127 110 view .LVU58
+ 319 0014 5078     		ldrb	r0, [r2, #1]	@ zero_extendqisi2
+ 320              	.LVL25:
+ 126:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     fame_data_set_particle_adjustment_coefficient[4] = ((0xFFFF-(fame_data_set_particle_adjustment_
+ 321              		.loc 1 126 115 view .LVU59
+ 322 0016 0344     		add	r3, r3, r0
+ 128:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****                                                                 fame_data_set_particle_adjustment_c
+ 323              		.loc 1 128 110 view .LVU60
+ 324 0018 9078     		ldrb	r0, [r2, #2]	@ zero_extendqisi2
+ 127:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****                                                                 fame_data_set_particle_adjustment_c
+ 325              		.loc 1 127 114 view .LVU61
+ 326 001a 0344     		add	r3, r3, r0
+ 327              		.loc 1 128 114 view .LVU62
+ 328 001c 0B44     		add	r3, r3, r1
+ 126:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     fame_data_set_particle_adjustment_coefficient[4] = ((0xFFFF-(fame_data_set_particle_adjustment_
+ 329              		.loc 1 126 64 view .LVU63
+ 330 001e C3F57F43 		rsb	r3, r3, #65280
+ 331 0022 FF33     		adds	r3, r3, #255
+ARM GAS  /tmp/cccA4g5K.s 			page 9
+
+
+ 129:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****                                                                 fame_data_set_particle_adjustment_c
+ 332              		.loc 1 129 116 view .LVU64
+ 333 0024 5942     		rsbs	r1, r3, #0
+ 334              	.LVL26:
+ 335              		.loc 1 129 116 view .LVU65
+ 336 0026 DBB2     		uxtb	r3, r3
+ 337 0028 C9B2     		uxtb	r1, r1
+ 338 002a 58BF     		it	pl
+ 339 002c 4B42     		rsbpl	r3, r1, #0
+ 126:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****                                                                 fame_data_set_particle_adjustment_c
+ 340              		.loc 1 126 54 view .LVU66
+ 341 002e 1371     		strb	r3, [r2, #4]
+ 130:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** }
+ 342              		.loc 1 130 1 view .LVU67
+ 343 0030 7047     		bx	lr
+ 344              	.L31:
+ 345 0032 00BF     		.align	2
+ 346              	.L30:
+ 347 0034 00000000 		.word	.LANCHOR5
+ 348              		.cfi_endproc
+ 349              	.LFE70:
+ 351              		.section	.text.Hpma115S0_Read_Particle_Measuring,"ax",%progbits
+ 352              		.align	1
+ 353              		.global	Hpma115S0_Read_Particle_Measuring
+ 354              		.syntax unified
+ 355              		.thumb
+ 356              		.thumb_func
+ 358              	Hpma115S0_Read_Particle_Measuring:
+ 359              	.LVL27:
+ 360              	.LFB71:
+ 131:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+ 132:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+ 133:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** /**
+ 134:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @brief Read_Particle_Measuring
+ 135:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * 
+ 136:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param huart_Dust_Sensor 
+ 137:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param huart_Display 
+ 138:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param rx_data_lenght 
+ 139:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param time_out 
+ 140:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @return uint8_t 
+ 141:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  */
+ 142:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** uint16_t Hpma115S0_Read_Particle_Measuring(Hpma115S0_Dust_Sensor_Name *sensor_x)
+ 143:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** {
+ 361              		.loc 1 143 1 is_stmt 1 view -0
+ 362              		.cfi_startproc
+ 363              		@ args = 0, pretend = 0, frame = 0
+ 364              		@ frame_needed = 0, uses_anonymous_args = 0
+ 365              		.loc 1 143 1 is_stmt 0 view .LVU69
+ 366 0000 10B5     		push	{r4, lr}
+ 367              	.LCFI4:
+ 368              		.cfi_def_cfa_offset 8
+ 369              		.cfi_offset 4, -8
+ 370              		.cfi_offset 14, -4
+ 371 0002 0446     		mov	r4, r0
+ 144:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     uint16_t pm2_5 = 0;
+ 372              		.loc 1 144 5 is_stmt 1 view .LVU70
+ 373              	.LVL28:
+ARM GAS  /tmp/cccA4g5K.s 			page 10
+
+
+ 145:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     HAL_UART_Transmit(sensor_x->uart_dust_sensor, (uint8_t*)fame_data_read_particle_measure, sizeof
+ 374              		.loc 1 145 5 view .LVU71
+ 375 0004 4FF47A73 		mov	r3, #1000
+ 376 0008 0422     		movs	r2, #4
+ 377 000a 0A49     		ldr	r1, .L36
+ 378 000c 0068     		ldr	r0, [r0]
+ 379              	.LVL29:
+ 380              		.loc 1 145 5 is_stmt 0 view .LVU72
+ 381 000e FFF7FEFF 		bl	HAL_UART_Transmit
+ 382              	.LVL30:
+ 146:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     if(HAL_UART_Receive(sensor_x->uart_dust_sensor, (uint8_t*)particle_measure_data_hpma115s0_senso
+ 383              		.loc 1 146 5 is_stmt 1 view .LVU73
+ 384              		.loc 1 146 8 is_stmt 0 view .LVU74
+ 385 0012 41F28833 		movw	r3, #5000
+ 386 0016 2022     		movs	r2, #32
+ 387 0018 0749     		ldr	r1, .L36+4
+ 388 001a 2068     		ldr	r0, [r4]
+ 389 001c FFF7FEFF 		bl	HAL_UART_Receive
+ 390              	.LVL31:
+ 391              		.loc 1 146 7 view .LVU75
+ 392 0020 28B9     		cbnz	r0, .L34
+ 147:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 148:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         pm2_5=  particle_measure_data_hpma115s0_sensor[7] << 8;
+ 393              		.loc 1 148 9 is_stmt 1 view .LVU76
+ 394              		.loc 1 148 55 is_stmt 0 view .LVU77
+ 395 0022 054B     		ldr	r3, .L36+4
+ 396 0024 DA79     		ldrb	r2, [r3, #7]	@ zero_extendqisi2
+ 397              	.LVL32:
+ 149:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         pm2_5 = pm2_5 | particle_measure_data_hpma115s0_sensor[8];
+ 398              		.loc 1 149 9 is_stmt 1 view .LVU78
+ 399              		.loc 1 149 63 is_stmt 0 view .LVU79
+ 400 0026 187A     		ldrb	r0, [r3, #8]	@ zero_extendqisi2
+ 401              		.loc 1 149 15 view .LVU80
+ 402 0028 40EA0220 		orr	r0, r0, r2, lsl #8
+ 403              	.LVL33:
+ 404              	.L33:
+ 150:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+ 151:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     return pm2_5;
+ 405              		.loc 1 151 5 is_stmt 1 view .LVU81
+ 152:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** }
+ 406              		.loc 1 152 1 is_stmt 0 view .LVU82
+ 407 002c 10BD     		pop	{r4, pc}
+ 408              	.LVL34:
+ 409              	.L34:
+ 144:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     HAL_UART_Transmit(sensor_x->uart_dust_sensor, (uint8_t*)fame_data_read_particle_measure, sizeof
+ 410              		.loc 1 144 14 view .LVU83
+ 411 002e 0020     		movs	r0, #0
+ 412 0030 FCE7     		b	.L33
+ 413              	.L37:
+ 414 0032 00BF     		.align	2
+ 415              	.L36:
+ 416 0034 00000000 		.word	.LANCHOR6
+ 417 0038 00000000 		.word	.LANCHOR7
+ 418              		.cfi_endproc
+ 419              	.LFE71:
+ 421              		.section	.text.Hpma115S0_Adjustment_Cofficient,"ax",%progbits
+ 422              		.align	1
+ARM GAS  /tmp/cccA4g5K.s 			page 11
+
+
+ 423              		.global	Hpma115S0_Adjustment_Cofficient
+ 424              		.syntax unified
+ 425              		.thumb
+ 426              		.thumb_func
+ 428              	Hpma115S0_Adjustment_Cofficient:
+ 429              	.LVL35:
+ 430              	.LFB72:
+ 153:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+ 154:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** /**
+ 155:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @brief Hpma115S0_Adjustment_Cofficient
+ 156:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * 
+ 157:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param sensor_x 
+ 158:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @return uint16_t 
+ 159:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  */
+ 160:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** uint16_t Hpma115S0_Adjustment_Cofficient(Hpma115S0_Dust_Sensor_Name *sensor_x)
+ 161:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** {
+ 431              		.loc 1 161 1 is_stmt 1 view -0
+ 432              		.cfi_startproc
+ 433              		@ args = 0, pretend = 0, frame = 0
+ 434              		@ frame_needed = 0, uses_anonymous_args = 0
+ 435              		.loc 1 161 1 is_stmt 0 view .LVU85
+ 436 0000 08B5     		push	{r3, lr}
+ 437              	.LCFI5:
+ 438              		.cfi_def_cfa_offset 8
+ 439              		.cfi_offset 3, -8
+ 440              		.cfi_offset 14, -4
+ 162:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****    uint16_t pm2_5 =0 ;
+ 441              		.loc 1 162 4 is_stmt 1 view .LVU86
+ 442              	.LVL36:
+ 163:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     if(HAL_UART_Receive(sensor_x->uart_dust_sensor, (uint8_t*)(particle_measure_data_hpma115s0_sens
+ 443              		.loc 1 163 5 view .LVU87
+ 444              		.loc 1 163 8 is_stmt 0 view .LVU88
+ 445 0002 41F28833 		movw	r3, #5000
+ 446 0006 2022     		movs	r2, #32
+ 447 0008 0A49     		ldr	r1, .L43
+ 448 000a 0068     		ldr	r0, [r0]
+ 449              	.LVL37:
+ 450              		.loc 1 163 8 view .LVU89
+ 451 000c FFF7FEFF 		bl	HAL_UART_Receive
+ 452              	.LVL38:
+ 453              		.loc 1 163 7 view .LVU90
+ 454 0010 68B9     		cbnz	r0, .L39
+ 164:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 165:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         if(particle_measure_data_hpma115s0_sensor[4] < 30)
+ 455              		.loc 1 165 9 is_stmt 1 view .LVU91
+ 456              		.loc 1 165 50 is_stmt 0 view .LVU92
+ 457 0012 084B     		ldr	r3, .L43
+ 458 0014 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 459              		.loc 1 165 11 view .LVU93
+ 460 0016 1D2B     		cmp	r3, #29
+ 461 0018 02D8     		bhi	.L40
+ 166:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         {
+ 167:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         	particle_measure_data_hpma115s0_sensor[4] = 30;
+ 462              		.loc 1 167 10 is_stmt 1 view .LVU94
+ 463              		.loc 1 167 52 is_stmt 0 view .LVU95
+ 464 001a 064B     		ldr	r3, .L43
+ 465 001c 1E22     		movs	r2, #30
+ARM GAS  /tmp/cccA4g5K.s 			page 12
+
+
+ 466 001e 1A71     		strb	r2, [r3, #4]
+ 467              	.L40:
+ 168:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         }
+ 169:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         if(particle_measure_data_hpma115s0_sensor[4] > 200)
+ 468              		.loc 1 169 9 is_stmt 1 view .LVU96
+ 469              		.loc 1 169 50 is_stmt 0 view .LVU97
+ 470 0020 044B     		ldr	r3, .L43
+ 471 0022 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 472              		.loc 1 169 11 view .LVU98
+ 473 0024 C82B     		cmp	r3, #200
+ 474 0026 02D9     		bls	.L39
+ 170:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         {
+ 171:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         	particle_measure_data_hpma115s0_sensor[4] = 200;
+ 475              		.loc 1 171 10 is_stmt 1 view .LVU99
+ 476              		.loc 1 171 52 is_stmt 0 view .LVU100
+ 477 0028 024B     		ldr	r3, .L43
+ 478 002a C822     		movs	r2, #200
+ 479 002c 1A71     		strb	r2, [r3, #4]
+ 172:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         }
+ 173:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         pm2_5 = particle_measure_data_hpma115s0_sensor[3] << 8;
+ 480              		.loc 1 173 9 is_stmt 1 view .LVU101
+ 481              	.LVL39:
+ 174:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         pm2_5 = pm2_5 | particle_measure_data_hpma115s0_sensor[4];
+ 482              		.loc 1 174 9 view .LVU102
+ 483              	.L39:
+ 175:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+ 176:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     return 0;
+ 484              		.loc 1 176 5 view .LVU103
+ 177:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** }
+ 485              		.loc 1 177 1 is_stmt 0 view .LVU104
+ 486 002e 0020     		movs	r0, #0
+ 487 0030 08BD     		pop	{r3, pc}
+ 488              	.L44:
+ 489 0032 00BF     		.align	2
+ 490              	.L43:
+ 491 0034 00000000 		.word	.LANCHOR7
+ 492              		.cfi_endproc
+ 493              	.LFE72:
+ 495              		.global	__aeabi_ui2f
+ 496              		.global	__aeabi_i2f
+ 497              		.global	__aeabi_fdiv
+ 498              		.global	__aeabi_fsub
+ 499              		.global	__aeabi_f2iz
+ 500              		.global	__aeabi_fcmplt
+ 501              		.global	__aeabi_fcmpge
+ 502              		.global	__aeabi_fcmple
+ 503              		.section	.text.Hpma115S0_Caclulator_Average,"ax",%progbits
+ 504              		.align	1
+ 505              		.global	Hpma115S0_Caclulator_Average
+ 506              		.syntax unified
+ 507              		.thumb
+ 508              		.thumb_func
+ 510              	Hpma115S0_Caclulator_Average:
+ 511              	.LVL40:
+ 512              	.LFB73:
+ 178:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+ 179:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** /**
+ARM GAS  /tmp/cccA4g5K.s 			page 13
+
+
+ 180:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @brief Hpma115S0_Caclulator_Average
+ 181:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * 
+ 182:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param sensor_x 
+ 183:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @param sample 
+ 184:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  * @return uint16_t 
+ 185:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****  */
+ 186:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** float Hpma115S0_Caclulator_Average(Hpma115S0_Dust_Sensor_Name *sensor_x, uint16_t sample)
+ 187:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** {
+ 513              		.loc 1 187 1 is_stmt 1 view -0
+ 514              		.cfi_startproc
+ 515              		@ args = 0, pretend = 0, frame = 0
+ 516              		@ frame_needed = 1, uses_anonymous_args = 0
+ 517              		.loc 1 187 1 is_stmt 0 view .LVU106
+ 518 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 519              	.LCFI6:
+ 520              		.cfi_def_cfa_offset 40
+ 521              		.cfi_offset 3, -40
+ 522              		.cfi_offset 4, -36
+ 523              		.cfi_offset 5, -32
+ 524              		.cfi_offset 6, -28
+ 525              		.cfi_offset 7, -24
+ 526              		.cfi_offset 8, -20
+ 527              		.cfi_offset 9, -16
+ 528              		.cfi_offset 10, -12
+ 529              		.cfi_offset 11, -8
+ 530              		.cfi_offset 14, -4
+ 531 0004 00AF     		add	r7, sp, #0
+ 532              	.LCFI7:
+ 533              		.cfi_def_cfa_register 7
+ 534 0006 8146     		mov	r9, r0
+ 535 0008 0E46     		mov	r6, r1
+ 188:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     float data = 0;
+ 536              		.loc 1 188 5 is_stmt 1 view .LVU107
+ 537              	.LVL41:
+ 189:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     uint16_t arr_buff[sample];
+ 538              		.loc 1 189 5 view .LVU108
+ 539              		.loc 1 189 14 is_stmt 0 view .LVU109
+ 540 000a 4B00     		lsls	r3, r1, #1
+ 541 000c 0733     		adds	r3, r3, #7
+ 542 000e DB08     		lsrs	r3, r3, #3
+ 543 0010 6A46     		mov	r2, sp
+ 544 0012 A2EBC302 		sub	r2, r2, r3, lsl #3
+ 545 0016 9546     		mov	sp, r2
+ 546 0018 E846     		mov	r8, sp
+ 547              	.LVL42:
+ 190:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     uint16_t copy_buff[sample];
+ 548              		.loc 1 190 5 is_stmt 1 view .LVU110
+ 549              		.loc 1 190 14 is_stmt 0 view .LVU111
+ 550 001a A2EBC303 		sub	r3, r2, r3, lsl #3
+ 551 001e 9D46     		mov	sp, r3
+ 552 0020 6D46     		mov	r5, sp
+ 553              	.LVL43:
+ 191:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     uint32_t sum = 0;
+ 554              		.loc 1 191 5 is_stmt 1 view .LVU112
+ 192:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     uint8_t index = 0;
+ 555              		.loc 1 192 5 view .LVU113
+ 193:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+ARM GAS  /tmp/cccA4g5K.s 			page 14
+
+
+ 194:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     for(uint8_t i = 0; i < sample; i++)
+ 556              		.loc 1 194 5 view .LVU114
+ 557              	.LBB2:
+ 558              		.loc 1 194 9 view .LVU115
+ 559              		.loc 1 194 17 is_stmt 0 view .LVU116
+ 560 0022 0024     		movs	r4, #0
+ 561              		.loc 1 194 5 view .LVU117
+ 562 0024 09E0     		b	.L46
+ 563              	.LVL44:
+ 564              	.L47:
+ 195:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 196:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         arr_buff[i] = Hpma115S0_Read_Particle_Measuring(sensor_x);
+ 565              		.loc 1 196 9 is_stmt 1 discriminator 3 view .LVU118
+ 566              		.loc 1 196 23 is_stmt 0 discriminator 3 view .LVU119
+ 567 0026 4846     		mov	r0, r9
+ 568 0028 FFF7FEFF 		bl	Hpma115S0_Read_Particle_Measuring
+ 569              	.LVL45:
+ 570              		.loc 1 196 21 discriminator 3 view .LVU120
+ 571 002c 28F81400 		strh	r0, [r8, r4, lsl #1]	@ movhi
+ 197:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         HAL_Delay(5);
+ 572              		.loc 1 197 9 is_stmt 1 discriminator 3 view .LVU121
+ 573 0030 0520     		movs	r0, #5
+ 574 0032 FFF7FEFF 		bl	HAL_Delay
+ 575              	.LVL46:
+ 194:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 576              		.loc 1 194 37 discriminator 3 view .LVU122
+ 577 0036 0134     		adds	r4, r4, #1
+ 578              	.LVL47:
+ 194:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 579              		.loc 1 194 37 is_stmt 0 discriminator 3 view .LVU123
+ 580 0038 E4B2     		uxtb	r4, r4
+ 581              	.LVL48:
+ 582              	.L46:
+ 194:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 583              		.loc 1 194 26 is_stmt 1 discriminator 1 view .LVU124
+ 584 003a A3B2     		uxth	r3, r4
+ 585 003c B342     		cmp	r3, r6
+ 586 003e F2D3     		bcc	.L47
+ 587              	.LBE2:
+ 588              	.LBB3:
+ 198:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+ 199:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+ 200:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     for(uint8_t i =0; i< sample; i++)
+ 589              		.loc 1 200 17 is_stmt 0 view .LVU125
+ 590 0040 0023     		movs	r3, #0
+ 591              	.LBE3:
+ 191:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     uint8_t index = 0;
+ 592              		.loc 1 191 14 view .LVU126
+ 593 0042 1846     		mov	r0, r3
+ 594 0044 04E0     		b	.L48
+ 595              	.LVL49:
+ 596              	.L49:
+ 597              	.LBB4:
+ 201:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 202:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         sum += arr_buff[i];
+ 598              		.loc 1 202 9 is_stmt 1 discriminator 3 view .LVU127
+ 599              		.loc 1 202 24 is_stmt 0 discriminator 3 view .LVU128
+ARM GAS  /tmp/cccA4g5K.s 			page 15
+
+
+ 600 0046 38F81320 		ldrh	r2, [r8, r3, lsl #1]
+ 601              		.loc 1 202 13 discriminator 3 view .LVU129
+ 602 004a 1044     		add	r0, r0, r2
+ 603              	.LVL50:
+ 200:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 604              		.loc 1 200 35 is_stmt 1 discriminator 3 view .LVU130
+ 605 004c 0133     		adds	r3, r3, #1
+ 606              	.LVL51:
+ 200:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 607              		.loc 1 200 35 is_stmt 0 discriminator 3 view .LVU131
+ 608 004e DBB2     		uxtb	r3, r3
+ 609              	.LVL52:
+ 610              	.L48:
+ 200:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 611              		.loc 1 200 24 is_stmt 1 discriminator 1 view .LVU132
+ 612 0050 9AB2     		uxth	r2, r3
+ 613 0052 B242     		cmp	r2, r6
+ 614 0054 F7D3     		bcc	.L49
+ 615              	.LBE4:
+ 203:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+ 204:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+ 205:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     data = (float)sum / sample;
+ 616              		.loc 1 205 5 view .LVU133
+ 617              		.loc 1 205 12 is_stmt 0 view .LVU134
+ 618 0056 FFF7FEFF 		bl	__aeabi_ui2f
+ 619              	.LVL53:
+ 620              		.loc 1 205 12 view .LVU135
+ 621 005a 0446     		mov	r4, r0
+ 622              	.LVL54:
+ 623              		.loc 1 205 23 view .LVU136
+ 624 005c 3046     		mov	r0, r6
+ 625 005e FFF7FEFF 		bl	__aeabi_i2f
+ 626              	.LVL55:
+ 627 0062 0146     		mov	r1, r0
+ 628              		.loc 1 205 10 view .LVU137
+ 629 0064 2046     		mov	r0, r4
+ 630 0066 FFF7FEFF 		bl	__aeabi_fdiv
+ 631              	.LVL56:
+ 632 006a 8346     		mov	fp, r0
+ 633              	.LVL57:
+ 206:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+ 207:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     for(uint8_t i =0; i < sample; i++)
+ 634              		.loc 1 207 5 is_stmt 1 view .LVU138
+ 635              	.LBB5:
+ 636              		.loc 1 207 9 view .LVU139
+ 637              		.loc 1 207 17 is_stmt 0 view .LVU140
+ 638 006c 0024     		movs	r4, #0
+ 639              	.LBE5:
+ 192:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+ 640              		.loc 1 192 13 view .LVU141
+ 641 006e A146     		mov	r9, r4
+ 642              	.LVL58:
+ 643              	.LBB6:
+ 644              		.loc 1 207 5 view .LVU142
+ 645 0070 01E0     		b	.L50
+ 646              	.LVL59:
+ 647              	.L51:
+ARM GAS  /tmp/cccA4g5K.s 			page 16
+
+
+ 648              		.loc 1 207 36 is_stmt 1 discriminator 2 view .LVU143
+ 649 0072 0134     		adds	r4, r4, #1
+ 650              	.LVL60:
+ 651              		.loc 1 207 36 is_stmt 0 discriminator 2 view .LVU144
+ 652 0074 E4B2     		uxtb	r4, r4
+ 653              	.LVL61:
+ 654              	.L50:
+ 655              		.loc 1 207 25 is_stmt 1 discriminator 1 view .LVU145
+ 656 0076 A3B2     		uxth	r3, r4
+ 657 0078 B342     		cmp	r3, r6
+ 658 007a 1BD2     		bcs	.L62
+ 208:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 209:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         if(abs(data - arr_buff[i]) < data)
+ 659              		.loc 1 209 9 view .LVU146
+ 660              		.loc 1 209 31 is_stmt 0 view .LVU147
+ 661 007c 38F814A0 		ldrh	r10, [r8, r4, lsl #1]
+ 662              		.loc 1 209 21 view .LVU148
+ 663 0080 5046     		mov	r0, r10
+ 664 0082 FFF7FEFF 		bl	__aeabi_i2f
+ 665              	.LVL62:
+ 666 0086 0146     		mov	r1, r0
+ 667 0088 5846     		mov	r0, fp
+ 668 008a FFF7FEFF 		bl	__aeabi_fsub
+ 669              	.LVL63:
+ 670              		.loc 1 209 12 view .LVU149
+ 671 008e FFF7FEFF 		bl	__aeabi_f2iz
+ 672              	.LVL64:
+ 673              		.loc 1 209 36 view .LVU150
+ 674 0092 0028     		cmp	r0, #0
+ 675 0094 B8BF     		it	lt
+ 676 0096 4042     		rsblt	r0, r0, #0
+ 677 0098 FFF7FEFF 		bl	__aeabi_i2f
+ 678              	.LVL65:
+ 679              		.loc 1 209 11 view .LVU151
+ 680 009c 5946     		mov	r1, fp
+ 681 009e FFF7FEFF 		bl	__aeabi_fcmplt
+ 682              	.LVL66:
+ 683 00a2 0028     		cmp	r0, #0
+ 684 00a4 E5D0     		beq	.L51
+ 210:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         {
+ 211:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         	copy_buff[index] = arr_buff[i];
+ 685              		.loc 1 211 10 is_stmt 1 view .LVU152
+ 686              		.loc 1 211 27 is_stmt 0 view .LVU153
+ 687 00a6 25F819A0 		strh	r10, [r5, r9, lsl #1]	@ movhi
+ 212:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         	index++;
+ 688              		.loc 1 212 10 is_stmt 1 view .LVU154
+ 689              		.loc 1 212 15 is_stmt 0 view .LVU155
+ 690 00aa 09F10109 		add	r9, r9, #1
+ 691              	.LVL67:
+ 692              		.loc 1 212 15 view .LVU156
+ 693 00ae 5FFA89F9 		uxtb	r9, r9
+ 694              	.LVL68:
+ 695              		.loc 1 212 15 view .LVU157
+ 696 00b2 DEE7     		b	.L51
+ 697              	.L62:
+ 698              		.loc 1 212 15 view .LVU158
+ 699              	.LBE6:
+ARM GAS  /tmp/cccA4g5K.s 			page 17
+
+
+ 700              	.LBB7:
+ 213:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         }
+ 214:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+ 215:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+ 216:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     sum =0;
+ 217:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     data = 0;
+ 218:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+ 219:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     for(uint8_t i =0; i < index; i++)
+ 701              		.loc 1 219 17 view .LVU159
+ 702 00b4 0023     		movs	r3, #0
+ 703              	.LBE7:
+ 216:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     data = 0;
+ 704              		.loc 1 216 9 view .LVU160
+ 705 00b6 1846     		mov	r0, r3
+ 706 00b8 04E0     		b	.L54
+ 707              	.LVL69:
+ 708              	.L55:
+ 709              	.LBB8:
+ 220:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 221:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****         sum += copy_buff[i];
+ 710              		.loc 1 221 9 is_stmt 1 discriminator 3 view .LVU161
+ 711              		.loc 1 221 25 is_stmt 0 discriminator 3 view .LVU162
+ 712 00ba 35F81320 		ldrh	r2, [r5, r3, lsl #1]
+ 713              		.loc 1 221 13 discriminator 3 view .LVU163
+ 714 00be 1044     		add	r0, r0, r2
+ 715              	.LVL70:
+ 219:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 716              		.loc 1 219 35 is_stmt 1 discriminator 3 view .LVU164
+ 717 00c0 0133     		adds	r3, r3, #1
+ 718              	.LVL71:
+ 219:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 719              		.loc 1 219 35 is_stmt 0 discriminator 3 view .LVU165
+ 720 00c2 DBB2     		uxtb	r3, r3
+ 721              	.LVL72:
+ 722              	.L54:
+ 219:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 723              		.loc 1 219 25 is_stmt 1 discriminator 1 view .LVU166
+ 724 00c4 9945     		cmp	r9, r3
+ 725 00c6 F8D8     		bhi	.L55
+ 726              	.LBE8:
+ 222:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+ 223:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+ 224:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     data = (float)sum / index ;
+ 727              		.loc 1 224 5 view .LVU167
+ 728              		.loc 1 224 12 is_stmt 0 view .LVU168
+ 729 00c8 FFF7FEFF 		bl	__aeabi_ui2f
+ 730              	.LVL73:
+ 731              		.loc 1 224 12 view .LVU169
+ 732 00cc 0446     		mov	r4, r0
+ 733              	.LVL74:
+ 734              		.loc 1 224 23 view .LVU170
+ 735 00ce 4846     		mov	r0, r9
+ 736 00d0 FFF7FEFF 		bl	__aeabi_i2f
+ 737              	.LVL75:
+ 738 00d4 0146     		mov	r1, r0
+ 739              		.loc 1 224 10 view .LVU171
+ 740 00d6 2046     		mov	r0, r4
+ARM GAS  /tmp/cccA4g5K.s 			page 18
+
+
+ 741 00d8 FFF7FEFF 		bl	__aeabi_fdiv
+ 742              	.LVL76:
+ 743 00dc 0446     		mov	r4, r0
+ 744              	.LVL77:
+ 225:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+ 226:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     if(data >= 1000)
+ 745              		.loc 1 226 5 is_stmt 1 view .LVU172
+ 746              		.loc 1 226 7 is_stmt 0 view .LVU173
+ 747 00de 0849     		ldr	r1, .L64
+ 748 00e0 FFF7FEFF 		bl	__aeabi_fcmpge
+ 749              	.LVL78:
+ 750              		.loc 1 226 7 view .LVU174
+ 751 00e4 00B1     		cbz	r0, .L56
+ 227:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 228:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     	data = 1000;
+ 752              		.loc 1 228 11 view .LVU175
+ 753 00e6 064C     		ldr	r4, .L64
+ 754              	.LVL79:
+ 755              	.L56:
+ 229:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+ 230:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** 
+ 231:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     if(data <= 0)
+ 756              		.loc 1 231 5 is_stmt 1 view .LVU176
+ 757              		.loc 1 231 7 is_stmt 0 view .LVU177
+ 758 00e8 0021     		movs	r1, #0
+ 759 00ea 2046     		mov	r0, r4
+ 760 00ec FFF7FEFF 		bl	__aeabi_fcmple
+ 761              	.LVL80:
+ 762 00f0 18B9     		cbnz	r0, .L63
+ 763              	.LVL81:
+ 764              	.L45:
+ 232:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     {
+ 233:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     	data = 0;
+ 234:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+ 235:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     return  data;
+ 236:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** }
+ 765              		.loc 1 236 1 view .LVU178
+ 766 00f2 2046     		mov	r0, r4
+ 767 00f4 BD46     		mov	sp, r7
+ 768              	.LCFI8:
+ 769              		.cfi_remember_state
+ 770              		.cfi_def_cfa_register 13
+ 771              		@ sp needed
+ 772 00f6 BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 773              	.LVL82:
+ 774              	.L63:
+ 775              	.LCFI9:
+ 776              		.cfi_restore_state
+ 233:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c ****     }
+ 777              		.loc 1 233 11 view .LVU179
+ 778 00fa 0024     		movs	r4, #0
+ 779              	.LVL83:
+ 235:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** }
+ 780              		.loc 1 235 5 is_stmt 1 view .LVU180
+ 235:HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.c **** }
+ 781              		.loc 1 235 13 is_stmt 0 view .LVU181
+ 782 00fc F9E7     		b	.L45
+ARM GAS  /tmp/cccA4g5K.s 			page 19
+
+
+ 783              	.L65:
+ 784 00fe 00BF     		.align	2
+ 785              	.L64:
+ 786 0100 00007A44 		.word	1148846080
+ 787              		.cfi_endproc
+ 788              	.LFE73:
+ 790              		.global	particle_measure_data_hpma115s0_sensor
+ 791              		.global	ackn
+ 792              		.global	fame_data_read_customer_adjustment_coffcicient
+ 793              		.global	fame_data_set_particle_adjustment_coefficient
+ 794              		.global	fame_data_read_particle_measure
+ 795              		.global	fame_datat_stop_auto_send
+ 796              		.global	fame_data_enable_auto_send
+ 797              		.global	fame_data_stop_particle_peasure
+ 798              		.global	fame_data_start_particle_peasure
+ 799              		.section	.bss.ackn,"aw",%nobits
+ 800              		.align	2
+ 801              		.set	.LANCHOR1,. + 0
+ 804              	ackn:
+ 805 0000 0000     		.space	2
+ 806              		.section	.bss.particle_measure_data_hpma115s0_sensor,"aw",%nobits
+ 807              		.align	2
+ 808              		.set	.LANCHOR7,. + 0
+ 811              	particle_measure_data_hpma115s0_sensor:
+ 812 0000 00000000 		.space	32
+ 812      00000000 
+ 812      00000000 
+ 812      00000000 
+ 812      00000000 
+ 813              		.section	.data.fame_data_enable_auto_send,"aw"
+ 814              		.align	2
+ 815              		.set	.LANCHOR3,. + 0
+ 818              	fame_data_enable_auto_send:
+ 819 0000 68014057 		.ascii	"h\001@W"
+ 820              		.section	.data.fame_data_read_customer_adjustment_coffcicient,"aw"
+ 821              		.align	2
+ 824              	fame_data_read_customer_adjustment_coffcicient:
+ 825 0000 68011087 		.ascii	"h\001\020\207"
+ 826              		.section	.data.fame_data_read_particle_measure,"aw"
+ 827              		.align	2
+ 828              		.set	.LANCHOR6,. + 0
+ 831              	fame_data_read_particle_measure:
+ 832 0000 68010493 		.ascii	"h\001\004\223"
+ 833              		.section	.data.fame_data_set_particle_adjustment_coefficient,"aw"
+ 834              		.align	2
+ 835              		.set	.LANCHOR5,. + 0
+ 838              	fame_data_set_particle_adjustment_coefficient:
+ 839 0000 68020840 		.ascii	"h\002\010@*"
+ 839      2A
+ 840              		.section	.data.fame_data_start_particle_peasure,"aw"
+ 841              		.align	2
+ 842              		.set	.LANCHOR0,. + 0
+ 845              	fame_data_start_particle_peasure:
+ 846 0000 68010196 		.ascii	"h\001\001\226"
+ 847              		.section	.data.fame_data_stop_particle_peasure,"aw"
+ 848              		.align	2
+ 849              		.set	.LANCHOR2,. + 0
+ARM GAS  /tmp/cccA4g5K.s 			page 20
+
+
+ 852              	fame_data_stop_particle_peasure:
+ 853 0000 68010295 		.ascii	"h\001\002\225"
+ 854              		.section	.data.fame_datat_stop_auto_send,"aw"
+ 855              		.align	2
+ 856              		.set	.LANCHOR4,. + 0
+ 859              	fame_datat_stop_auto_send:
+ 860 0000 68012077 		.ascii	"h\001 w"
+ 861              		.text
+ 862              	.Letext0:
+ 863              		.file 2 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 864              		.file 3 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 865              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 866              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 867              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 868              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h"
+ 869              		.file 8 "HPMA115S_Dust_Sensor/Hpma115S0_Dust_Sensor.h"
+ 870              		.file 9 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ARM GAS  /tmp/cccA4g5K.s 			page 21
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Hpma115S0_Dust_Sensor.c
+     /tmp/cccA4g5K.s:18     .text.Hpma115S0_Dust_Sensor_Init:0000000000000000 $t
+     /tmp/cccA4g5K.s:24     .text.Hpma115S0_Dust_Sensor_Init:0000000000000000 Hpma115S0_Dust_Sensor_Init
+     /tmp/cccA4g5K.s:46     .text.Hpma115S0_Start_Particle_Measure:0000000000000000 $t
+     /tmp/cccA4g5K.s:52     .text.Hpma115S0_Start_Particle_Measure:0000000000000000 Hpma115S0_Start_Particle_Measure
+     /tmp/cccA4g5K.s:98     .text.Hpma115S0_Start_Particle_Measure:000000000000002c $d
+     /tmp/cccA4g5K.s:104    .text.Hpma115S0_Stop_Particle_Measurement:0000000000000000 $t
+     /tmp/cccA4g5K.s:110    .text.Hpma115S0_Stop_Particle_Measurement:0000000000000000 Hpma115S0_Stop_Particle_Measurement
+     /tmp/cccA4g5K.s:156    .text.Hpma115S0_Stop_Particle_Measurement:000000000000002c $d
+     /tmp/cccA4g5K.s:162    .text.Hpma115S0_Enable_Auto_Send:0000000000000000 $t
+     /tmp/cccA4g5K.s:168    .text.Hpma115S0_Enable_Auto_Send:0000000000000000 Hpma115S0_Enable_Auto_Send
+     /tmp/cccA4g5K.s:214    .text.Hpma115S0_Enable_Auto_Send:000000000000002c $d
+     /tmp/cccA4g5K.s:220    .text.Hpma115S0_Stop_Auto_Send:0000000000000000 $t
+     /tmp/cccA4g5K.s:226    .text.Hpma115S0_Stop_Auto_Send:0000000000000000 Hpma115S0_Stop_Auto_Send
+     /tmp/cccA4g5K.s:272    .text.Hpma115S0_Stop_Auto_Send:000000000000002c $d
+     /tmp/cccA4g5K.s:278    .text.Hpma115S0_Set_Adjustment_Cofficient:0000000000000000 $t
+     /tmp/cccA4g5K.s:284    .text.Hpma115S0_Set_Adjustment_Cofficient:0000000000000000 Hpma115S0_Set_Adjustment_Cofficient
+     /tmp/cccA4g5K.s:347    .text.Hpma115S0_Set_Adjustment_Cofficient:0000000000000034 $d
+     /tmp/cccA4g5K.s:352    .text.Hpma115S0_Read_Particle_Measuring:0000000000000000 $t
+     /tmp/cccA4g5K.s:358    .text.Hpma115S0_Read_Particle_Measuring:0000000000000000 Hpma115S0_Read_Particle_Measuring
+     /tmp/cccA4g5K.s:416    .text.Hpma115S0_Read_Particle_Measuring:0000000000000034 $d
+     /tmp/cccA4g5K.s:422    .text.Hpma115S0_Adjustment_Cofficient:0000000000000000 $t
+     /tmp/cccA4g5K.s:428    .text.Hpma115S0_Adjustment_Cofficient:0000000000000000 Hpma115S0_Adjustment_Cofficient
+     /tmp/cccA4g5K.s:491    .text.Hpma115S0_Adjustment_Cofficient:0000000000000034 $d
+     /tmp/cccA4g5K.s:504    .text.Hpma115S0_Caclulator_Average:0000000000000000 $t
+     /tmp/cccA4g5K.s:510    .text.Hpma115S0_Caclulator_Average:0000000000000000 Hpma115S0_Caclulator_Average
+     /tmp/cccA4g5K.s:786    .text.Hpma115S0_Caclulator_Average:0000000000000100 $d
+     /tmp/cccA4g5K.s:811    .bss.particle_measure_data_hpma115s0_sensor:0000000000000000 particle_measure_data_hpma115s0_sensor
+     /tmp/cccA4g5K.s:804    .bss.ackn:0000000000000000 ackn
+     /tmp/cccA4g5K.s:824    .data.fame_data_read_customer_adjustment_coffcicient:0000000000000000 fame_data_read_customer_adjustment_coffcicient
+     /tmp/cccA4g5K.s:838    .data.fame_data_set_particle_adjustment_coefficient:0000000000000000 fame_data_set_particle_adjustment_coefficient
+     /tmp/cccA4g5K.s:831    .data.fame_data_read_particle_measure:0000000000000000 fame_data_read_particle_measure
+     /tmp/cccA4g5K.s:859    .data.fame_datat_stop_auto_send:0000000000000000 fame_datat_stop_auto_send
+     /tmp/cccA4g5K.s:818    .data.fame_data_enable_auto_send:0000000000000000 fame_data_enable_auto_send
+     /tmp/cccA4g5K.s:852    .data.fame_data_stop_particle_peasure:0000000000000000 fame_data_stop_particle_peasure
+     /tmp/cccA4g5K.s:845    .data.fame_data_start_particle_peasure:0000000000000000 fame_data_start_particle_peasure
+     /tmp/cccA4g5K.s:800    .bss.ackn:0000000000000000 $d
+     /tmp/cccA4g5K.s:807    .bss.particle_measure_data_hpma115s0_sensor:0000000000000000 $d
+     /tmp/cccA4g5K.s:814    .data.fame_data_enable_auto_send:0000000000000000 $d
+     /tmp/cccA4g5K.s:821    .data.fame_data_read_customer_adjustment_coffcicient:0000000000000000 $d
+     /tmp/cccA4g5K.s:827    .data.fame_data_read_particle_measure:0000000000000000 $d
+     /tmp/cccA4g5K.s:834    .data.fame_data_set_particle_adjustment_coefficient:0000000000000000 $d
+     /tmp/cccA4g5K.s:841    .data.fame_data_start_particle_peasure:0000000000000000 $d
+     /tmp/cccA4g5K.s:848    .data.fame_data_stop_particle_peasure:0000000000000000 $d
+     /tmp/cccA4g5K.s:855    .data.fame_datat_stop_auto_send:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+HAL_UART_Transmit
+HAL_UART_Receive
+__aeabi_ui2f
+__aeabi_i2f
+__aeabi_fdiv
+__aeabi_fsub
+__aeabi_f2iz
+__aeabi_fcmplt
+__aeabi_fcmpge
+ARM GAS  /tmp/cccA4g5K.s 			page 22
+
+
+__aeabi_fcmple
+HAL_Delay

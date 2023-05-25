@@ -1,0 +1,5 @@
+../Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c:27:13:G2y10_Delay_Init	16	static
+../Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c:38:13:G2y10_Delay_Us	16	static
+../Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c:49:13:G2y10_ADC_Channel_Config	32	static
+../Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c:74:6:Sharp_G2y10_Dust_Sensor_Init	24	static
+../Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c:96:7:Sharp_G2y10_Dust_Sensor_Measuring_Average	104	dynamic

@@ -1,0 +1,857 @@
+ARM GAS  /tmp/ccxmsxmY.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"Sharp_G2y10_Dust_Sensor.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.G2y10_Delay_Init,"ax",%progbits
+  18              		.align	1
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  23              	G2y10_Delay_Init:
+  24              	.LVL0:
+  25              	.LFB65:
+  26              		.file 1 "Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c"
+   1:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** /**
+   2:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @file Sharp_G2y10_Dust_Sensor.c
+   3:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @author Nguyen Trong Son (LoH Technology Company Limited)
+   4:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @brief 
+   5:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @version 0.1
+   6:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @date 2022-08-27
+   7:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * 
+   8:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @copyright Copyright (c) 2022
+   9:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * 
+  10:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  */
+  11:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+  12:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** #include "Sharp_G2y10_Dust_Sensor.h"
+  13:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** #include "Delay_Timer.h"
+  14:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** #include "math.h"
+  15:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** #include "stdlib.h"
+  16:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+  17:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+  18:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** static void G2y10_Delay_Init(SharpG2y10DustSensor_Name *sensor_x);
+  19:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** static void G2y10_Delay_Us(SharpG2y10DustSensor_Name *sensor_x, uint16_t Time);
+  20:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** static void G2y10_ADC_Channel_Config(SharpG2y10DustSensor_Name *sensor_x);
+  21:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+  22:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** /**
+  23:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @brief G2y10_Delay_Init
+  24:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * 
+  25:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param sensor_x 
+  26:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  */
+  27:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** static void G2y10_Delay_Init(SharpG2y10DustSensor_Name *sensor_x)
+  28:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** {
+  27              		.loc 1 28 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /tmp/ccxmsxmY.s 			page 2
+
+
+  31              		.loc 1 28 1 is_stmt 0 view .LVU1
+  32 0000 08B5     		push	{r3, lr}
+  33              	.LCFI0:
+  34              		.cfi_def_cfa_offset 8
+  35              		.cfi_offset 3, -8
+  36              		.cfi_offset 14, -4
+  29:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 	Delay_Tim_Init(sensor_x->Timerx);
+  37              		.loc 1 29 2 is_stmt 1 view .LVU2
+  38 0002 8068     		ldr	r0, [r0, #8]
+  39              	.LVL1:
+  40              		.loc 1 29 2 is_stmt 0 view .LVU3
+  41 0004 FFF7FEFF 		bl	Delay_Tim_Init
+  42              	.LVL2:
+  30:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** }
+  43              		.loc 1 30 1 view .LVU4
+  44 0008 08BD     		pop	{r3, pc}
+  45              		.cfi_endproc
+  46              	.LFE65:
+  48              		.section	.text.G2y10_ADC_Channel_Config,"ax",%progbits
+  49              		.align	1
+  50              		.syntax unified
+  51              		.thumb
+  52              		.thumb_func
+  54              	G2y10_ADC_Channel_Config:
+  55              	.LVL3:
+  56              	.LFB67:
+  31:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+  32:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** /**
+  33:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @brief G2y10_Delay_Us
+  34:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * 
+  35:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param sensor_x 
+  36:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param Time 
+  37:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  */
+  38:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** static void G2y10_Delay_Us(SharpG2y10DustSensor_Name *sensor_x, uint16_t Time)
+  39:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** {
+  40:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 	Delay_Timer_Us(sensor_x->Timerx, Time);
+  41:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** }
+  42:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+  43:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+  44:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** /**
+  45:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @brief G2y10_ADC_Channel_Config
+  46:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  *
+  47:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param sensor_x
+  48:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  */
+  49:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** static void G2y10_ADC_Channel_Config(SharpG2y10DustSensor_Name *sensor_x)
+  50:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** {
+  57              		.loc 1 50 1 is_stmt 1 view -0
+  58              		.cfi_startproc
+  59              		@ args = 0, pretend = 0, frame = 16
+  60              		@ frame_needed = 0, uses_anonymous_args = 0
+  61              		.loc 1 50 1 is_stmt 0 view .LVU6
+  62 0000 00B5     		push	{lr}
+  63              	.LCFI1:
+  64              		.cfi_def_cfa_offset 4
+  65              		.cfi_offset 14, -4
+  66 0002 85B0     		sub	sp, sp, #20
+  67              	.LCFI2:
+ARM GAS  /tmp/ccxmsxmY.s 			page 3
+
+
+  68              		.cfi_def_cfa_offset 24
+  51:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     ADC_ChannelConfTypeDef sConfig = {0};
+  69              		.loc 1 51 5 is_stmt 1 view .LVU7
+  70              		.loc 1 51 28 is_stmt 0 view .LVU8
+  71 0004 0023     		movs	r3, #0
+  72 0006 0193     		str	r3, [sp, #4]
+  73 0008 0293     		str	r3, [sp, #8]
+  74 000a 0393     		str	r3, [sp, #12]
+  52:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     sConfig.Channel = ADC_CHANNEL_10;
+  75              		.loc 1 52 5 is_stmt 1 view .LVU9
+  76              		.loc 1 52 21 is_stmt 0 view .LVU10
+  77 000c 0A23     		movs	r3, #10
+  78 000e 0193     		str	r3, [sp, #4]
+  53:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     sConfig.Rank = ADC_REGULAR_RANK_1;
+  79              		.loc 1 53 5 is_stmt 1 view .LVU11
+  80              		.loc 1 53 18 is_stmt 0 view .LVU12
+  81 0010 0123     		movs	r3, #1
+  82 0012 0293     		str	r3, [sp, #8]
+  54:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
+  83              		.loc 1 54 5 is_stmt 1 view .LVU13
+  84              		.loc 1 54 26 is_stmt 0 view .LVU14
+  85 0014 0723     		movs	r3, #7
+  86 0016 0393     		str	r3, [sp, #12]
+  55:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     if (HAL_ADC_ConfigChannel(sensor_x->G2y10_ADC, &sConfig) != HAL_OK)
+  87              		.loc 1 55 5 is_stmt 1 view .LVU15
+  88              		.loc 1 55 9 is_stmt 0 view .LVU16
+  89 0018 01A9     		add	r1, sp, #4
+  90 001a 0068     		ldr	r0, [r0]
+  91              	.LVL4:
+  92              		.loc 1 55 9 view .LVU17
+  93 001c FFF7FEFF 		bl	HAL_ADC_ConfigChannel
+  94              	.LVL5:
+  95              		.loc 1 55 8 view .LVU18
+  96 0020 10B9     		cbnz	r0, .L6
+  97              	.L3:
+  56:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     {
+  57:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****         Error_Handler();
+  58:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     }
+  59:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+  60:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** }
+  98              		.loc 1 60 1 view .LVU19
+  99 0022 05B0     		add	sp, sp, #20
+ 100              	.LCFI3:
+ 101              		.cfi_remember_state
+ 102              		.cfi_def_cfa_offset 4
+ 103              		@ sp needed
+ 104 0024 5DF804FB 		ldr	pc, [sp], #4
+ 105              	.L6:
+ 106              	.LCFI4:
+ 107              		.cfi_restore_state
+ 108              	.LBB2:
+  57:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     }
+ 109              		.loc 1 57 9 is_stmt 1 view .LVU20
+ 110 0028 FFF7FEFF 		bl	Error_Handler
+ 111              	.LVL6:
+ 112              	.LBE2:
+ 113              		.loc 1 60 1 is_stmt 0 view .LVU21
+ARM GAS  /tmp/ccxmsxmY.s 			page 4
+
+
+ 114 002c F9E7     		b	.L3
+ 115              		.cfi_endproc
+ 116              	.LFE67:
+ 118              		.section	.text.G2y10_Delay_Us,"ax",%progbits
+ 119              		.align	1
+ 120              		.syntax unified
+ 121              		.thumb
+ 122              		.thumb_func
+ 124              	G2y10_Delay_Us:
+ 125              	.LVL7:
+ 126              	.LFB66:
+  39:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 	Delay_Timer_Us(sensor_x->Timerx, Time);
+ 127              		.loc 1 39 1 is_stmt 1 view -0
+ 128              		.cfi_startproc
+ 129              		@ args = 0, pretend = 0, frame = 0
+ 130              		@ frame_needed = 0, uses_anonymous_args = 0
+  39:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 	Delay_Timer_Us(sensor_x->Timerx, Time);
+ 131              		.loc 1 39 1 is_stmt 0 view .LVU23
+ 132 0000 08B5     		push	{r3, lr}
+ 133              	.LCFI5:
+ 134              		.cfi_def_cfa_offset 8
+ 135              		.cfi_offset 3, -8
+ 136              		.cfi_offset 14, -4
+  40:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** }
+ 137              		.loc 1 40 2 is_stmt 1 view .LVU24
+ 138 0002 8068     		ldr	r0, [r0, #8]
+ 139              	.LVL8:
+  40:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** }
+ 140              		.loc 1 40 2 is_stmt 0 view .LVU25
+ 141 0004 FFF7FEFF 		bl	Delay_Timer_Us
+ 142              	.LVL9:
+  41:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+ 143              		.loc 1 41 1 view .LVU26
+ 144 0008 08BD     		pop	{r3, pc}
+ 145              		.cfi_endproc
+ 146              	.LFE66:
+ 148              		.section	.text.Sharp_G2y10_Dust_Sensor_Init,"ax",%progbits
+ 149              		.align	1
+ 150              		.global	Sharp_G2y10_Dust_Sensor_Init
+ 151              		.syntax unified
+ 152              		.thumb
+ 153              		.thumb_func
+ 155              	Sharp_G2y10_Dust_Sensor_Init:
+ 156              	.LVL10:
+ 157              	.LFB68:
+  61:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+  62:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** /**
+  63:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @brief Sharp_G2y10_Dust_Sensor_Init
+  64:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  *
+  65:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param sensor_x
+  66:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param G2y10_ADCx
+  67:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param Timer
+  68:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param G2y10_Chanel_ADC
+  69:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param G2y10_Rank_ADC
+  70:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param G2y10_Sample_Time_ADC
+  71:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param G2y10_Port
+  72:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param G2y10_Pin
+ARM GAS  /tmp/ccxmsxmY.s 			page 5
+
+
+  73:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  */
+  74:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** void Sharp_G2y10_Dust_Sensor_Init(SharpG2y10DustSensor_Name *sensor_x, ADC_HandleTypeDef *G2y10_ADC
+  75:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** {
+ 158              		.loc 1 75 1 is_stmt 1 view -0
+ 159              		.cfi_startproc
+ 160              		@ args = 4, pretend = 0, frame = 0
+ 161              		@ frame_needed = 0, uses_anonymous_args = 0
+ 162              		.loc 1 75 1 is_stmt 0 view .LVU28
+ 163 0000 08B5     		push	{r3, lr}
+ 164              	.LCFI6:
+ 165              		.cfi_def_cfa_offset 8
+ 166              		.cfi_offset 3, -8
+ 167              		.cfi_offset 14, -4
+  76:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     sensor_x->G2y10_ADC = G2y10_ADCx;
+ 168              		.loc 1 76 5 is_stmt 1 view .LVU29
+ 169              		.loc 1 76 25 is_stmt 0 view .LVU30
+ 170 0002 0160     		str	r1, [r0]
+  77:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     sensor_x->Timerx = Timer;
+ 171              		.loc 1 77 5 is_stmt 1 view .LVU31
+ 172              		.loc 1 77 22 is_stmt 0 view .LVU32
+ 173 0004 8260     		str	r2, [r0, #8]
+  78:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     sensor_x->PORT = G2y10_Port;
+ 174              		.loc 1 78 5 is_stmt 1 view .LVU33
+ 175              		.loc 1 78 20 is_stmt 0 view .LVU34
+ 176 0006 4360     		str	r3, [r0, #4]
+  79:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     sensor_x->Pin = G2y10_Pin;
+ 177              		.loc 1 79 5 is_stmt 1 view .LVU35
+ 178              		.loc 1 79 19 is_stmt 0 view .LVU36
+ 179 0008 BDF80830 		ldrh	r3, [sp, #8]
+ 180              	.LVL11:
+ 181              		.loc 1 79 19 view .LVU37
+ 182 000c 0383     		strh	r3, [r0, #24]	@ movhi
+  80:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     G2y10_Delay_Init(sensor_x);
+ 183              		.loc 1 80 5 is_stmt 1 view .LVU38
+ 184 000e FFF7FEFF 		bl	G2y10_Delay_Init
+ 185              	.LVL12:
+  81:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** }
+ 186              		.loc 1 81 1 is_stmt 0 view .LVU39
+ 187 0012 08BD     		pop	{r3, pc}
+ 188              		.loc 1 81 1 view .LVU40
+ 189              		.cfi_endproc
+ 190              	.LFE68:
+ 192              		.global	__aeabi_ui2f
+ 193              		.global	__aeabi_i2f
+ 194              		.global	__aeabi_fdiv
+ 195              		.global	__aeabi_fsub
+ 196              		.global	__aeabi_f2iz
+ 197              		.global	__aeabi_fcmplt
+ 198              		.global	__aeabi_fmul
+ 199              		.global	__aeabi_fcmpge
+ 200              		.global	__aeabi_fcmple
+ 201              		.section	.text.Sharp_G2y10_Dust_Sensor_Measuring_Average,"ax",%progbits
+ 202              		.align	1
+ 203              		.global	Sharp_G2y10_Dust_Sensor_Measuring_Average
+ 204              		.syntax unified
+ 205              		.thumb
+ 206              		.thumb_func
+ARM GAS  /tmp/ccxmsxmY.s 			page 6
+
+
+ 208              	Sharp_G2y10_Dust_Sensor_Measuring_Average:
+ 209              	.LVL13:
+ 210              	.LFB69:
+  82:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+  83:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+  84:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** /**
+  85:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @brief Read_Particle_Measuring_Mode_Analog
+  86:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  *
+  87:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param hadc
+  88:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param chanel
+  89:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param rank
+  90:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param sample_time
+  91:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param GPIOx
+  92:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param GPIO_Pin
+  93:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @param time_out
+  94:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  * @return uint16_t
+  95:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****  */
+  96:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** float Sharp_G2y10_Dust_Sensor_Measuring_Average(SharpG2y10DustSensor_Name *sensor_x, uint8_t sample
+  97:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** {
+ 211              		.loc 1 97 1 is_stmt 1 view -0
+ 212              		.cfi_startproc
+ 213              		@ args = 0, pretend = 0, frame = 0
+ 214              		@ frame_needed = 1, uses_anonymous_args = 0
+ 215              		.loc 1 97 1 is_stmt 0 view .LVU42
+ 216 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 217              	.LCFI7:
+ 218              		.cfi_def_cfa_offset 40
+ 219              		.cfi_offset 3, -40
+ 220              		.cfi_offset 4, -36
+ 221              		.cfi_offset 5, -32
+ 222              		.cfi_offset 6, -28
+ 223              		.cfi_offset 7, -24
+ 224              		.cfi_offset 8, -20
+ 225              		.cfi_offset 9, -16
+ 226              		.cfi_offset 10, -12
+ 227              		.cfi_offset 11, -8
+ 228              		.cfi_offset 14, -4
+ 229 0004 00AF     		add	r7, sp, #0
+ 230              	.LCFI8:
+ 231              		.cfi_def_cfa_register 7
+ 232 0006 0446     		mov	r4, r0
+ 233 0008 0E46     		mov	r6, r1
+  98:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     uint16_t arr_buff[sample];
+ 234              		.loc 1 98 5 is_stmt 1 view .LVU43
+ 235              	.LVL14:
+ 236              		.loc 1 98 14 is_stmt 0 view .LVU44
+ 237 000a 4B00     		lsls	r3, r1, #1
+ 238 000c 0733     		adds	r3, r3, #7
+ 239 000e 03F47E73 		and	r3, r3, #1016
+ 240 0012 ADEB030D 		sub	sp, sp, r3
+ 241 0016 E846     		mov	r8, sp
+ 242              	.LVL15:
+  99:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     uint16_t copy_buff[sample];
+ 243              		.loc 1 99 5 is_stmt 1 view .LVU45
+ 244              		.loc 1 99 14 is_stmt 0 view .LVU46
+ 245 0018 ADEB030D 		sub	sp, sp, r3
+ 246 001c 6D46     		mov	r5, sp
+ARM GAS  /tmp/ccxmsxmY.s 			page 7
+
+
+ 247              	.LVL16:
+ 100:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     uint16_t min, max;
+ 248              		.loc 1 100 5 is_stmt 1 view .LVU47
+ 101:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     uint32_t sum  = 0;
+ 249              		.loc 1 101 5 view .LVU48
+ 102:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     float data = 0;
+ 250              		.loc 1 102 5 view .LVU49
+ 103:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     uint8_t index = 0;
+ 251              		.loc 1 103 5 view .LVU50
+ 104:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     float calcVoltage = 0.0, dust_density = 0.0;
+ 252              		.loc 1 104 5 view .LVU51
+ 105:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+ 106:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     for(uint8_t i = 0; i< sample; i++)
+ 253              		.loc 1 106 5 view .LVU52
+ 254              	.LBB3:
+ 255              		.loc 1 106 9 view .LVU53
+ 256              		.loc 1 106 17 is_stmt 0 view .LVU54
+ 257 001e 4FF00009 		mov	r9, #0
+ 258              		.loc 1 106 5 view .LVU55
+ 259 0022 2EE0     		b	.L12
+ 260              	.LVL17:
+ 261              	.L13:
+ 107:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     {
+ 108:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****         G2y10_ADC_Channel_Config(sensor_x);
+ 262              		.loc 1 108 9 is_stmt 1 discriminator 3 view .LVU56
+ 263 0024 2046     		mov	r0, r4
+ 264 0026 FFF7FEFF 		bl	G2y10_ADC_Channel_Config
+ 265              	.LVL18:
+ 109:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****         HAL_ADC_Start(sensor_x->G2y10_ADC);
+ 266              		.loc 1 109 9 discriminator 3 view .LVU57
+ 267 002a 2068     		ldr	r0, [r4]
+ 268 002c FFF7FEFF 		bl	HAL_ADC_Start
+ 269              	.LVL19:
+ 110:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****         HAL_ADC_PollForConversion(sensor_x->G2y10_ADC, 1000);
+ 270              		.loc 1 110 9 discriminator 3 view .LVU58
+ 271 0030 4FF47A71 		mov	r1, #1000
+ 272 0034 2068     		ldr	r0, [r4]
+ 273 0036 FFF7FEFF 		bl	HAL_ADC_PollForConversion
+ 274              	.LVL20:
+ 111:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****         HAL_GPIO_WritePin(sensor_x->PORT, sensor_x->Pin, GPIO_PIN_SET);
+ 275              		.loc 1 111 9 discriminator 3 view .LVU59
+ 276 003a 0122     		movs	r2, #1
+ 277 003c 218B     		ldrh	r1, [r4, #24]
+ 278 003e 6068     		ldr	r0, [r4, #4]
+ 279 0040 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 280              	.LVL21:
+ 112:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****         G2y10_Delay_Us(sensor_x, 280);
+ 281              		.loc 1 112 9 discriminator 3 view .LVU60
+ 282 0044 4FF48C71 		mov	r1, #280
+ 283 0048 2046     		mov	r0, r4
+ 284 004a FFF7FEFF 		bl	G2y10_Delay_Us
+ 285              	.LVL22:
+ 113:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****         arr_buff[i]= HAL_ADC_GetValue(sensor_x->G2y10_ADC);
+ 286              		.loc 1 113 9 discriminator 3 view .LVU61
+ 287              		.loc 1 113 22 is_stmt 0 discriminator 3 view .LVU62
+ 288 004e 2068     		ldr	r0, [r4]
+ 289 0050 FFF7FEFF 		bl	HAL_ADC_GetValue
+ARM GAS  /tmp/ccxmsxmY.s 			page 8
+
+
+ 290              	.LVL23:
+ 291              		.loc 1 113 20 discriminator 3 view .LVU63
+ 292 0054 28F81900 		strh	r0, [r8, r9, lsl #1]	@ movhi
+ 114:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****         G2y10_Delay_Us(sensor_x, 19);
+ 293              		.loc 1 114 9 is_stmt 1 discriminator 3 view .LVU64
+ 294 0058 1321     		movs	r1, #19
+ 295 005a 2046     		mov	r0, r4
+ 296 005c FFF7FEFF 		bl	G2y10_Delay_Us
+ 297              	.LVL24:
+ 115:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****         G2y10_Delay_Us(sensor_x, 9680);
+ 298              		.loc 1 115 9 discriminator 3 view .LVU65
+ 299 0060 42F2D051 		movw	r1, #9680
+ 300 0064 2046     		mov	r0, r4
+ 301 0066 FFF7FEFF 		bl	G2y10_Delay_Us
+ 302              	.LVL25:
+ 116:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****         HAL_GPIO_WritePin(sensor_x->PORT, sensor_x->Pin, GPIO_PIN_RESET);
+ 303              		.loc 1 116 9 discriminator 3 view .LVU66
+ 304 006a 0022     		movs	r2, #0
+ 305 006c 218B     		ldrh	r1, [r4, #24]
+ 306 006e 6068     		ldr	r0, [r4, #4]
+ 307 0070 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 308              	.LVL26:
+ 117:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****         HAL_ADC_Stop(sensor_x->G2y10_ADC);
+ 309              		.loc 1 117 9 discriminator 3 view .LVU67
+ 310 0074 2068     		ldr	r0, [r4]
+ 311 0076 FFF7FEFF 		bl	HAL_ADC_Stop
+ 312              	.LVL27:
+ 106:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     {
+ 313              		.loc 1 106 36 discriminator 3 view .LVU68
+ 314 007a 09F10109 		add	r9, r9, #1
+ 315              	.LVL28:
+ 106:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     {
+ 316              		.loc 1 106 36 is_stmt 0 discriminator 3 view .LVU69
+ 317 007e 5FFA89F9 		uxtb	r9, r9
+ 318              	.LVL29:
+ 319              	.L12:
+ 106:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     {
+ 320              		.loc 1 106 25 is_stmt 1 discriminator 1 view .LVU70
+ 321 0082 B145     		cmp	r9, r6
+ 322 0084 CED3     		bcc	.L13
+ 323              	.LBE3:
+ 324              	.LBB4:
+ 118:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****         //G2y10_Delay_Us(sensor_x, 5000);
+ 119:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     }
+ 120:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+ 121:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     for(uint8_t i = 0; i < sample; i++)
+ 325              		.loc 1 121 17 is_stmt 0 view .LVU71
+ 326 0086 0023     		movs	r3, #0
+ 327              	.LBE4:
+ 101:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     float data = 0;
+ 328              		.loc 1 101 14 view .LVU72
+ 329 0088 1846     		mov	r0, r3
+ 330 008a 04E0     		b	.L14
+ 331              	.LVL30:
+ 332              	.L15:
+ 333              	.LBB5:
+ 122:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     {
+ARM GAS  /tmp/ccxmsxmY.s 			page 9
+
+
+ 123:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****         sum += arr_buff[i];
+ 334              		.loc 1 123 9 is_stmt 1 discriminator 3 view .LVU73
+ 335              		.loc 1 123 24 is_stmt 0 discriminator 3 view .LVU74
+ 336 008c 38F81320 		ldrh	r2, [r8, r3, lsl #1]
+ 337              		.loc 1 123 13 discriminator 3 view .LVU75
+ 338 0090 1044     		add	r0, r0, r2
+ 339              	.LVL31:
+ 121:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     {
+ 340              		.loc 1 121 37 is_stmt 1 discriminator 3 view .LVU76
+ 341 0092 0133     		adds	r3, r3, #1
+ 342              	.LVL32:
+ 121:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     {
+ 343              		.loc 1 121 37 is_stmt 0 discriminator 3 view .LVU77
+ 344 0094 DBB2     		uxtb	r3, r3
+ 345              	.LVL33:
+ 346              	.L14:
+ 121:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     {
+ 347              		.loc 1 121 26 is_stmt 1 discriminator 1 view .LVU78
+ 348 0096 B342     		cmp	r3, r6
+ 349 0098 F8D3     		bcc	.L15
+ 350              	.LBE5:
+ 124:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     }
+ 125:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+ 126:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     data = (float)(sum - max - min) / sample;
+ 351              		.loc 1 126 5 view .LVU79
+ 352              		.loc 1 126 12 is_stmt 0 view .LVU80
+ 353 009a FFF7FEFF 		bl	__aeabi_ui2f
+ 354              	.LVL34:
+ 355              		.loc 1 126 12 view .LVU81
+ 356 009e 0446     		mov	r4, r0
+ 357              	.LVL35:
+ 358              		.loc 1 126 37 view .LVU82
+ 359 00a0 3046     		mov	r0, r6
+ 360 00a2 FFF7FEFF 		bl	__aeabi_i2f
+ 361              	.LVL36:
+ 362 00a6 0146     		mov	r1, r0
+ 363              		.loc 1 126 10 view .LVU83
+ 364 00a8 2046     		mov	r0, r4
+ 365 00aa FFF7FEFF 		bl	__aeabi_fdiv
+ 366              	.LVL37:
+ 367 00ae 8246     		mov	r10, r0
+ 368              	.LVL38:
+ 127:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+ 128:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     for(uint8_t i = 0; i< sample; i++)
+ 369              		.loc 1 128 5 is_stmt 1 view .LVU84
+ 370              	.LBB6:
+ 371              		.loc 1 128 9 view .LVU85
+ 372              		.loc 1 128 17 is_stmt 0 view .LVU86
+ 373 00b0 0024     		movs	r4, #0
+ 374              	.LBE6:
+ 103:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     float calcVoltage = 0.0, dust_density = 0.0;
+ 375              		.loc 1 103 13 view .LVU87
+ 376 00b2 A146     		mov	r9, r4
+ 377              	.LVL39:
+ 378              	.LBB7:
+ 379              		.loc 1 128 5 view .LVU88
+ 380 00b4 01E0     		b	.L16
+ARM GAS  /tmp/ccxmsxmY.s 			page 10
+
+
+ 381              	.LVL40:
+ 382              	.L17:
+ 383              		.loc 1 128 36 is_stmt 1 discriminator 2 view .LVU89
+ 384 00b6 0134     		adds	r4, r4, #1
+ 385              	.LVL41:
+ 386              		.loc 1 128 36 is_stmt 0 discriminator 2 view .LVU90
+ 387 00b8 E4B2     		uxtb	r4, r4
+ 388              	.LVL42:
+ 389              	.L16:
+ 390              		.loc 1 128 25 is_stmt 1 discriminator 1 view .LVU91
+ 391 00ba B442     		cmp	r4, r6
+ 392 00bc 1BD2     		bcs	.L31
+ 129:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     {
+ 130:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     	 if(abs(data - arr_buff[i]) < data)
+ 393              		.loc 1 130 7 view .LVU92
+ 394              		.loc 1 130 29 is_stmt 0 view .LVU93
+ 395 00be 38F814B0 		ldrh	fp, [r8, r4, lsl #1]
+ 396              		.loc 1 130 19 view .LVU94
+ 397 00c2 5846     		mov	r0, fp
+ 398 00c4 FFF7FEFF 		bl	__aeabi_i2f
+ 399              	.LVL43:
+ 400 00c8 0146     		mov	r1, r0
+ 401 00ca 5046     		mov	r0, r10
+ 402 00cc FFF7FEFF 		bl	__aeabi_fsub
+ 403              	.LVL44:
+ 404              		.loc 1 130 10 view .LVU95
+ 405 00d0 FFF7FEFF 		bl	__aeabi_f2iz
+ 406              	.LVL45:
+ 407              		.loc 1 130 34 view .LVU96
+ 408 00d4 0028     		cmp	r0, #0
+ 409 00d6 B8BF     		it	lt
+ 410 00d8 4042     		rsblt	r0, r0, #0
+ 411 00da FFF7FEFF 		bl	__aeabi_i2f
+ 412              	.LVL46:
+ 413              		.loc 1 130 9 view .LVU97
+ 414 00de 5146     		mov	r1, r10
+ 415 00e0 FFF7FEFF 		bl	__aeabi_fcmplt
+ 416              	.LVL47:
+ 417 00e4 0028     		cmp	r0, #0
+ 418 00e6 E6D0     		beq	.L17
+ 131:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     	 {
+ 132:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     		 copy_buff[index] = arr_buff[i];
+ 419              		.loc 1 132 8 is_stmt 1 view .LVU98
+ 420              		.loc 1 132 25 is_stmt 0 view .LVU99
+ 421 00e8 25F819B0 		strh	fp, [r5, r9, lsl #1]	@ movhi
+ 133:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     		 index ++;
+ 422              		.loc 1 133 8 is_stmt 1 view .LVU100
+ 423              		.loc 1 133 14 is_stmt 0 view .LVU101
+ 424 00ec 09F10109 		add	r9, r9, #1
+ 425              	.LVL48:
+ 426              		.loc 1 133 14 view .LVU102
+ 427 00f0 5FFA89F9 		uxtb	r9, r9
+ 428              	.LVL49:
+ 429              		.loc 1 133 14 view .LVU103
+ 430 00f4 DFE7     		b	.L17
+ 431              	.L31:
+ 432              		.loc 1 133 14 view .LVU104
+ARM GAS  /tmp/ccxmsxmY.s 			page 11
+
+
+ 433              	.LBE7:
+ 134:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     	 }
+ 135:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     }
+ 136:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+ 137:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     max = copy_buff[0];
+ 434              		.loc 1 137 5 is_stmt 1 view .LVU105
+ 435              		.loc 1 137 9 is_stmt 0 view .LVU106
+ 436 00f6 2888     		ldrh	r0, [r5]
+ 437              	.LVL50:
+ 138:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     min = copy_buff[0];
+ 438              		.loc 1 138 5 is_stmt 1 view .LVU107
+ 139:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     sum = copy_buff[0];
+ 439              		.loc 1 139 5 view .LVU108
+ 440              		.loc 1 139 9 is_stmt 0 view .LVU109
+ 441 00f8 0146     		mov	r1, r0
+ 442              	.LVL51:
+ 140:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+ 141:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     for(uint8_t i = 0; i < index; i++)
+ 443              		.loc 1 141 5 is_stmt 1 view .LVU110
+ 444              	.LBB8:
+ 445              		.loc 1 141 9 view .LVU111
+ 446              		.loc 1 141 9 is_stmt 0 view .LVU112
+ 447              	.LBE8:
+ 137:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     min = copy_buff[0];
+ 448              		.loc 1 137 9 view .LVU113
+ 449 00fa 0446     		mov	r4, r0
+ 450              	.LVL52:
+ 451              	.LBB9:
+ 452              		.loc 1 141 17 view .LVU114
+ 453 00fc 0023     		movs	r3, #0
+ 454              		.loc 1 141 5 view .LVU115
+ 455 00fe 03E0     		b	.L20
+ 456              	.LVL53:
+ 457              	.L25:
+ 142:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     {
+ 143:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 		if(max < copy_buff[i])
+ 144:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 		{
+ 145:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 			max = copy_buff[i];
+ 458              		.loc 1 145 8 view .LVU116
+ 459 0100 1446     		mov	r4, r2
+ 460              	.LVL54:
+ 461              	.L21:
+ 146:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 		}
+ 147:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 		else if(min >  copy_buff[i])
+ 148:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 		{
+ 149:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 			min = copy_buff[i];
+ 150:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 		}
+ 151:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+ 152:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 		sum+=copy_buff[i];
+ 462              		.loc 1 152 3 is_stmt 1 discriminator 2 view .LVU117
+ 463              		.loc 1 152 6 is_stmt 0 discriminator 2 view .LVU118
+ 464 0102 1144     		add	r1, r1, r2
+ 465              	.LVL55:
+ 141:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     {
+ 466              		.loc 1 141 36 is_stmt 1 discriminator 2 view .LVU119
+ 467 0104 0133     		adds	r3, r3, #1
+ 468              	.LVL56:
+ARM GAS  /tmp/ccxmsxmY.s 			page 12
+
+
+ 141:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     {
+ 469              		.loc 1 141 36 is_stmt 0 discriminator 2 view .LVU120
+ 470 0106 DBB2     		uxtb	r3, r3
+ 471              	.LVL57:
+ 472              	.L20:
+ 141:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     {
+ 473              		.loc 1 141 26 is_stmt 1 discriminator 1 view .LVU121
+ 474 0108 9945     		cmp	r9, r3
+ 475 010a 07D9     		bls	.L32
+ 143:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 		{
+ 476              		.loc 1 143 3 view .LVU122
+ 143:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 		{
+ 477              		.loc 1 143 21 is_stmt 0 view .LVU123
+ 478 010c 35F81320 		ldrh	r2, [r5, r3, lsl #1]
+ 143:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 		{
+ 479              		.loc 1 143 5 view .LVU124
+ 480 0110 A242     		cmp	r2, r4
+ 481 0112 F5D8     		bhi	.L25
+ 147:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 		{
+ 482              		.loc 1 147 8 is_stmt 1 view .LVU125
+ 147:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 		{
+ 483              		.loc 1 147 10 is_stmt 0 view .LVU126
+ 484 0114 8242     		cmp	r2, r0
+ 485 0116 F4D2     		bcs	.L21
+ 149:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 		}
+ 486              		.loc 1 149 8 view .LVU127
+ 487 0118 1046     		mov	r0, r2
+ 488              	.LVL58:
+ 149:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 		}
+ 489              		.loc 1 149 8 view .LVU128
+ 490 011a F2E7     		b	.L21
+ 491              	.LVL59:
+ 492              	.L32:
+ 149:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 		}
+ 493              		.loc 1 149 8 view .LVU129
+ 494              	.LBE9:
+ 153:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     }
+ 154:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+ 155:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     data = (float)(sum - max - min)/index;
+ 495              		.loc 1 155 5 is_stmt 1 view .LVU130
+ 496              		.loc 1 155 24 is_stmt 0 view .LVU131
+ 497 011c 091B     		subs	r1, r1, r4
+ 498              	.LVL60:
+ 499              		.loc 1 155 12 view .LVU132
+ 500 011e 081A     		subs	r0, r1, r0
+ 501              	.LVL61:
+ 502              		.loc 1 155 12 view .LVU133
+ 503 0120 FFF7FEFF 		bl	__aeabi_ui2f
+ 504              	.LVL62:
+ 505              		.loc 1 155 12 view .LVU134
+ 506 0124 0446     		mov	r4, r0
+ 507              	.LVL63:
+ 508              		.loc 1 155 36 view .LVU135
+ 509 0126 4846     		mov	r0, r9
+ 510 0128 FFF7FEFF 		bl	__aeabi_i2f
+ 511              	.LVL64:
+ 512 012c 0146     		mov	r1, r0
+ARM GAS  /tmp/ccxmsxmY.s 			page 13
+
+
+ 513              		.loc 1 155 10 view .LVU136
+ 514 012e 2046     		mov	r0, r4
+ 515 0130 FFF7FEFF 		bl	__aeabi_fdiv
+ 516              	.LVL65:
+ 156:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+ 157:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     calcVoltage = data * (3.3 / 4095);
+ 517              		.loc 1 157 5 is_stmt 1 view .LVU137
+ 158:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+ 159:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     dust_density =  data * 0.17f - 0.1f;
+ 518              		.loc 1 159 5 view .LVU138
+ 519              		.loc 1 159 26 is_stmt 0 view .LVU139
+ 520 0134 0B49     		ldr	r1, .L34
+ 521 0136 FFF7FEFF 		bl	__aeabi_fmul
+ 522              	.LVL66:
+ 523              		.loc 1 159 18 view .LVU140
+ 524 013a 0B49     		ldr	r1, .L34+4
+ 525 013c FFF7FEFF 		bl	__aeabi_fsub
+ 526              	.LVL67:
+ 527 0140 0446     		mov	r4, r0
+ 528              	.LVL68:
+ 160:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+ 161:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     if(dust_density >= 500)
+ 529              		.loc 1 161 5 is_stmt 1 view .LVU141
+ 530              		.loc 1 161 7 is_stmt 0 view .LVU142
+ 531 0142 0A49     		ldr	r1, .L34+8
+ 532 0144 FFF7FEFF 		bl	__aeabi_fcmpge
+ 533              	.LVL69:
+ 534              		.loc 1 161 7 view .LVU143
+ 535 0148 00B1     		cbz	r0, .L23
+ 162:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     {
+ 163:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     	dust_density = 500;
+ 536              		.loc 1 163 19 view .LVU144
+ 537 014a 084C     		ldr	r4, .L34+8
+ 538              	.LVL70:
+ 539              	.L23:
+ 164:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     }
+ 165:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+ 166:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     if(dust_density <= 0)
+ 540              		.loc 1 166 5 is_stmt 1 view .LVU145
+ 541              		.loc 1 166 7 is_stmt 0 view .LVU146
+ 542 014c 0021     		movs	r1, #0
+ 543 014e 2046     		mov	r0, r4
+ 544 0150 FFF7FEFF 		bl	__aeabi_fcmple
+ 545              	.LVL71:
+ 546 0154 18B9     		cbnz	r0, .L33
+ 547              	.LVL72:
+ 548              	.L11:
+ 167:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     {
+ 168:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     	dust_density = 0;
+ 169:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     }
+ 170:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** 
+ 171:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     return dust_density;
+ 172:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** }
+ 549              		.loc 1 172 1 view .LVU147
+ 550 0156 2046     		mov	r0, r4
+ 551 0158 BD46     		mov	sp, r7
+ 552              	.LCFI9:
+ARM GAS  /tmp/ccxmsxmY.s 			page 14
+
+
+ 553              		.cfi_remember_state
+ 554              		.cfi_def_cfa_register 13
+ 555              		@ sp needed
+ 556 015a BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 557              	.LVL73:
+ 558              	.L33:
+ 559              	.LCFI10:
+ 560              		.cfi_restore_state
+ 168:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c ****     }
+ 561              		.loc 1 168 19 view .LVU148
+ 562 015e 0024     		movs	r4, #0
+ 563              	.LVL74:
+ 171:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** }
+ 564              		.loc 1 171 5 is_stmt 1 view .LVU149
+ 171:Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.c **** }
+ 565              		.loc 1 171 12 is_stmt 0 view .LVU150
+ 566 0160 F9E7     		b	.L11
+ 567              	.L35:
+ 568 0162 00BF     		.align	2
+ 569              	.L34:
+ 570 0164 7B142E3E 		.word	1043207291
+ 571 0168 CDCCCC3D 		.word	1036831949
+ 572 016c 0000FA43 		.word	1140457472
+ 573              		.cfi_endproc
+ 574              	.LFE69:
+ 576              		.text
+ 577              	.Letext0:
+ 578              		.file 2 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 579              		.file 3 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 580              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 581              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h"
+ 582              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 583              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 584              		.file 8 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 585              		.file 9 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_adc.h"
+ 586              		.file 10 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h"
+ 587              		.file 11 "Sharp_G2Y10_Dust_Sensor/Sharp_G2y10_Dust_Sensor.h"
+ 588              		.file 12 "Delay_Timer/Delay_Timer.h"
+ARM GAS  /tmp/ccxmsxmY.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Sharp_G2y10_Dust_Sensor.c
+     /tmp/ccxmsxmY.s:18     .text.G2y10_Delay_Init:0000000000000000 $t
+     /tmp/ccxmsxmY.s:23     .text.G2y10_Delay_Init:0000000000000000 G2y10_Delay_Init
+     /tmp/ccxmsxmY.s:49     .text.G2y10_ADC_Channel_Config:0000000000000000 $t
+     /tmp/ccxmsxmY.s:54     .text.G2y10_ADC_Channel_Config:0000000000000000 G2y10_ADC_Channel_Config
+     /tmp/ccxmsxmY.s:119    .text.G2y10_Delay_Us:0000000000000000 $t
+     /tmp/ccxmsxmY.s:124    .text.G2y10_Delay_Us:0000000000000000 G2y10_Delay_Us
+     /tmp/ccxmsxmY.s:149    .text.Sharp_G2y10_Dust_Sensor_Init:0000000000000000 $t
+     /tmp/ccxmsxmY.s:155    .text.Sharp_G2y10_Dust_Sensor_Init:0000000000000000 Sharp_G2y10_Dust_Sensor_Init
+     /tmp/ccxmsxmY.s:202    .text.Sharp_G2y10_Dust_Sensor_Measuring_Average:0000000000000000 $t
+     /tmp/ccxmsxmY.s:208    .text.Sharp_G2y10_Dust_Sensor_Measuring_Average:0000000000000000 Sharp_G2y10_Dust_Sensor_Measuring_Average
+     /tmp/ccxmsxmY.s:570    .text.Sharp_G2y10_Dust_Sensor_Measuring_Average:0000000000000164 $d
+
+UNDEFINED SYMBOLS
+Delay_Tim_Init
+HAL_ADC_ConfigChannel
+Error_Handler
+Delay_Timer_Us
+__aeabi_ui2f
+__aeabi_i2f
+__aeabi_fdiv
+__aeabi_fsub
+__aeabi_f2iz
+__aeabi_fcmplt
+__aeabi_fmul
+__aeabi_fcmpge
+__aeabi_fcmple
+HAL_ADC_Start
+HAL_ADC_PollForConversion
+HAL_GPIO_WritePin
+HAL_ADC_GetValue
+HAL_ADC_Stop

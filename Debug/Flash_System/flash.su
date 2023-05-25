@@ -1,0 +1,10 @@
+../Flash_System/flash.c:20:6:Flash_Erase	40	static
+../Flash_System/flash.c:36:6:Flash_Write_Int	24	static
+../Flash_System/flash.c:46:6:Flash_Write_Float	32	static
+../Flash_System/flash.c:58:6:Flash_Write_Array	40	static
+../Flash_System/flash.c:73:6:Flash_Write_Struct	16	static
+../Flash_System/flash.c:81:5:Flash_Read_Int	16	static
+../Flash_System/flash.c:89:7:Flash_Read_Float	24	static
+../Flash_System/flash.c:98:6:Flash_Read_Array	32	static
+../Flash_System/flash.c:111:6:Flash_Read_Struct	16	static
+../Flash_System/flash.c:119:6:Flash_Protecion_Main	8	static

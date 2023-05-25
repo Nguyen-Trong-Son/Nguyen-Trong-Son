@@ -1,0 +1,14 @@
+../So2_Hx711/So2_Sensor_Hx711.c:16:6:hx711_delay_us	16	static,ignoring_inline_asm
+../So2_Hx711/So2_Sensor_Hx711.c:26:6:hx711_lock	16	static
+../So2_Hx711/So2_Sensor_Hx711.c:33:6:hx711_unlock	16	static
+../So2_Hx711/So2_Sensor_Hx711.c:38:6:hx711_init	40	static
+../So2_Hx711/So2_Sensor_Hx711.c:67:6:hx711_set_gain	16	static
+../So2_Hx711/So2_Sensor_Hx711.c:86:9:hx711_value	32	static
+../So2_Hx711/So2_Sensor_Hx711.c:117:9:hx711_value_ave	56	static
+../So2_Hx711/So2_Sensor_Hx711.c:131:6:hx711_tare	56	static
+../So2_Hx711/So2_Sensor_Hx711.c:144:6:hx711_calibration	24	static
+../So2_Hx711/So2_Sensor_Hx711.c:152:7:hx711_so2_result	64	static
+../So2_Hx711/So2_Sensor_Hx711.c:171:6:hx711_coef_set	16	static
+../So2_Hx711/So2_Sensor_Hx711.c:176:7:hx711_coef_get	16	static
+../So2_Hx711/So2_Sensor_Hx711.c:181:6:hx711_power_down	16	static
+../So2_Hx711/So2_Sensor_Hx711.c:188:6:hx711_power_up	16	static

@@ -1,0 +1,8 @@
+../Display_Prameter/Display_LCD_Parameter.c:23:6:Display_Setup_Parameter_Pm2_5	32	static
+../Display_Prameter/Display_LCD_Parameter.c:167:6:Display_Setup_Parameter_Sum_pm	32	static
+../Display_Prameter/Display_LCD_Parameter.c:247:6:Display_Setup_Parameter_Co2	32	static
+../Display_Prameter/Display_LCD_Parameter.c:394:6:Display_Setup_Parameter_So2	32	static
+../Display_Prameter/Display_LCD_Parameter.c:542:6:Display_Setup_Parameter_Humidity	32	static
+../Display_Prameter/Display_LCD_Parameter.c:691:6:Display_Setup_Parameter_Temperature	32	static
+../Display_Prameter/Display_LCD_Parameter.c:785:6:Display_Done	32	static
+../Display_Prameter/Display_LCD_Parameter.c:845:6:Display_Monitor	32	static

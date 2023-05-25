@@ -1,0 +1,207 @@
+ARM GAS  /tmp/ccChFOaK.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"Delay_Timer.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.Delay_Tim_Init,"ax",%progbits
+  18              		.align	1
+  19              		.global	Delay_Tim_Init
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	Delay_Tim_Init:
+  25              	.LVL0:
+  26              	.LFB65:
+  27              		.file 1 "Delay_Timer/Delay_Timer.c"
+   1:Delay_Timer/Delay_Timer.c **** /**
+   2:Delay_Timer/Delay_Timer.c ****  * @file Delay_Timer.c
+   3:Delay_Timer/Delay_Timer.c ****  * @author Nguyen Trong Son (LoH Technology Company Limited)
+   4:Delay_Timer/Delay_Timer.c ****  * @brief 
+   5:Delay_Timer/Delay_Timer.c ****  * @version 0.1
+   6:Delay_Timer/Delay_Timer.c ****  * @date 2022-08-28
+   7:Delay_Timer/Delay_Timer.c ****  * 
+   8:Delay_Timer/Delay_Timer.c ****  * @copyright Copyright (c) 2022
+   9:Delay_Timer/Delay_Timer.c ****  * 
+  10:Delay_Timer/Delay_Timer.c ****  */
+  11:Delay_Timer/Delay_Timer.c **** #include "Delay_Timer.h"
+  12:Delay_Timer/Delay_Timer.c **** 
+  13:Delay_Timer/Delay_Timer.c **** /**
+  14:Delay_Timer/Delay_Timer.c ****  * @brief Config is use mode timer base
+  15:Delay_Timer/Delay_Timer.c ****  * 
+  16:Delay_Timer/Delay_Timer.c ****  * @param htim 
+  17:Delay_Timer/Delay_Timer.c ****  */
+  18:Delay_Timer/Delay_Timer.c **** void Delay_Tim_Init(TIM_HandleTypeDef *htim)
+  19:Delay_Timer/Delay_Timer.c **** {
+  28              		.loc 1 19 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		.loc 1 19 1 is_stmt 0 view .LVU1
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+  20:Delay_Timer/Delay_Timer.c **** 	HAL_TIM_Base_Start(htim);
+  38              		.loc 1 20 2 is_stmt 1 view .LVU2
+ARM GAS  /tmp/ccChFOaK.s 			page 2
+
+
+  39 0002 FFF7FEFF 		bl	HAL_TIM_Base_Start
+  40              	.LVL1:
+  21:Delay_Timer/Delay_Timer.c **** }
+  41              		.loc 1 21 1 is_stmt 0 view .LVU3
+  42 0006 08BD     		pop	{r3, pc}
+  43              		.cfi_endproc
+  44              	.LFE65:
+  46              		.section	.text.Delay_Timer_Us,"ax",%progbits
+  47              		.align	1
+  48              		.global	Delay_Timer_Us
+  49              		.syntax unified
+  50              		.thumb
+  51              		.thumb_func
+  53              	Delay_Timer_Us:
+  54              	.LVL2:
+  55              	.LFB66:
+  22:Delay_Timer/Delay_Timer.c **** 
+  23:Delay_Timer/Delay_Timer.c **** /**
+  24:Delay_Timer/Delay_Timer.c ****  * @brief delay microsecond mode is used by timer
+  25:Delay_Timer/Delay_Timer.c ****  * 
+  26:Delay_Timer/Delay_Timer.c ****  * @param htim 
+  27:Delay_Timer/Delay_Timer.c ****  * @param time 
+  28:Delay_Timer/Delay_Timer.c ****  */
+  29:Delay_Timer/Delay_Timer.c **** void Delay_Timer_Us(TIM_HandleTypeDef *htim, uint16_t time)
+  30:Delay_Timer/Delay_Timer.c **** {
+  56              		.loc 1 30 1 is_stmt 1 view -0
+  57              		.cfi_startproc
+  58              		@ args = 0, pretend = 0, frame = 0
+  59              		@ frame_needed = 0, uses_anonymous_args = 0
+  60              		@ link register save eliminated.
+  31:Delay_Timer/Delay_Timer.c **** 	__HAL_TIM_SET_COUNTER(htim,0);
+  61              		.loc 1 31 2 view .LVU5
+  62 0000 0368     		ldr	r3, [r0]
+  63 0002 0022     		movs	r2, #0
+  64 0004 5A62     		str	r2, [r3, #36]
+  32:Delay_Timer/Delay_Timer.c **** 	while(__HAL_TIM_GET_COUNTER(htim)<time){}
+  65              		.loc 1 32 2 view .LVU6
+  66              	.L4:
+  67              		.loc 1 32 42 discriminator 1 view .LVU7
+  68              		.loc 1 32 35 discriminator 1 view .LVU8
+  69              		.loc 1 32 8 is_stmt 0 discriminator 1 view .LVU9
+  70 0006 0368     		ldr	r3, [r0]
+  71 0008 5B6A     		ldr	r3, [r3, #36]
+  72              		.loc 1 32 35 discriminator 1 view .LVU10
+  73 000a 8B42     		cmp	r3, r1
+  74 000c FBD3     		bcc	.L4
+  33:Delay_Timer/Delay_Timer.c **** }
+  75              		.loc 1 33 1 view .LVU11
+  76 000e 7047     		bx	lr
+  77              		.cfi_endproc
+  78              	.LFE66:
+  80              		.section	.text.Delay_Tim_Ms,"ax",%progbits
+  81              		.align	1
+  82              		.global	Delay_Tim_Ms
+  83              		.syntax unified
+  84              		.thumb
+  85              		.thumb_func
+ARM GAS  /tmp/ccChFOaK.s 			page 3
+
+
+  87              	Delay_Tim_Ms:
+  88              	.LVL3:
+  89              	.LFB67:
+  34:Delay_Timer/Delay_Timer.c **** 
+  35:Delay_Timer/Delay_Timer.c **** /**
+  36:Delay_Timer/Delay_Timer.c ****  * @brief delay milisecond mode is used by timer
+  37:Delay_Timer/Delay_Timer.c ****  * 
+  38:Delay_Timer/Delay_Timer.c ****  * @param htim 
+  39:Delay_Timer/Delay_Timer.c ****  * @param Time 
+  40:Delay_Timer/Delay_Timer.c ****  */
+  41:Delay_Timer/Delay_Timer.c **** void Delay_Tim_Ms(TIM_HandleTypeDef *htim, uint16_t Time)
+  42:Delay_Timer/Delay_Timer.c **** {
+  90              		.loc 1 42 1 is_stmt 1 view -0
+  91              		.cfi_startproc
+  92              		@ args = 0, pretend = 0, frame = 0
+  93              		@ frame_needed = 0, uses_anonymous_args = 0
+  94              		@ link register save eliminated.
+  43:Delay_Timer/Delay_Timer.c **** 	__HAL_TIM_SET_COUNTER(htim,0);
+  95              		.loc 1 43 2 view .LVU13
+  96 0000 0368     		ldr	r3, [r0]
+  97 0002 0022     		movs	r2, #0
+  98 0004 5A62     		str	r2, [r3, #36]
+  44:Delay_Timer/Delay_Timer.c **** 	while(Time--)
+  99              		.loc 1 44 2 view .LVU14
+ 100              		.loc 1 44 7 is_stmt 0 view .LVU15
+ 101 0006 04E0     		b	.L6
+ 102              	.L7:
+  45:Delay_Timer/Delay_Timer.c **** 	{
+  46:Delay_Timer/Delay_Timer.c **** 		while(__HAL_TIM_GET_COUNTER(htim)<1000){}
+ 103              		.loc 1 46 43 is_stmt 1 discriminator 1 view .LVU16
+ 104              		.loc 1 46 36 discriminator 1 view .LVU17
+ 105              		.loc 1 46 9 is_stmt 0 discriminator 1 view .LVU18
+ 106 0008 0368     		ldr	r3, [r0]
+ 107 000a 5B6A     		ldr	r3, [r3, #36]
+ 108              		.loc 1 46 36 discriminator 1 view .LVU19
+ 109 000c B3F57A7F 		cmp	r3, #1000
+ 110 0010 FAD3     		bcc	.L7
+ 111              	.L6:
+  44:Delay_Timer/Delay_Timer.c **** 	while(Time--)
+ 112              		.loc 1 44 8 is_stmt 1 view .LVU20
+ 113 0012 0B46     		mov	r3, r1
+  44:Delay_Timer/Delay_Timer.c **** 	while(Time--)
+ 114              		.loc 1 44 12 is_stmt 0 view .LVU21
+ 115 0014 0139     		subs	r1, r1, #1
+ 116              	.LVL4:
+  44:Delay_Timer/Delay_Timer.c **** 	while(Time--)
+ 117              		.loc 1 44 12 view .LVU22
+ 118 0016 89B2     		uxth	r1, r1
+ 119              	.LVL5:
+  44:Delay_Timer/Delay_Timer.c **** 	while(Time--)
+ 120              		.loc 1 44 8 view .LVU23
+ 121 0018 002B     		cmp	r3, #0
+ 122 001a F5D1     		bne	.L7
+  47:Delay_Timer/Delay_Timer.c **** 	}
+  48:Delay_Timer/Delay_Timer.c **** }...
+ 123              		.loc 1 48 1 view .LVU24
+ 124 001c 7047     		bx	lr
+ARM GAS  /tmp/ccChFOaK.s 			page 4
+
+
+ 125              		.cfi_endproc
+ 126              	.LFE67:
+ 128              		.text
+ 129              	.Letext0:
+ 130              		.file 2 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 131              		.file 3 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 132              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 133              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 134              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 135              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h"
+ARM GAS  /tmp/ccChFOaK.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Delay_Timer.c
+     /tmp/ccChFOaK.s:18     .text.Delay_Tim_Init:0000000000000000 $t
+     /tmp/ccChFOaK.s:24     .text.Delay_Tim_Init:0000000000000000 Delay_Tim_Init
+     /tmp/ccChFOaK.s:47     .text.Delay_Timer_Us:0000000000000000 $t
+     /tmp/ccChFOaK.s:53     .text.Delay_Timer_Us:0000000000000000 Delay_Timer_Us
+     /tmp/ccChFOaK.s:81     .text.Delay_Tim_Ms:0000000000000000 $t
+     /tmp/ccChFOaK.s:87     .text.Delay_Tim_Ms:0000000000000000 Delay_Tim_Ms
+
+UNDEFINED SYMBOLS
+HAL_TIM_Base_Start

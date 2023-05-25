@@ -1,0 +1,2 @@
+../Protocol_Lora/Transmit_Data_Lora.c:106:6:Uart_Lora_Init	24	static
+../Protocol_Lora/Transmit_Data_Lora.c:114:9:Lora_Uart_Master_Send_Data_To_Salve	40	static

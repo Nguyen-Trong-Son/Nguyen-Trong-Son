@@ -1,0 +1,3 @@
+../Debug_Program/Debug_Program.c:22:6:Debug_Program_Config	24	static
+../Debug_Program/Debug_Program.c:37:6:Transmit_Data_To_Computer	24	static
+../Debug_Program/Debug_Program.c:48:6:Blink_Led01	16	static

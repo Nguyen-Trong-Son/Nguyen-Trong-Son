@@ -1,0 +1,3 @@
+../LM335A_Sensor/LM335A_Sensor.c:12:13:LM335A_ADC_Config	32	static
+../LM335A_Sensor/LM335A_Sensor.c:33:6:LM335A_Init	16	static
+../LM335A_Sensor/LM335A_Sensor.c:46:7:LM335A_Measuring	72	dynamic

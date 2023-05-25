@@ -1,0 +1,14 @@
+../Machine_Routine/Machine_Routine.c:102:6:vApplicationStackOverflowHook	16	static,ignoring_inline_asm
+../Machine_Routine/Machine_Routine.c:119:6:vApplicationMallocFailedHook	8	static,ignoring_inline_asm
+../Machine_Routine/Machine_Routine.c:141:13:Init_Debug_Program	16	static
+../Machine_Routine/Machine_Routine.c:151:13:Init_LCD_Display	16	static
+../Machine_Routine/Machine_Routine.c:173:13:Init_Transimir_Lora_Mode_Uart	8	static
+../Machine_Routine/Machine_Routine.c:182:6:Init_Cmd_Transmit_Lora	8	static
+../Machine_Routine/Machine_Routine.c:191:13:Init_HC595	8	static
+../Machine_Routine/Machine_Routine.c:201:6:Init_RTOS_System_Project	16	static
+../Machine_Routine/Machine_Routine.c:237:6:Init_System_Funtion_Project	8	static
+../Machine_Routine/Machine_Routine.c:266:16:Routine01_Task_01_Routine_System	8	static
+../Machine_Routine/Machine_Routine.c:272:16:Routine02_Task_02_Status_Machine	8	static
+../Machine_Routine/Machine_Routine.c:285:13:Task01_Routine_System	24	static
+../Machine_Routine/Machine_Routine.c:328:13:Task02_Status_Machine	16	static
+../Machine_Routine/Machine_Routine.c:344:9:Routine_Machine_NotUseRTOS	16	static

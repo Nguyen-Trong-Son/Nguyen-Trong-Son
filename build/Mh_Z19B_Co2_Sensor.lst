@@ -1,0 +1,879 @@
+ARM GAS  /tmp/ccOfCeLO.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"Mh_Z19B_Co2_Sensor.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.Mh_Z19B_Co2_Sensor_Init,"ax",%progbits
+  18              		.align	1
+  19              		.global	Mh_Z19B_Co2_Sensor_Init
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	Mh_Z19B_Co2_Sensor_Init:
+  25              	.LVL0:
+  26              	.LFB68:
+  27              		.file 1 "MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c"
+   1:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** /**
+   2:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @file Co2_Sensor.c
+   3:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @author Nguyen Trong Son (LoH Technology Company Limited)
+   4:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @brief 
+   5:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @version 0.1
+   6:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @date 2022-08-26
+   7:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * 
+   8:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @copyright Copyright (c) 2022
+   9:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * 
+  10:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  */
+  11:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** #include "Mh_Z19B_Co2_Sensor.h"
+  12:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** #include "stdint.h"
+  13:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** #include "stdio.h"
+  14:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** #include "stdlib.h"
+  15:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+  16:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** uint8_t particle_measure[] = {0xFF, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79};
+  17:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** uint8_t zero_point_calibration[]={0xFF, 0x01, 0x87, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78};
+  18:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** uint8_t span_point_calibration[] = {0xFF, 0x01, 0x88, 2000 >> 8, 2000 & 0xFF, 0x00, 0x00, 0x00, 0x2
+  19:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** uint8_t sensor_detetion_range_setting[] = {0xFF, 0x01, 0x99, 2500 >> 8, 2500 & 0xFF, 0x00, 0x00, 0x
+  20:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** uint8_t sensor_auto_calibration[] = {0xFF, 0x01, 0x79, 0xA0, 0x00, 0x00, 0x00, 0x00, 0xFF-282};
+  21:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** uint8_t particle_measure_data_co2_sensor[9];
+  22:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+  23:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** /**
+  24:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @brief Mh_Z19B_Co2_Sensor_Init
+  25:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * 
+  26:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @param sensor_x 
+  27:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  */
+  28:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** void Mh_Z19B_Co2_Sensor_Init(Mh_Z19B_Co2_Sensor_Name *sensor_x, UART_HandleTypeDef *uart)
+  29:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** {
+  28              		.loc 1 29 1 view -0
+  29              		.cfi_startproc
+ARM GAS  /tmp/ccOfCeLO.s 			page 2
+
+
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  30:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     sensor_x->uart_co2_sensor = uart;
+  33              		.loc 1 30 5 view .LVU1
+  34              		.loc 1 30 31 is_stmt 0 view .LVU2
+  35 0000 0160     		str	r1, [r0]
+  31:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** }
+  36              		.loc 1 31 1 view .LVU3
+  37 0002 7047     		bx	lr
+  38              		.cfi_endproc
+  39              	.LFE68:
+  41              		.section	.text.Zero_Point_Calibration,"ax",%progbits
+  42              		.align	1
+  43              		.global	Zero_Point_Calibration
+  44              		.syntax unified
+  45              		.thumb
+  46              		.thumb_func
+  48              	Zero_Point_Calibration:
+  49              	.LVL1:
+  50              	.LFB69:
+  32:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+  33:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** /**
+  34:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @brief Zero_Point_Calibration
+  35:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * ZERO POINT is 400PPM, PLS MAKE SURE THE SENSOR HAD BEEN WORKED UNDER 400PPM FOR OVER 20MINUTES
+  36:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @param sensor_x 
+  37:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  */
+  38:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** uint8_t Zero_Point_Calibration(Mh_Z19B_Co2_Sensor_Name *sensor_x)
+  39:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** {
+  51              		.loc 1 39 1 is_stmt 1 view -0
+  52              		.cfi_startproc
+  53              		@ args = 0, pretend = 0, frame = 0
+  54              		@ frame_needed = 0, uses_anonymous_args = 0
+  55              		.loc 1 39 1 is_stmt 0 view .LVU5
+  56 0000 08B5     		push	{r3, lr}
+  57              	.LCFI0:
+  58              		.cfi_def_cfa_offset 8
+  59              		.cfi_offset 3, -8
+  60              		.cfi_offset 14, -4
+  40:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     HAL_UART_Transmit(sensor_x->uart_co2_sensor, (uint8_t*)(zero_point_calibration), sizeof(zero_po
+  61              		.loc 1 40 5 is_stmt 1 view .LVU6
+  62 0002 4FF47A73 		mov	r3, #1000
+  63 0006 0922     		movs	r2, #9
+  64 0008 0249     		ldr	r1, .L4
+  65 000a 0068     		ldr	r0, [r0]
+  66              	.LVL2:
+  67              		.loc 1 40 5 is_stmt 0 view .LVU7
+  68 000c FFF7FEFF 		bl	HAL_UART_Transmit
+  69              	.LVL3:
+  41:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     return 0;
+  70              		.loc 1 41 5 is_stmt 1 view .LVU8
+  42:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** }
+  71              		.loc 1 42 1 is_stmt 0 view .LVU9
+  72 0010 0020     		movs	r0, #0
+  73 0012 08BD     		pop	{r3, pc}
+  74              	.L5:
+  75              		.align	2
+ARM GAS  /tmp/ccOfCeLO.s 			page 3
+
+
+  76              	.L4:
+  77 0014 00000000 		.word	.LANCHOR0
+  78              		.cfi_endproc
+  79              	.LFE69:
+  81              		.section	.text.Span_Point_Calibration,"ax",%progbits
+  82              		.align	1
+  83              		.global	Span_Point_Calibration
+  84              		.syntax unified
+  85              		.thumb
+  86              		.thumb_func
+  88              	Span_Point_Calibration:
+  89              	.LVL4:
+  90              	.LFB70:
+  43:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+  44:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** /**
+  45:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @brief 
+  46:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * Note: Pls do ZERO calibration before span calibration
+  47:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * Please make sure the sensor worked under a certain level co2 for over 20 minutes.
+  48:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * Suggest using 2000ppm as span, at least 1000ppm
+  49:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @param sensor_x 
+  50:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @return uint8_t 
+  51:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  */
+  52:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** uint8_t Span_Point_Calibration(Mh_Z19B_Co2_Sensor_Name *sensor_x)
+  53:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** {
+  91              		.loc 1 53 1 is_stmt 1 view -0
+  92              		.cfi_startproc
+  93              		@ args = 0, pretend = 0, frame = 0
+  94              		@ frame_needed = 0, uses_anonymous_args = 0
+  95              		.loc 1 53 1 is_stmt 0 view .LVU11
+  96 0000 08B5     		push	{r3, lr}
+  97              	.LCFI1:
+  98              		.cfi_def_cfa_offset 8
+  99              		.cfi_offset 3, -8
+ 100              		.cfi_offset 14, -4
+  54:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     HAL_UART_Transmit(sensor_x->uart_co2_sensor, (uint8_t*)(span_point_calibration), sizeof(span_po
+ 101              		.loc 1 54 5 is_stmt 1 view .LVU12
+ 102 0002 4FF47A73 		mov	r3, #1000
+ 103 0006 0922     		movs	r2, #9
+ 104 0008 0249     		ldr	r1, .L8
+ 105 000a 0068     		ldr	r0, [r0]
+ 106              	.LVL5:
+ 107              		.loc 1 54 5 is_stmt 0 view .LVU13
+ 108 000c FFF7FEFF 		bl	HAL_UART_Transmit
+ 109              	.LVL6:
+  55:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     return 0;
+ 110              		.loc 1 55 5 is_stmt 1 view .LVU14
+  56:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** }
+ 111              		.loc 1 56 1 is_stmt 0 view .LVU15
+ 112 0010 0020     		movs	r0, #0
+ 113 0012 08BD     		pop	{r3, pc}
+ 114              	.L9:
+ 115              		.align	2
+ 116              	.L8:
+ 117 0014 00000000 		.word	.LANCHOR1
+ 118              		.cfi_endproc
+ 119              	.LFE70:
+ 121              		.section	.text.Sensor_Detection_Range_Setting,"ax",%progbits
+ARM GAS  /tmp/ccOfCeLO.s 			page 4
+
+
+ 122              		.align	1
+ 123              		.global	Sensor_Detection_Range_Setting
+ 124              		.syntax unified
+ 125              		.thumb
+ 126              		.thumb_func
+ 128              	Sensor_Detection_Range_Setting:
+ 129              	.LVL7:
+ 130              	.LFB71:
+  57:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+  58:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** /**
+  59:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @brief Sensor_Detection_Range_Setting
+  60:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * 
+  61:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @param sensor_x 
+  62:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @return uint8_t 
+  63:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  */
+  64:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** uint8_t Sensor_Detection_Range_Setting(Mh_Z19B_Co2_Sensor_Name *sensor_x)
+  65:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** {
+ 131              		.loc 1 65 1 is_stmt 1 view -0
+ 132              		.cfi_startproc
+ 133              		@ args = 0, pretend = 0, frame = 0
+ 134              		@ frame_needed = 0, uses_anonymous_args = 0
+ 135              		.loc 1 65 1 is_stmt 0 view .LVU17
+ 136 0000 08B5     		push	{r3, lr}
+ 137              	.LCFI2:
+ 138              		.cfi_def_cfa_offset 8
+ 139              		.cfi_offset 3, -8
+ 140              		.cfi_offset 14, -4
+  66:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     HAL_UART_Transmit(sensor_x->uart_co2_sensor,(uint8_t*)sensor_detetion_range_setting, sizeof(sen
+ 141              		.loc 1 66 5 is_stmt 1 view .LVU18
+ 142 0002 4FF47A73 		mov	r3, #1000
+ 143 0006 0922     		movs	r2, #9
+ 144 0008 0249     		ldr	r1, .L12
+ 145 000a 0068     		ldr	r0, [r0]
+ 146              	.LVL8:
+ 147              		.loc 1 66 5 is_stmt 0 view .LVU19
+ 148 000c FFF7FEFF 		bl	HAL_UART_Transmit
+ 149              	.LVL9:
+  67:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     return 0;
+ 150              		.loc 1 67 5 is_stmt 1 view .LVU20
+  68:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** }
+ 151              		.loc 1 68 1 is_stmt 0 view .LVU21
+ 152 0010 0020     		movs	r0, #0
+ 153 0012 08BD     		pop	{r3, pc}
+ 154              	.L13:
+ 155              		.align	2
+ 156              	.L12:
+ 157 0014 00000000 		.word	.LANCHOR2
+ 158              		.cfi_endproc
+ 159              	.LFE71:
+ 161              		.section	.text.Sensor_Set_Auto_Calibration,"ax",%progbits
+ 162              		.align	1
+ 163              		.global	Sensor_Set_Auto_Calibration
+ 164              		.syntax unified
+ 165              		.thumb
+ 166              		.thumb_func
+ 168              	Sensor_Set_Auto_Calibration:
+ 169              	.LVL10:
+ARM GAS  /tmp/ccOfCeLO.s 			page 5
+
+
+ 170              	.LFB72:
+  69:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+  70:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** /**
+  71:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @brief Sensor_Set_Auto_Calibration
+  72:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * 
+  73:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @param sensor_x 
+  74:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @return uint8_t 
+  75:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  */
+  76:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** uint8_t Sensor_Set_Auto_Calibration(Mh_Z19B_Co2_Sensor_Name *sensor_x)
+  77:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** {
+ 171              		.loc 1 77 1 is_stmt 1 view -0
+ 172              		.cfi_startproc
+ 173              		@ args = 0, pretend = 0, frame = 0
+ 174              		@ frame_needed = 0, uses_anonymous_args = 0
+ 175              		.loc 1 77 1 is_stmt 0 view .LVU23
+ 176 0000 08B5     		push	{r3, lr}
+ 177              	.LCFI3:
+ 178              		.cfi_def_cfa_offset 8
+ 179              		.cfi_offset 3, -8
+ 180              		.cfi_offset 14, -4
+  78:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     HAL_UART_Transmit(sensor_x->uart_co2_sensor,(uint8_t*)sensor_auto_calibration, sizeof(sensor_au
+ 181              		.loc 1 78 5 is_stmt 1 view .LVU24
+ 182 0002 4FF47A73 		mov	r3, #1000
+ 183 0006 0922     		movs	r2, #9
+ 184 0008 0249     		ldr	r1, .L16
+ 185 000a 0068     		ldr	r0, [r0]
+ 186              	.LVL11:
+ 187              		.loc 1 78 5 is_stmt 0 view .LVU25
+ 188 000c FFF7FEFF 		bl	HAL_UART_Transmit
+ 189              	.LVL12:
+  79:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     return 0;
+ 190              		.loc 1 79 5 is_stmt 1 view .LVU26
+  80:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** }
+ 191              		.loc 1 80 1 is_stmt 0 view .LVU27
+ 192 0010 0020     		movs	r0, #0
+ 193 0012 08BD     		pop	{r3, pc}
+ 194              	.L17:
+ 195              		.align	2
+ 196              	.L16:
+ 197 0014 00000000 		.word	.LANCHOR3
+ 198              		.cfi_endproc
+ 199              	.LFE72:
+ 201              		.section	.text.Mh_Z19B_Co2_Sensor_Concentration,"ax",%progbits
+ 202              		.align	1
+ 203              		.global	Mh_Z19B_Co2_Sensor_Concentration
+ 204              		.syntax unified
+ 205              		.thumb
+ 206              		.thumb_func
+ 208              	Mh_Z19B_Co2_Sensor_Concentration:
+ 209              	.LVL13:
+ 210              	.LFB73:
+  81:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+  82:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** /**
+  83:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @brief 
+  84:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * 
+  85:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @param huart1_Co2_Sensor 
+  86:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @param huart3_Debug 
+ARM GAS  /tmp/ccOfCeLO.s 			page 6
+
+
+  87:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @param time_out 
+  88:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @return uint16_t 
+  89:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  */
+  90:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** uint16_t Mh_Z19B_Co2_Sensor_Concentration(Mh_Z19B_Co2_Sensor_Name *sensor_x)
+  91:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** {
+ 211              		.loc 1 91 1 is_stmt 1 view -0
+ 212              		.cfi_startproc
+ 213              		@ args = 0, pretend = 0, frame = 0
+ 214              		@ frame_needed = 0, uses_anonymous_args = 0
+ 215              		.loc 1 91 1 is_stmt 0 view .LVU29
+ 216 0000 10B5     		push	{r4, lr}
+ 217              	.LCFI4:
+ 218              		.cfi_def_cfa_offset 8
+ 219              		.cfi_offset 4, -8
+ 220              		.cfi_offset 14, -4
+ 221 0002 0446     		mov	r4, r0
+  92:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     
+  93:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     /**
+  94:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****      * @brief The Data transmission frame of 8 byte in which the 3rd byte is byte command 
+  95:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****      * The returned result consists of 8 btye, where the 2nd and 3rd bytes are the low and high byt
+  96:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****      * containing the parameters of the co2 gas in the environment.
+  97:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****      */  
+  98:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+  99:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     uint16_t ppm_co2 = 0;
+ 222              		.loc 1 99 5 is_stmt 1 view .LVU30
+ 223              	.LVL14:
+ 100:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     HAL_UART_Transmit(sensor_x->uart_co2_sensor, (uint8_t*)(particle_measure), sizeof(particle_meas
+ 224              		.loc 1 100 5 view .LVU31
+ 225 0004 4FF47A73 		mov	r3, #1000
+ 226 0008 0922     		movs	r2, #9
+ 227 000a 0A49     		ldr	r1, .L22
+ 228 000c 0068     		ldr	r0, [r0]
+ 229              	.LVL15:
+ 230              		.loc 1 100 5 is_stmt 0 view .LVU32
+ 231 000e FFF7FEFF 		bl	HAL_UART_Transmit
+ 232              	.LVL16:
+ 101:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     if(HAL_UART_Receive(sensor_x->uart_co2_sensor, (uint8_t*)particle_measure_data_co2_sensor, size
+ 233              		.loc 1 101 5 is_stmt 1 view .LVU33
+ 234              		.loc 1 101 8 is_stmt 0 view .LVU34
+ 235 0012 41F28833 		movw	r3, #5000
+ 236 0016 0922     		movs	r2, #9
+ 237 0018 0749     		ldr	r1, .L22+4
+ 238 001a 2068     		ldr	r0, [r4]
+ 239 001c FFF7FEFF 		bl	HAL_UART_Receive
+ 240              	.LVL17:
+ 241              		.loc 1 101 7 view .LVU35
+ 242 0020 28B9     		cbnz	r0, .L20
+ 102:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     {
+ 103:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****        ppm_co2 = particle_measure_data_co2_sensor[2] << 8;
+ 243              		.loc 1 103 8 is_stmt 1 view .LVU36
+ 244              		.loc 1 103 50 is_stmt 0 view .LVU37
+ 245 0022 054B     		ldr	r3, .L22+4
+ 246 0024 9A78     		ldrb	r2, [r3, #2]	@ zero_extendqisi2
+ 247              	.LVL18:
+ 104:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****        ppm_co2 = ppm_co2 | particle_measure_data_co2_sensor[3];
+ 248              		.loc 1 104 8 is_stmt 1 view .LVU38
+ 249              		.loc 1 104 60 is_stmt 0 view .LVU39
+ARM GAS  /tmp/ccOfCeLO.s 			page 7
+
+
+ 250 0026 D878     		ldrb	r0, [r3, #3]	@ zero_extendqisi2
+ 251              		.loc 1 104 16 view .LVU40
+ 252 0028 40EA0220 		orr	r0, r0, r2, lsl #8
+ 253              	.LVL19:
+ 254              	.L19:
+ 105:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     }
+ 106:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     return ppm_co2;
+ 255              		.loc 1 106 5 is_stmt 1 view .LVU41
+ 107:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** }
+ 256              		.loc 1 107 1 is_stmt 0 view .LVU42
+ 257 002c 10BD     		pop	{r4, pc}
+ 258              	.LVL20:
+ 259              	.L20:
+  99:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     HAL_UART_Transmit(sensor_x->uart_co2_sensor, (uint8_t*)(particle_measure), sizeof(particle_meas
+ 260              		.loc 1 99 14 view .LVU43
+ 261 002e 0020     		movs	r0, #0
+ 262 0030 FCE7     		b	.L19
+ 263              	.L23:
+ 264 0032 00BF     		.align	2
+ 265              	.L22:
+ 266 0034 00000000 		.word	.LANCHOR4
+ 267 0038 00000000 		.word	.LANCHOR5
+ 268              		.cfi_endproc
+ 269              	.LFE73:
+ 271              		.global	__aeabi_ui2f
+ 272              		.global	__aeabi_i2f
+ 273              		.global	__aeabi_fdiv
+ 274              		.global	__aeabi_fsub
+ 275              		.global	__aeabi_f2iz
+ 276              		.global	__aeabi_fcmplt
+ 277              		.global	__aeabi_fcmpge
+ 278              		.global	__aeabi_fcmple
+ 279              		.section	.text.Mh_Z19B_Co2_Sensor_Caclulator_Average,"ax",%progbits
+ 280              		.align	1
+ 281              		.global	Mh_Z19B_Co2_Sensor_Caclulator_Average
+ 282              		.syntax unified
+ 283              		.thumb
+ 284              		.thumb_func
+ 286              	Mh_Z19B_Co2_Sensor_Caclulator_Average:
+ 287              	.LVL21:
+ 288              	.LFB74:
+ 108:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+ 109:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+ 110:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** /**
+ 111:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @brief Mh_Z19B_Co2_Sensor_Result
+ 112:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * 
+ 113:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @param sensor_x 
+ 114:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @param sample 
+ 115:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  * @return uint16_t 
+ 116:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****  */
+ 117:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** float Mh_Z19B_Co2_Sensor_Caclulator_Average(Mh_Z19B_Co2_Sensor_Name *sensor_x, uint8_t sample)
+ 118:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** {
+ 289              		.loc 1 118 1 is_stmt 1 view -0
+ 290              		.cfi_startproc
+ 291              		@ args = 0, pretend = 0, frame = 0
+ 292              		@ frame_needed = 1, uses_anonymous_args = 0
+ 293              		.loc 1 118 1 is_stmt 0 view .LVU45
+ARM GAS  /tmp/ccOfCeLO.s 			page 8
+
+
+ 294 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 295              	.LCFI5:
+ 296              		.cfi_def_cfa_offset 40
+ 297              		.cfi_offset 3, -40
+ 298              		.cfi_offset 4, -36
+ 299              		.cfi_offset 5, -32
+ 300              		.cfi_offset 6, -28
+ 301              		.cfi_offset 7, -24
+ 302              		.cfi_offset 8, -20
+ 303              		.cfi_offset 9, -16
+ 304              		.cfi_offset 10, -12
+ 305              		.cfi_offset 11, -8
+ 306              		.cfi_offset 14, -4
+ 307 0004 00AF     		add	r7, sp, #0
+ 308              	.LCFI6:
+ 309              		.cfi_def_cfa_register 7
+ 310 0006 8146     		mov	r9, r0
+ 311 0008 0E46     		mov	r6, r1
+ 119:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     float data = 0;
+ 312              		.loc 1 119 5 is_stmt 1 view .LVU46
+ 313              	.LVL22:
+ 120:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     uint16_t arr_buff[sample];
+ 314              		.loc 1 120 5 view .LVU47
+ 315              		.loc 1 120 14 is_stmt 0 view .LVU48
+ 316 000a 4B00     		lsls	r3, r1, #1
+ 317 000c 0733     		adds	r3, r3, #7
+ 318 000e 03F47E73 		and	r3, r3, #1016
+ 319 0012 ADEB030D 		sub	sp, sp, r3
+ 320 0016 E846     		mov	r8, sp
+ 321              	.LVL23:
+ 121:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     uint16_t copy_buff[sample];
+ 322              		.loc 1 121 5 is_stmt 1 view .LVU49
+ 323              		.loc 1 121 14 is_stmt 0 view .LVU50
+ 324 0018 ADEB030D 		sub	sp, sp, r3
+ 325 001c 6D46     		mov	r5, sp
+ 326              	.LVL24:
+ 122:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     uint32_t sum =0;
+ 327              		.loc 1 122 5 is_stmt 1 view .LVU51
+ 123:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     uint8_t index = 0;
+ 328              		.loc 1 123 5 view .LVU52
+ 124:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     
+ 125:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     for(uint8_t i = 0; i< sample; i++)
+ 329              		.loc 1 125 5 view .LVU53
+ 330              	.LBB2:
+ 331              		.loc 1 125 9 view .LVU54
+ 332              		.loc 1 125 17 is_stmt 0 view .LVU55
+ 333 001e 0024     		movs	r4, #0
+ 334              		.loc 1 125 5 view .LVU56
+ 335 0020 09E0     		b	.L25
+ 336              	.LVL25:
+ 337              	.L26:
+ 126:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     {
+ 127:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****         arr_buff[i] = Mh_Z19B_Co2_Sensor_Concentration(sensor_x);
+ 338              		.loc 1 127 9 is_stmt 1 discriminator 3 view .LVU57
+ 339              		.loc 1 127 23 is_stmt 0 discriminator 3 view .LVU58
+ 340 0022 4846     		mov	r0, r9
+ 341 0024 FFF7FEFF 		bl	Mh_Z19B_Co2_Sensor_Concentration
+ARM GAS  /tmp/ccOfCeLO.s 			page 9
+
+
+ 342              	.LVL26:
+ 343              		.loc 1 127 21 discriminator 3 view .LVU59
+ 344 0028 28F81400 		strh	r0, [r8, r4, lsl #1]	@ movhi
+ 128:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****         HAL_Delay(5);
+ 345              		.loc 1 128 9 is_stmt 1 discriminator 3 view .LVU60
+ 346 002c 0520     		movs	r0, #5
+ 347 002e FFF7FEFF 		bl	HAL_Delay
+ 348              	.LVL27:
+ 125:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     {
+ 349              		.loc 1 125 36 discriminator 3 view .LVU61
+ 350 0032 0134     		adds	r4, r4, #1
+ 351              	.LVL28:
+ 125:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     {
+ 352              		.loc 1 125 36 is_stmt 0 discriminator 3 view .LVU62
+ 353 0034 E4B2     		uxtb	r4, r4
+ 354              	.LVL29:
+ 355              	.L25:
+ 125:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     {
+ 356              		.loc 1 125 25 is_stmt 1 discriminator 1 view .LVU63
+ 357 0036 B442     		cmp	r4, r6
+ 358 0038 F3D3     		bcc	.L26
+ 359              	.LBE2:
+ 360              	.LBB3:
+ 129:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     }
+ 130:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+ 131:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     for(uint8_t i =0; i < sample; i++)
+ 361              		.loc 1 131 17 is_stmt 0 view .LVU64
+ 362 003a 0023     		movs	r3, #0
+ 363              	.LBE3:
+ 122:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     uint8_t index = 0;
+ 364              		.loc 1 122 14 view .LVU65
+ 365 003c 1846     		mov	r0, r3
+ 366 003e 04E0     		b	.L27
+ 367              	.LVL30:
+ 368              	.L28:
+ 369              	.LBB4:
+ 132:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     {
+ 133:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****         sum += arr_buff[i];
+ 370              		.loc 1 133 9 is_stmt 1 discriminator 3 view .LVU66
+ 371              		.loc 1 133 24 is_stmt 0 discriminator 3 view .LVU67
+ 372 0040 38F81320 		ldrh	r2, [r8, r3, lsl #1]
+ 373              		.loc 1 133 13 discriminator 3 view .LVU68
+ 374 0044 1044     		add	r0, r0, r2
+ 375              	.LVL31:
+ 131:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     {
+ 376              		.loc 1 131 36 is_stmt 1 discriminator 3 view .LVU69
+ 377 0046 0133     		adds	r3, r3, #1
+ 378              	.LVL32:
+ 131:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     {
+ 379              		.loc 1 131 36 is_stmt 0 discriminator 3 view .LVU70
+ 380 0048 DBB2     		uxtb	r3, r3
+ 381              	.LVL33:
+ 382              	.L27:
+ 131:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     {
+ 383              		.loc 1 131 25 is_stmt 1 discriminator 1 view .LVU71
+ 384 004a B342     		cmp	r3, r6
+ 385 004c F8D3     		bcc	.L28
+ARM GAS  /tmp/ccOfCeLO.s 			page 10
+
+
+ 386              	.LBE4:
+ 134:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     }
+ 135:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+ 136:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     data = (float)sum / sample;
+ 387              		.loc 1 136 5 view .LVU72
+ 388              		.loc 1 136 12 is_stmt 0 view .LVU73
+ 389 004e FFF7FEFF 		bl	__aeabi_ui2f
+ 390              	.LVL34:
+ 391              		.loc 1 136 12 view .LVU74
+ 392 0052 0446     		mov	r4, r0
+ 393              	.LVL35:
+ 394              		.loc 1 136 23 view .LVU75
+ 395 0054 3046     		mov	r0, r6
+ 396 0056 FFF7FEFF 		bl	__aeabi_i2f
+ 397              	.LVL36:
+ 398 005a 0146     		mov	r1, r0
+ 399              		.loc 1 136 10 view .LVU76
+ 400 005c 2046     		mov	r0, r4
+ 401 005e FFF7FEFF 		bl	__aeabi_fdiv
+ 402              	.LVL37:
+ 403 0062 8246     		mov	r10, r0
+ 404              	.LVL38:
+ 137:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+ 138:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     for(uint8_t i =0; i < sample; i++)
+ 405              		.loc 1 138 5 is_stmt 1 view .LVU77
+ 406              	.LBB5:
+ 407              		.loc 1 138 9 view .LVU78
+ 408              		.loc 1 138 17 is_stmt 0 view .LVU79
+ 409 0064 0024     		movs	r4, #0
+ 410              	.LBE5:
+ 123:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     
+ 411              		.loc 1 123 13 view .LVU80
+ 412 0066 A146     		mov	r9, r4
+ 413              	.LVL39:
+ 414              	.LBB6:
+ 415              		.loc 1 138 5 view .LVU81
+ 416 0068 01E0     		b	.L29
+ 417              	.LVL40:
+ 418              	.L30:
+ 419              		.loc 1 138 36 is_stmt 1 discriminator 2 view .LVU82
+ 420 006a 0134     		adds	r4, r4, #1
+ 421              	.LVL41:
+ 422              		.loc 1 138 36 is_stmt 0 discriminator 2 view .LVU83
+ 423 006c E4B2     		uxtb	r4, r4
+ 424              	.LVL42:
+ 425              	.L29:
+ 426              		.loc 1 138 25 is_stmt 1 discriminator 1 view .LVU84
+ 427 006e B442     		cmp	r4, r6
+ 428 0070 1BD2     		bcs	.L41
+ 139:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     {
+ 140:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****         if(abs(data - arr_buff[i]) < data)
+ 429              		.loc 1 140 9 view .LVU85
+ 430              		.loc 1 140 31 is_stmt 0 view .LVU86
+ 431 0072 38F814B0 		ldrh	fp, [r8, r4, lsl #1]
+ 432              		.loc 1 140 21 view .LVU87
+ 433 0076 5846     		mov	r0, fp
+ 434 0078 FFF7FEFF 		bl	__aeabi_i2f
+ARM GAS  /tmp/ccOfCeLO.s 			page 11
+
+
+ 435              	.LVL43:
+ 436 007c 0146     		mov	r1, r0
+ 437 007e 5046     		mov	r0, r10
+ 438 0080 FFF7FEFF 		bl	__aeabi_fsub
+ 439              	.LVL44:
+ 440              		.loc 1 140 12 view .LVU88
+ 441 0084 FFF7FEFF 		bl	__aeabi_f2iz
+ 442              	.LVL45:
+ 443              		.loc 1 140 36 view .LVU89
+ 444 0088 0028     		cmp	r0, #0
+ 445 008a B8BF     		it	lt
+ 446 008c 4042     		rsblt	r0, r0, #0
+ 447 008e FFF7FEFF 		bl	__aeabi_i2f
+ 448              	.LVL46:
+ 449              		.loc 1 140 11 view .LVU90
+ 450 0092 5146     		mov	r1, r10
+ 451 0094 FFF7FEFF 		bl	__aeabi_fcmplt
+ 452              	.LVL47:
+ 453 0098 0028     		cmp	r0, #0
+ 454 009a E6D0     		beq	.L30
+ 141:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****         {
+ 142:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****         	copy_buff[index]= arr_buff[i];
+ 455              		.loc 1 142 10 is_stmt 1 view .LVU91
+ 456              		.loc 1 142 26 is_stmt 0 view .LVU92
+ 457 009c 25F819B0 		strh	fp, [r5, r9, lsl #1]	@ movhi
+ 143:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****             index ++;
+ 458              		.loc 1 143 13 is_stmt 1 view .LVU93
+ 459              		.loc 1 143 19 is_stmt 0 view .LVU94
+ 460 00a0 09F10109 		add	r9, r9, #1
+ 461              	.LVL48:
+ 462              		.loc 1 143 19 view .LVU95
+ 463 00a4 5FFA89F9 		uxtb	r9, r9
+ 464              	.LVL49:
+ 465              		.loc 1 143 19 view .LVU96
+ 466 00a8 DFE7     		b	.L30
+ 467              	.L41:
+ 468              		.loc 1 143 19 view .LVU97
+ 469              	.LBE6:
+ 470              	.LBB7:
+ 144:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****         }
+ 145:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     }
+ 146:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+ 147:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     sum = 0;
+ 148:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     data = 0;
+ 149:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     for(uint8_t i =0; i < index; i++)
+ 471              		.loc 1 149 17 view .LVU98
+ 472 00aa 0023     		movs	r3, #0
+ 473              	.LBE7:
+ 147:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     data = 0;
+ 474              		.loc 1 147 9 view .LVU99
+ 475 00ac 1846     		mov	r0, r3
+ 476 00ae 04E0     		b	.L33
+ 477              	.LVL50:
+ 478              	.L34:
+ 479              	.LBB8:
+ 150:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     {
+ 151:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****         sum += copy_buff[i];
+ARM GAS  /tmp/ccOfCeLO.s 			page 12
+
+
+ 480              		.loc 1 151 9 is_stmt 1 discriminator 3 view .LVU100
+ 481              		.loc 1 151 25 is_stmt 0 discriminator 3 view .LVU101
+ 482 00b0 35F81320 		ldrh	r2, [r5, r3, lsl #1]
+ 483              		.loc 1 151 13 discriminator 3 view .LVU102
+ 484 00b4 1044     		add	r0, r0, r2
+ 485              	.LVL51:
+ 149:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     {
+ 486              		.loc 1 149 35 is_stmt 1 discriminator 3 view .LVU103
+ 487 00b6 0133     		adds	r3, r3, #1
+ 488              	.LVL52:
+ 149:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     {
+ 489              		.loc 1 149 35 is_stmt 0 discriminator 3 view .LVU104
+ 490 00b8 DBB2     		uxtb	r3, r3
+ 491              	.LVL53:
+ 492              	.L33:
+ 149:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     {
+ 493              		.loc 1 149 25 is_stmt 1 discriminator 1 view .LVU105
+ 494 00ba 9945     		cmp	r9, r3
+ 495 00bc F8D8     		bhi	.L34
+ 496              	.LBE8:
+ 152:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     }
+ 153:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+ 154:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     data = (float)sum / index;
+ 497              		.loc 1 154 5 view .LVU106
+ 498              		.loc 1 154 12 is_stmt 0 view .LVU107
+ 499 00be FFF7FEFF 		bl	__aeabi_ui2f
+ 500              	.LVL54:
+ 501              		.loc 1 154 12 view .LVU108
+ 502 00c2 0446     		mov	r4, r0
+ 503              	.LVL55:
+ 504              		.loc 1 154 23 view .LVU109
+ 505 00c4 4846     		mov	r0, r9
+ 506 00c6 FFF7FEFF 		bl	__aeabi_i2f
+ 507              	.LVL56:
+ 508 00ca 0146     		mov	r1, r0
+ 509              		.loc 1 154 10 view .LVU110
+ 510 00cc 2046     		mov	r0, r4
+ 511 00ce FFF7FEFF 		bl	__aeabi_fdiv
+ 512              	.LVL57:
+ 513 00d2 0446     		mov	r4, r0
+ 514              	.LVL58:
+ 155:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+ 156:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     if(data >= 1000)
+ 515              		.loc 1 156 5 is_stmt 1 view .LVU111
+ 516              		.loc 1 156 7 is_stmt 0 view .LVU112
+ 517 00d4 0749     		ldr	r1, .L43
+ 518 00d6 FFF7FEFF 		bl	__aeabi_fcmpge
+ 519              	.LVL59:
+ 520              		.loc 1 156 7 view .LVU113
+ 521 00da 00B1     		cbz	r0, .L35
+ 157:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     {
+ 158:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****         data = 1000;
+ 522              		.loc 1 158 14 view .LVU114
+ 523 00dc 054C     		ldr	r4, .L43
+ 524              	.LVL60:
+ 525              	.L35:
+ 159:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     }
+ARM GAS  /tmp/ccOfCeLO.s 			page 13
+
+
+ 160:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+ 161:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     if(data <= 0)
+ 526              		.loc 1 161 5 is_stmt 1 view .LVU115
+ 527              		.loc 1 161 7 is_stmt 0 view .LVU116
+ 528 00de 0021     		movs	r1, #0
+ 529 00e0 2046     		mov	r0, r4
+ 530 00e2 FFF7FEFF 		bl	__aeabi_fcmple
+ 531              	.LVL61:
+ 532 00e6 18B9     		cbnz	r0, .L42
+ 533              	.LVL62:
+ 534              	.L24:
+ 162:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     {
+ 163:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     	data = 0;
+ 164:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     }
+ 165:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+ 166:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     return data;
+ 167:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+ 168:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** }
+ 535              		.loc 1 168 1 view .LVU117
+ 536 00e8 2046     		mov	r0, r4
+ 537 00ea BD46     		mov	sp, r7
+ 538              	.LCFI7:
+ 539              		.cfi_remember_state
+ 540              		.cfi_def_cfa_register 13
+ 541              		@ sp needed
+ 542 00ec BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 543              	.LVL63:
+ 544              	.L42:
+ 545              	.LCFI8:
+ 546              		.cfi_restore_state
+ 163:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c ****     }
+ 547              		.loc 1 163 11 view .LVU118
+ 548 00f0 0024     		movs	r4, #0
+ 549              	.LVL64:
+ 166:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+ 550              		.loc 1 166 5 is_stmt 1 view .LVU119
+ 166:MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.c **** 
+ 551              		.loc 1 166 12 is_stmt 0 view .LVU120
+ 552 00f2 F9E7     		b	.L24
+ 553              	.L44:
+ 554              		.align	2
+ 555              	.L43:
+ 556 00f4 00007A44 		.word	1148846080
+ 557              		.cfi_endproc
+ 558              	.LFE74:
+ 560              		.global	particle_measure_data_co2_sensor
+ 561              		.global	sensor_auto_calibration
+ 562              		.global	sensor_detetion_range_setting
+ 563              		.global	span_point_calibration
+ 564              		.global	zero_point_calibration
+ 565              		.global	particle_measure
+ 566              		.section	.bss.particle_measure_data_co2_sensor,"aw",%nobits
+ 567              		.align	2
+ 568              		.set	.LANCHOR5,. + 0
+ 571              	particle_measure_data_co2_sensor:
+ 572 0000 00000000 		.space	9
+ 572      00000000 
+ARM GAS  /tmp/ccOfCeLO.s 			page 14
+
+
+ 572      00
+ 573              		.section	.data.particle_measure,"aw"
+ 574              		.align	2
+ 575              		.set	.LANCHOR4,. + 0
+ 578              	particle_measure:
+ 579 0000 FF018600 		.ascii	"\377\001\206\000\000\000\000\000y"
+ 579      00000000 
+ 579      79
+ 580              		.section	.data.sensor_auto_calibration,"aw"
+ 581              		.align	2
+ 582              		.set	.LANCHOR3,. + 0
+ 585              	sensor_auto_calibration:
+ 586 0000 FF0179A0 		.ascii	"\377\001y\240\000\000\000\000\345"
+ 586      00000000 
+ 586      E5
+ 587              		.section	.data.sensor_detetion_range_setting,"aw"
+ 588              		.align	2
+ 589              		.set	.LANCHOR2,. + 0
+ 592              	sensor_detetion_range_setting:
+ 593 0000 FF019909 		.ascii	"\377\001\231\011\304\000\000\000x"
+ 593      C4000000 
+ 593      78
+ 594              		.section	.data.span_point_calibration,"aw"
+ 595              		.align	2
+ 596              		.set	.LANCHOR1,. + 0
+ 599              	span_point_calibration:
+ 600 0000 FF018807 		.ascii	"\377\001\210\007\320\000\000\000/"
+ 600      D0000000 
+ 600      2F
+ 601              		.section	.data.zero_point_calibration,"aw"
+ 602              		.align	2
+ 603              		.set	.LANCHOR0,. + 0
+ 606              	zero_point_calibration:
+ 607 0000 FF018700 		.ascii	"\377\001\207\000\000\000\000\000x"
+ 607      00000000 
+ 607      78
+ 608              		.text
+ 609              	.Letext0:
+ 610              		.file 2 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 611              		.file 3 "/media/son/Data/Embedded_Systems/Document/Tool/Arm_GNU_Toolchain/gcc-arm-11.2-2022.02-x86
+ 612              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 613              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 614              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 615              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h"
+ 616              		.file 8 "MHZ19B_Co2_Sensor/Mh_Z19B_Co2_Sensor.h"
+ 617              		.file 9 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ARM GAS  /tmp/ccOfCeLO.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Mh_Z19B_Co2_Sensor.c
+     /tmp/ccOfCeLO.s:18     .text.Mh_Z19B_Co2_Sensor_Init:0000000000000000 $t
+     /tmp/ccOfCeLO.s:24     .text.Mh_Z19B_Co2_Sensor_Init:0000000000000000 Mh_Z19B_Co2_Sensor_Init
+     /tmp/ccOfCeLO.s:42     .text.Zero_Point_Calibration:0000000000000000 $t
+     /tmp/ccOfCeLO.s:48     .text.Zero_Point_Calibration:0000000000000000 Zero_Point_Calibration
+     /tmp/ccOfCeLO.s:77     .text.Zero_Point_Calibration:0000000000000014 $d
+     /tmp/ccOfCeLO.s:82     .text.Span_Point_Calibration:0000000000000000 $t
+     /tmp/ccOfCeLO.s:88     .text.Span_Point_Calibration:0000000000000000 Span_Point_Calibration
+     /tmp/ccOfCeLO.s:117    .text.Span_Point_Calibration:0000000000000014 $d
+     /tmp/ccOfCeLO.s:122    .text.Sensor_Detection_Range_Setting:0000000000000000 $t
+     /tmp/ccOfCeLO.s:128    .text.Sensor_Detection_Range_Setting:0000000000000000 Sensor_Detection_Range_Setting
+     /tmp/ccOfCeLO.s:157    .text.Sensor_Detection_Range_Setting:0000000000000014 $d
+     /tmp/ccOfCeLO.s:162    .text.Sensor_Set_Auto_Calibration:0000000000000000 $t
+     /tmp/ccOfCeLO.s:168    .text.Sensor_Set_Auto_Calibration:0000000000000000 Sensor_Set_Auto_Calibration
+     /tmp/ccOfCeLO.s:197    .text.Sensor_Set_Auto_Calibration:0000000000000014 $d
+     /tmp/ccOfCeLO.s:202    .text.Mh_Z19B_Co2_Sensor_Concentration:0000000000000000 $t
+     /tmp/ccOfCeLO.s:208    .text.Mh_Z19B_Co2_Sensor_Concentration:0000000000000000 Mh_Z19B_Co2_Sensor_Concentration
+     /tmp/ccOfCeLO.s:266    .text.Mh_Z19B_Co2_Sensor_Concentration:0000000000000034 $d
+     /tmp/ccOfCeLO.s:280    .text.Mh_Z19B_Co2_Sensor_Caclulator_Average:0000000000000000 $t
+     /tmp/ccOfCeLO.s:286    .text.Mh_Z19B_Co2_Sensor_Caclulator_Average:0000000000000000 Mh_Z19B_Co2_Sensor_Caclulator_Average
+     /tmp/ccOfCeLO.s:556    .text.Mh_Z19B_Co2_Sensor_Caclulator_Average:00000000000000f4 $d
+     /tmp/ccOfCeLO.s:571    .bss.particle_measure_data_co2_sensor:0000000000000000 particle_measure_data_co2_sensor
+     /tmp/ccOfCeLO.s:585    .data.sensor_auto_calibration:0000000000000000 sensor_auto_calibration
+     /tmp/ccOfCeLO.s:592    .data.sensor_detetion_range_setting:0000000000000000 sensor_detetion_range_setting
+     /tmp/ccOfCeLO.s:599    .data.span_point_calibration:0000000000000000 span_point_calibration
+     /tmp/ccOfCeLO.s:606    .data.zero_point_calibration:0000000000000000 zero_point_calibration
+     /tmp/ccOfCeLO.s:578    .data.particle_measure:0000000000000000 particle_measure
+     /tmp/ccOfCeLO.s:567    .bss.particle_measure_data_co2_sensor:0000000000000000 $d
+     /tmp/ccOfCeLO.s:574    .data.particle_measure:0000000000000000 $d
+     /tmp/ccOfCeLO.s:581    .data.sensor_auto_calibration:0000000000000000 $d
+     /tmp/ccOfCeLO.s:588    .data.sensor_detetion_range_setting:0000000000000000 $d
+     /tmp/ccOfCeLO.s:595    .data.span_point_calibration:0000000000000000 $d
+     /tmp/ccOfCeLO.s:602    .data.zero_point_calibration:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+HAL_UART_Transmit
+HAL_UART_Receive
+__aeabi_ui2f
+__aeabi_i2f
+__aeabi_fdiv
+__aeabi_fsub
+__aeabi_f2iz
+__aeabi_fcmplt
+__aeabi_fcmpge
+__aeabi_fcmple
+HAL_Delay
